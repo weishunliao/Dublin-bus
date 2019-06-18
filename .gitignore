@@ -3,3 +3,4 @@ settings.py
 Docs
 secret.py
 dev_environment
+.vscode
