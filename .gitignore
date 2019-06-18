@@ -1,6 +1,8 @@
 node_modules
 settings.py
-Docs
+
 secret.py
 dev_environment
 .vscode
+
+Docs
