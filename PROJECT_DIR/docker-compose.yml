@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  djangoapp:
+    build: .
+    volumes:
+      - .:/code/
+      
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - 8000:80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/static
+    depends_on:  # <-- wait for djangoapp to be "ready" before starting this service
+      - djangoapp
+
+
+networks:  # <-- and here
+  nginx_network:
+    driver: bridge
+
+
