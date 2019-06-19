@@ -20,5 +20,6 @@ from dublin_bus import views
 
 urlpatterns = [
     path('', HomeView.as_view()),
-    path('test', views.test_view)
+    path('test', views.test_view),
+    path('stops', views.test_db)
 ]
