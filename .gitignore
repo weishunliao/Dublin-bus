@@ -8,3 +8,10 @@ dev_environment
 Docs
 PROJECT_DIR/django_project/django_project/__pycache__/
 .env
+
+.DS_Store
+.idea/
+PROJECT_DIR/.DS_Store
+PROJECT_DIR/.idea/
+PROJECT_DIR/django_project/.DS_Store
+PROJECT_DIR/django_project/.idea/
