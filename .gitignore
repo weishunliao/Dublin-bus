@@ -7,3 +7,4 @@ dev_environment
 .vscode
 
 Docs
+PROJECT_DIR/django_project/webpack-stats.json
