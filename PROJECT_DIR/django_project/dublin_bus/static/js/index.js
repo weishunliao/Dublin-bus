@@ -1,9 +1,9 @@
-import '../css/hello.scss'
+import '../css/main.scss'
 
 
 var el = document.getElementById('lol')
 
-el.innerHTML = "Hi Chris again"
+el.innerHTML = "Hi Chris "
 
 const UCD =  () => {
     return "hi there!"

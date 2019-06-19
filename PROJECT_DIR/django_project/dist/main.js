@@ -86,14 +86,14 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./dublin_bus/static/css/hello.scss":
-/*!******************************************!*\
-  !*** ./dublin_bus/static/css/hello.scss ***!
-  \******************************************/
+/***/ "./dublin_bus/static/css/main.scss":
+/*!*****************************************!*\
+  !*** ./dublin_bus/static/css/main.scss ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("\nvar content = __webpack_require__(/*! !../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../node_modules/css-loader!../../../node_modules/postcss-loader/src!../../../node_modules/sass-loader/lib/loader.js!./hello.scss */ \"./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js!./node_modules/sass-loader/lib/loader.js!./dublin_bus/static/css/hello.scss\");\n\nif(typeof content === 'string') content = [[module.i, content, '']];\n\nvar transform;\nvar insertInto;\n\n\n\nvar options = {\"hmr\":true}\n\noptions.transform = transform\noptions.insertInto = undefined;\n\nvar update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ \"./node_modules/style-loader/lib/addStyles.js\")(content, options);\n\nif(content.locals) module.exports = content.locals;\n\nif(false) {}\n\n//# sourceURL=webpack:///./dublin_bus/static/css/hello.scss?");
+eval("\nvar content = __webpack_require__(/*! !../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../node_modules/css-loader!../../../node_modules/postcss-loader/src!../../../node_modules/sass-loader/lib/loader.js!./main.scss */ \"./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js!./node_modules/sass-loader/lib/loader.js!./dublin_bus/static/css/main.scss\");\n\nif(typeof content === 'string') content = [[module.i, content, '']];\n\nvar transform;\nvar insertInto;\n\n\n\nvar options = {\"hmr\":true}\n\noptions.transform = transform\noptions.insertInto = undefined;\n\nvar update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ \"./node_modules/style-loader/lib/addStyles.js\")(content, options);\n\nif(content.locals) module.exports = content.locals;\n\nif(false) {}\n\n//# sourceURL=webpack:///./dublin_bus/static/css/main.scss?");
 
 /***/ }),
 
@@ -105,7 +105,7 @@ eval("\nvar content = __webpack_require__(/*! !../../../node_modules/mini-css-ex
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_hello_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/hello.scss */ \"./dublin_bus/static/css/hello.scss\");\n/* harmony import */ var _css_hello_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_hello_scss__WEBPACK_IMPORTED_MODULE_0__);\n\nvar el = document.getElementById('lol');\nel.innerHTML = \"Hi Chris again\";\n\nconst UCD = () => {\n  return \"hi there!\";\n};\n\nlet people = {\n  first: \"Chris\",\n  second: \"Fionnuala\",\n  third: \"Raph\"\n};\nlet nums = [1, 2, 3, 4];\nnums.forEach(num => {\n  console.log(num);\n});\n\n//# sourceURL=webpack:///./dublin_bus/static/js/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/main.scss */ \"./dublin_bus/static/css/main.scss\");\n/* harmony import */ var _css_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_main_scss__WEBPACK_IMPORTED_MODULE_0__);\n\nvar el = document.getElementById('lol');\nel.innerHTML = \"Hi Chris \";\n\nconst UCD = () => {\n  return \"hi there!\";\n};\n\nlet people = {\n  first: \"Chris\",\n  second: \"Fionnuala\",\n  third: \"Raph\"\n};\nlet nums = [1, 2, 3, 4];\nnums.forEach(num => {\n  console.log(num);\n});\n\n//# sourceURL=webpack:///./dublin_bus/static/js/index.js?");
 
 /***/ }),
 
@@ -3850,14 +3850,14 @@ eval("__webpack_require__(/*! ./modules/es6.symbol */ \"./node_modules/core-js/m
 
 /***/ }),
 
-/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js!./node_modules/sass-loader/lib/loader.js!./dublin_bus/static/css/hello.scss":
-/*!*****************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/sass-loader/lib/loader.js!./dublin_bus/static/css/hello.scss ***!
-  \*****************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js!./node_modules/sass-loader/lib/loader.js!./dublin_bus/static/css/main.scss":
+/*!****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/sass-loader/lib/loader.js!./dublin_bus/static/css/main.scss ***!
+  \****************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("// extracted by mini-css-extract-plugin\n\n//# sourceURL=webpack:///./dublin_bus/static/css/hello.scss?./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/sass-loader/lib/loader.js");
+eval("// extracted by mini-css-extract-plugin\n\n//# sourceURL=webpack:///./dublin_bus/static/css/main.scss?./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/sass-loader/lib/loader.js");
 
 /***/ }),
 
