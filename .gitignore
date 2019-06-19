@@ -1,5 +1,6 @@
 node_modules
 
+webpack-stats.json
 
 secret.py
 dev_environment

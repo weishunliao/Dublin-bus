@@ -1,20 +1,7 @@
-{% load render_bundle from webpack_loader %}
+{% include "./partials/header.html" %}
 
+<!-- This is the main body - every thing will go in here! -->
+<h1 id="lol"></h1>
+<h2>This is an h2</h2>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {% render_bundle 'main' 'css' %}
-    <title>Document</title>
-</head>
-<body>
-
-    <h1 id="lol"></h1>
-    <h2>This is an h2</h2>
-    {% render_bundle 'main' 'js' 'DEFAULT' %}
-</body>
-</html>
-
+{% include "./partials/footer.html" %}
