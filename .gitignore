@@ -6,3 +6,5 @@ dev_environment
 .vscode
 
 Docs
+PROJECT_DIR/django_project/django_project/__pycache__/
+.env
