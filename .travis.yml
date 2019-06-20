@@ -29,9 +29,9 @@ after_success:
   - docker push $DOCKER_USERNAME/dublin-bus
   - sshpass -p $SERVER_PASSWORD ssh -o stricthostkeychecking=no student@137.43.49.50 "./build.sh $TRAVIS_BRANCH"
 
-branches:
- only:
-   - master
-   - dev
+# branches:
+#  only:
+#    - master
+#    - dev
 notifications:
   slack: testcislack:Z7KH0wadNSz1p6aTnYwMFw9W
