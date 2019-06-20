@@ -1,5 +1,6 @@
 This file outlines the steps required to set up the database schema and tables, and to load data into the tables.
 
+
 Follow the steps below to set up the database schema and tables:
 
 1. Copy contents of the database_setup folder to the CS server (e.g. using WinSCP).
@@ -8,15 +9,23 @@ Follow the steps below to set up the database schema and tables:
     mysql -u USER -pPASSWORD < create_tables.SQL
 (Note: there should NOT be a space between -p and PASSWORD, it's not a typo!)
 
+
 Follow the steps below to load data into the tables:
 
-1. Set up environment variables to store details of the database that you want to connect to:
-        - DBHOST: database host name
-        - DBUSER: username you will log in as
-        - DBPASS: password for the user specified above
-2. Copy contents of the database_setup folder to the CS server if this has not already been done.
+1. Copy contents of the database_setup folder to the CS server if this has not already been done.
 3. Navigate to the raw_data folder.
-4. Download the full Dublin Bus data set into the folder (follow the instructions on Brightspace to download).
+4. Download the full Dublin Bus data set into the folder (follow the instructions on Brightspace). 
+   The files should be named 'rt_leavetimes_DB_2018.txt', 'rt_trips_DB_2018_prepared.txt' & 
+   'rt_vehicles_DB_2018_prepared.txt'.
 5. Copy the Met Eireann data set to the same folder (can be downloaded from the Met Eireann website).
-6. Run the data load script as follows:
-        nohup python load_data.py &> dataload_DD_MM_YYYY.log
+   The file should be named 'hly175.csv'.
+6. Run the data prep script as follows:
+        nohup python prepare_files.py &> dataprep.log
+7. When the script finishes running, move the files that have been created to the MySQL upload folder:
+        sudo mv *prepared* /var/lib/mysql-files/
+8. Run the SQL scripts as follows:
+        mysql -vv -u $DBUSER -p$DBPASS < load_weather_data.SQL &> load_weather_data.log
+        mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_trips.SQL &> load_bus_data_trips.log
+        mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_vehicles.SQL &> load_bus_data_vehicles.log
+        mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_leavetimes.SQL &> load_bus_data_leavetimes.log
+   (load_bus_data_leavetimes.SQL must be run last, but other than that the order is not important)
