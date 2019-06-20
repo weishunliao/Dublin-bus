@@ -23,9 +23,9 @@ Follow the steps below to load data into the tables:
         nohup python prepare_files.py &> dataprep.log
 7. When the script finishes running, move the files that have been created to the MySQL upload folder:
         sudo mv *prepared* /var/lib/mysql-files/
-8. Run the SQL scripts as follows:
-        nohup mysql -vv -u $DBUSER -p$DBPASS < load_weather_data.SQL &> load_weather_data.log
-        nohup mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_trips.SQL &> load_bus_data_trips.log
-        nohup mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_vehicles.SQL &> load_bus_data_vehicles.log
-        nohup mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_leavetimes.SQL &> load_bus_data_leavetimes.log
+8. Run the SQL scripts as follows, replacing USER & PASSWORD with the login details for mysql:
+        sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_weather_data.SQL &'
+        sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_bus_data_trips.SQL &'
+        sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_bus_data_vehicles.SQL &'
+        sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_bus_data_leavetimes.SQL &'
    (load_bus_data_leavetimes.SQL must be run last, but other than that the order is not important)
