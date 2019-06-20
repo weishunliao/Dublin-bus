@@ -24,8 +24,8 @@ Follow the steps below to load data into the tables:
 7. When the script finishes running, move the files that have been created to the MySQL upload folder:
         sudo mv *prepared* /var/lib/mysql-files/
 8. Run the SQL scripts as follows:
-        mysql -vv -u $DBUSER -p$DBPASS < load_weather_data.SQL &> load_weather_data.log
-        mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_trips.SQL &> load_bus_data_trips.log
-        mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_vehicles.SQL &> load_bus_data_vehicles.log
-        mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_leavetimes.SQL &> load_bus_data_leavetimes.log
+        nohup mysql -vv -u $DBUSER -p$DBPASS < load_weather_data.SQL &> load_weather_data.log
+        nohup mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_trips.SQL &> load_bus_data_trips.log
+        nohup mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_vehicles.SQL &> load_bus_data_vehicles.log
+        nohup mysql -vv -u $DBUSER -p$DBPASS < load_bus_data_leavetimes.SQL &> load_bus_data_leavetimes.log
    (load_bus_data_leavetimes.SQL must be run last, but other than that the order is not important)
