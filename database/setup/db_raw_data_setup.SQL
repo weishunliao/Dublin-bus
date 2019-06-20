@@ -50,7 +50,7 @@ CREATE TABLE `db_raw_data`.`rt_leavetimes`
   `passengersout` int,
   `distance` int,
   `suppressed` int,
-  `justificationid` int,
+  `justificationid` bigint,
   `lastupdate` datetime,
   `note` varchar(255),
   CONSTRAINT pk_rt_leavetimes PRIMARY KEY(`datasource`, `dayofservice`, `tripid`, `prognumber`),
