@@ -15,24 +15,23 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install sshpass
 install:
-  - pip install -r requirements.txt
+  - pip install -r ./PROJECT_DIR/requirements.txt
 
 before_script:
   - mysql -e 'CREATE DATABASE unit_test;'
 
 script:
-  - python ./django_project/manage.py test
+  - python ./PROJECT_DIR/django_project/manage.py test
 
 after_success:
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t $DOCKER_USERNAME/dublin-bus:$TRAVIS_BRANCH .
+  - docker build -t $DOCKER_USERNAME/dublin-bus:$TRAVIS_BRANCH ./PROJECT_DIR/
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push $DOCKER_USERNAME/dublin-bus
   - sshpass -p $SERVER_PASSWORD ssh -o stricthostkeychecking=no student@137.43.49.50 "./build.sh $TRAVIS_BRANCH"
 
-#branches:
-#  only:
-#    - master
-#    - dev
+branches:
+ only:
+   - master
+   - dev
 notifications:
   slack: testcislack:Z7KH0wadNSz1p6aTnYwMFw9W

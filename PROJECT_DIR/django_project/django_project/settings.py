@@ -17,11 +17,11 @@ from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# key is stored in the .env file
 SECRET_KEY = config('SECRET_KEY')
 
 PUBLIC_DIR = os.path.join(BASE_DIR, '')
@@ -29,7 +29,6 @@ PUBLIC_DIR = os.path.join(BASE_DIR, '')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -76,22 +75,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
+        # There are two host addresses:
+        # localhost is for production,
+        # 137.43.49.50 is for development.
+
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dublinbus',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'dublinbus',  # database name
+        'USER': 'team8',
+        'PASSWORD': config('DATABASE_PASSWORD'),
         # 'HOST': 'localhost',
         'HOST': '137.43.49.50',
         'PORT': '3306',
     }
 }
 
+# these setting is uni-test use
 if 'test' in sys.argv:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.mysql',
@@ -101,7 +104,7 @@ if 'test' in sys.argv:
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
-
+    SECRET_KEY = "$SECRET_KEY"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -121,7 +124,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -135,21 +137,21 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(PUBLIC_DIR, '../static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'dist'), # We do this so that django's collectstatic copies or our bundles to the STATIC_ROOT or syncs them to whatever storage we use.
+    # We do this so that django's collectstatic copies or our bundles to the STATIC_ROOT
+    # or syncs them to whatever storage we use.
+    os.path.join(BASE_DIR, 'dist'),
 )
-
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': '', # must end with slash
+        'BUNDLE_DIR_NAME': '',  # must end with slash
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
