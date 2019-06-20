@@ -88,8 +88,8 @@ DATABASES = {
         'NAME': 'dublinbus',  # database name
         'USER': 'team8',
         'PASSWORD': config('DATABASE_PASSWORD'),
-        # 'HOST': 'localhost',
-        'HOST': '137.43.49.50',
+        'HOST': 'localhost',
+        # 'HOST': '137.43.49.50',
         'PORT': '3306',
     }
 }
