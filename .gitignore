@@ -7,3 +7,15 @@ dev_environment
 .vscode
 
 Docs
+PROJECT_DIR/django_project/django_project/__pycache__/**
+PROJECT_DIR/django_project/dublin_bus/__pycache__/**
+PROJECT_DIR/django_project/dublin_bus/migrations/__pycache__/**
+.env
+
+.DS_Store
+.idea/
+PROJECT_DIR/.DS_Store
+PROJECT_DIR/.idea/
+PROJECT_DIR/django_project/.DS_Store
+PROJECT_DIR/django_project/.idea/
+

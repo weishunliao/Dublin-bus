@@ -1,3 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 
-# Create your tests here.
+
+class ViewTest(TestCase):
+    def test_index_view(self):
+        client = Client()
+        resp = client.get('/test').content
+        self.assertEqual(resp, b"<h3>Hi, we're team 8.</h3>")
