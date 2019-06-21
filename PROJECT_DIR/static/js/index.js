@@ -1,26 +1,25 @@
-import '../css/hello.scss'
+import '../css/main.scss'
 
 
-var el = document.getElementById('lol')
 
-el.innerHTML = "Raph this is awesome"
+const menuCtrl = document.querySelector('ion-menu-controller');
 
-const UCD =  () => {
-    return "hi there!"
-}
+const starter = document.querySelector('#starter')
 
-let people = {
-    first: "Chris",
-    second: "Fionnuala",
-    third: "Raph"
-}
-
-let nums = [ 1,2,3,4] 
-
-nums.forEach((num) =>{
-    console.log(num)
-})
-
-
+starter.addEventListener('click', openFirst)
+ 
+function openFirst() {
+    menuCtrl.enable(true, 'first');
+    menuCtrl.open('first');
+  }
+  
+  function openEnd() {
+    menuCtrl.open('end');
+  }
+  
+  function openCustom() {
+    menuCtrl.enable(true, 'custom');
+    menuCtrl.open('custom');
+  }
 
 

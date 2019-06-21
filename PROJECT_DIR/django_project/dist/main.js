@@ -105,7 +105,7 @@ eval("\nvar content = __webpack_require__(/*! !../../../node_modules/mini-css-ex
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/main.scss */ \"./dublin_bus/static/css/main.scss\");\n/* harmony import */ var _css_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_main_scss__WEBPACK_IMPORTED_MODULE_0__);\n\nvar el = document.getElementById('lol');\nel.innerHTML = \"Hi Chris \";\n\nconst UCD = () => {\n  return \"hi there!\";\n};\n\nlet people = {\n  first: \"Chris\",\n  second: \"Fionnuala\",\n  third: \"Raph\"\n};\nlet nums = [1, 2, 3, 4];\nnums.forEach(num => {\n  console.log(num);\n});\n\n//# sourceURL=webpack:///./dublin_bus/static/js/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/main.scss */ \"./dublin_bus/static/css/main.scss\");\n/* harmony import */ var _css_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_main_scss__WEBPACK_IMPORTED_MODULE_0__);\n\n\n//# sourceURL=webpack:///./dublin_bus/static/js/index.js?");
 
 /***/ }),
 

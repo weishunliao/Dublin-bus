@@ -27,7 +27,7 @@ PUBLIC_DIR = os.path.join(BASE_DIR, '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.133']
+ALLOWED_HOSTS = ['localhost', '137.43.159.60', '169.254.54.248']
 
 
 # Application definition
