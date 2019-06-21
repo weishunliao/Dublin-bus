@@ -1,0 +1,40 @@
+dist: xenial   # required for Python >= 3.7
+sudo: required
+language: python
+python:
+    - "3.7"
+
+services:
+  - docker
+  - mysql
+
+env:
+  - DJANGO=2.2 DB=mysql
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install sshpass
+install:
+  - pip install -r ./PROJECT_DIR/requirements.txt
+
+before_script:
+  - echo DATABASE_PASSWORD = $SERVER_PASSWORD"\n"SECRET_KEY = $SECRET_KEY > ./PROJECT_DIR/django_project/.env
+  - mysql -e 'CREATE DATABASE unit_test;'
+  - cd ./PROJECT_DIR/django_project/
+
+script:
+  - python manage.py test
+
+after_success:
+  - cd ..
+  - docker build -t $DOCKER_USERNAME/dublin-bus:$TRAVIS_BRANCH .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push $DOCKER_USERNAME/dublin-bus
+  - sshpass -p $SERVER_PASSWORD ssh -o stricthostkeychecking=no student@137.43.49.50 "./build.sh $TRAVIS_BRANCH"
+
+# branches:
+#  only:
+#    - master
+#    - dev
+notifications:
+  slack: testcislack:Z7KH0wadNSz1p6aTnYwMFw9W

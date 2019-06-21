@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/the-8-team/COMP47360.svg?branch=raph_dev)](https://travis-ci.org/the-8-team/COMP47360)
 # COMP47360
 
 - dev_environment = the virtual environment for development; activate with 'source dev_environment/bin/activate'
