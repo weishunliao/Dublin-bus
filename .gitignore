@@ -5,6 +5,8 @@ webpack-stats.json
 secret.py
 dev_environment
 .vscode
+dist
+
 
 Docs
 PROJECT_DIR/django_project/django_project/__pycache__/**
