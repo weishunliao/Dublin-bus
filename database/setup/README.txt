@@ -32,7 +32,7 @@ Follow the steps below to load data into the tables:
         > sudo -i
         > cd /var/lib/mysql-files/
 10. Split the rt_trips_DB_2018_prepared.txt file as follows:
-        > nohup split --lines=1000000 rt_leavetimes_DB_2018_prepared.txt rt_leavetimes.txt
+        > nohup split --lines=20000000 rt_leavetimes_DB_2018_prepared.txt rt_leavetimes.txt
 11. Remove the files that are no longer needed:
         > rm *prepared*
 12. Import the data using mysqlimport:
