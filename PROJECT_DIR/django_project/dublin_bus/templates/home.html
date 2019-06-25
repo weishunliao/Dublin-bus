@@ -8,12 +8,27 @@
 
 <div class="main">
 
+    <div class="jp__header">
+        <div class="jp__header__textrel">
+            <div class="jp__header__textabs">
+                <h1>Journey Planner</h1>
+            </div>
+            <div class="jp__header__weatherabs">
+                <canvas id="icon2"></canvas>
+            </div>
+            <div class="jp__header__underline"></div>
+        </div>
+    </div>
+
 
 {% include "./drawers/top_drawer.html" %}
-
-
-
+    <!-- <div class="map__container"> -->
+        <div id="map"></div>
+    <!-- </div> -->
 {% include "./drawers/bottom_drawer.html" %}
+
+
+
 
 
 </div>
@@ -22,7 +37,9 @@
 
     
 <!-- <img src="{% static 'images/forest.jpg' %}" alt=""> -->
-
+<script>
+    var icon = '{{icon}}';
+</script>
 
 
 {% include "./partials/footer.html" %}

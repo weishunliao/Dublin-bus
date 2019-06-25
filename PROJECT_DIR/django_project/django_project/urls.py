@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from dublin_bus.views import HomeView
+from dublin_bus.views import home_view
 from dublin_bus import views
 
+
 urlpatterns = [
-    path('', HomeView.as_view()),
+    path('', views.home_view),
     path('test', views.test_view),
     path('stops', views.test_db)
 ]

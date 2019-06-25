@@ -1,28 +1,37 @@
-import '../css/main.scss'
+import "../css/main.scss";
+import "./google_maps";
+import buildWeather from "./skycons.js"
+import { nodes } from "./nodes";
 
-
-const topDrawer = document.querySelector('.drawer__container--top');
-const bottomDrawer = document.querySelector('.drawer__container--bottom');
-
-const drawers = [topDrawer, bottomDrawer];
+console.log(nodes.drawers);
 
 function handleDrawers(classList) {
-    const classes = [...classList]
-    if (classes.includes("drawer__container--top")) {
-        bottomDrawer.classList.remove('open')
-        topDrawer.classList.toggle('open')
-    } else if (classes.includes("drawer__container--bottom")){
-        topDrawer.classList.remove('open')
-        bottomDrawer.classList.toggle('open')
-    }
+  const classes = [...classList];
+  if (classes.includes("drawer__container--top")) {
+    nodes.drawers.bottom.classList.remove("open");
+    nodes.drawers.top.classList.toggle("open");
+    nodes.underline.classList.toggle("open");
+  } else if (classes.includes("drawer__container--bottom")) {
+    nodes.drawers.top.classList.remove("open");
+    nodes.drawers.bottom.classList.toggle("open");
+  }
 }
 
-drawers.forEach((el) => {
-    el.addEventListener('click', () =>{
-        handleDrawers(el.classList)
-    })
-})
 
+
+buildWeather(icon)
+
+
+
+
+const drawersArr = Object.values(nodes.drawers);
+
+drawersArr.forEach(el => {
+  el.addEventListener("click", () => {
+    handleDrawers(el.classList);
+
+  });
+});
 
 // var mySwiper = new Swiper ('.swiper-container', {
 //     // Optional parameters
