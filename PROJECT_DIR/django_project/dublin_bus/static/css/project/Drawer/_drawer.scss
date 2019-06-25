@@ -1,0 +1,29 @@
+.drawer__container {
+    width: 100%;
+    position: absolute;
+    height: 70vh;
+    width: 90%;
+    border: 1px solid black;
+    left: 50%;
+    transition: transform .3s ease-in-out;
+    border-radius: 1rem;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+
+    &--top {
+        top: 0;
+        transform: translateY(-60vh) translateX(-50%);
+        &.open {
+            transform: translateY(-5vh) translateX(-50%);
+        }
+    }
+
+    &--bottom {
+        bottom: 0;
+        transform: translateY(60vh) translateX(-50%);
+        &.open {
+            transform: translateY(5vh) translateX(-50%);
+        }
+    }
+    
+}
+

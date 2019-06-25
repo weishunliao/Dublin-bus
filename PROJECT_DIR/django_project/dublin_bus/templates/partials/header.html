@@ -1,5 +1,5 @@
 {% load render_bundle from webpack_loader %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,24 +14,19 @@
       href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
 
    
 
     {% render_bundle 'main' 'css' %}
     <title>Document</title>
   </head>
-  <body onclick="hello()">
-    <ion-app>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Header</ion-title>
-        </ion-toolbar>
-      </ion-header>
+  <body>
+   
+        
+            
+  
+
       
 
 
