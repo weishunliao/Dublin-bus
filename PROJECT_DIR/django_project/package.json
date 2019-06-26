@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage",
     "build": "webpack",
     "watch": "webpack --mode development --watch",
     "dev": "webpack --mode development"
@@ -22,7 +22,9 @@
     "webpack": "^4.34.0",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.3.4",
-    "webpack-dev-server": "^3.7.1"
+    "webpack-dev-server": "^3.7.1",
+    "jest": "^24.8.0",
+    "coveralls": "^3.0.4"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
