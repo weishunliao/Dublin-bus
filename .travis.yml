@@ -34,7 +34,7 @@ script:
 
 after_script:
   - cd ./django_project/
-  - cat ./coverage/lcov.info | coveralls
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 after_success:
   - cd ..
