@@ -21,18 +21,19 @@ before_install:
   - npm update
 install:
   - pip install -r ./PROJECT_DIR/requirements.txt
-  - npm install
 
 before_script:
   - echo DATABASE_PASSWORD = $SERVER_PASSWORD"\n"SECRET_KEY = $SECRET_KEY > ./PROJECT_DIR/django_project/.env
   - mysql -e 'CREATE DATABASE unit_test;'
   - cd ./PROJECT_DIR/django_project/
+  - npm install
 
 script:
   - python manage.py test
   - npm test
 
 after_script:
+  - cd ./django_project/
   - cat ./coverage/lcov.info | coveralls
 
 after_success:
