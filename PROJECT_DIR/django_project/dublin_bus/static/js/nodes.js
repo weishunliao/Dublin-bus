@@ -7,7 +7,6 @@ const drawers = {
     bottom: bottomDrawer
 }
     
-console.log(drawers)
 const underline = document.querySelector('.jp__header__underline');
 
 export const nodes = {

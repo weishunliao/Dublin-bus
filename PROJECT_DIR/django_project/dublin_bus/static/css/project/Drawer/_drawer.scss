@@ -1,7 +1,9 @@
+
+
 .drawer__container {
     width: 100%;
     position: absolute;
-    height: 70vh;
+    height: 80vh;
     width: 90%;
     background: white;
   
@@ -12,20 +14,40 @@
     z-index: 3;
     &--top {
         top: 0;
-        transform: translateY(-60vh) translateX(-50%);
-        &.open {
-            transform: translateY(-8vh) translateX(-50%);
-           
-        }
+        transform: translateY(-68vh) translateX(-50%);
     }
 
     &--bottom {
         bottom: 0;
-        transform: translateY(60vh) translateX(-50%);
+        transform: translateY(68vh) translateX(-50%);
         &.open {
-            transform: translateY(8vh) translateX(-50%);
+            transform: translateY(40px) translateX(-50%);
         }
     }
     
-}
+ }
+
+//     &__search {
+
+//         &__wrapper {
+
+            
+//         }
+//        &__searchbar {
+        
+//     }
+
+//        &__toolbar {
+     
+//        }
+//     }
+
+
+// }
+
+// input {
+//     box-shadow: none !important;
+//     border: 1px solid black !important;
+//     border-radius: 1rem !important;
+// }
 

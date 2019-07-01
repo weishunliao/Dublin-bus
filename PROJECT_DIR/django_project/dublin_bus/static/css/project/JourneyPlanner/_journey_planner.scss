@@ -22,14 +22,14 @@
       height: 1px;
       background: $main;
 
-      opacity: 0;
+      opacity: 1;
       z-index: 200;
       top: calc(10vh - 1px);
       left: 50%;
       transform: translateX(-50%);
       transition: opacity 0.3s linear;
-      &.open{
-          opacity: 0.8;
+      &.open {
+        opacity: 0.8;
       }
     }
 
@@ -40,7 +40,7 @@
       padding-top: 1rem;
       padding-bottom: 1rem;
       top: 50%;
-      
+
       transform: translateY(-50%);
       width: 100%;
 
@@ -53,15 +53,14 @@
     }
 
     &__weatherabs {
-        right: 10%;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+      right: 10%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
 
-        & canvas {
-            width: 100px;
-        
-        }
+      & canvas {
+        width: 100px;
+      }
     }
   }
 }
