@@ -330,7 +330,6 @@ window.addEventListener("load", function() {
     const topSwiper = new Swiper(topDrawer, "top", bottomSwiper);
     bottomSwiper.otherSwiper = topSwiper
     
-
   
   }, 500);
 });
