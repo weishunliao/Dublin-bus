@@ -136,5 +136,38 @@ class TestTimestampToDayOfWeek(unittest.TestCase):
         """Test to check the value returned for a timestamp that falls on a Monday."""
         self.assertEqual(convert_timestamp.timestamp_to_day_of_week('2018-10-07 00:00:00'), 6)
 
+
+class TestTimestampToWeekdayWeekend(unittest.TestCase):
+    """Unit tests for the timestamp_to_weekday_weekend function."""
+
+    def test_monday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-01 00:00:00'), 1)
+    
+    def test_tuesday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-02 00:00:00'), 1)
+
+    def test_wednesday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-03 00:00:00'), 1)
+
+    def test_thursday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-04 00:00:00'), 1)
+
+    def test_friday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-05 00:00:00'), 1)
+
+    def test_saturday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-06 00:00:00'), 0)
+
+    def test_sunday(self):
+        """Test to check the value returned for a timestamp that falls on a Monday."""
+        self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-07 00:00:00'), 0)
+
+
 if __name__ == '__main__':
     unittest.main()

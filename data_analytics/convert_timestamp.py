@@ -51,3 +51,11 @@ def timestamp_to_day_of_week(timestamp):
     """Takes a timestamp as input and returns the day of the week."""
     timestamp = pd.to_datetime(timestamp)
     return timestamp.weekday()
+
+def timestamp_to_weekday_weekend(timestamp):
+    """Takes a timestamp as input and returns 1 for a weekday, and 0 for a weekend. """
+    timestamp = pd.to_datetime(timestamp)
+    if timestamp.weekday() in [0,1,2,3,4]:
+        return 1
+    else:
+        return 0 
