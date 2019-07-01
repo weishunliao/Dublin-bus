@@ -46,3 +46,8 @@ def timestamp_to_month_bus(timestamp, seconds):
         return timestamp.month + 1
     else:
         return timestamp.month
+
+def timestamp_to_day_of_week(timestamp):
+    """Takes a timestamp as input and returns the day of the week."""
+    timestamp = pd.to_datetime(timestamp)
+    return timestamp.weekday()
