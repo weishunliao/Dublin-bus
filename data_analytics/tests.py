@@ -169,5 +169,19 @@ class TestTimestampToWeekdayWeekend(unittest.TestCase):
         self.assertEqual(convert_timestamp.timestamp_to_weekday_weekend('2018-10-07 00:00:00'), 0)
 
 
+class TestTimestampToBankHoliday(unittest.TestCase):
+    """Unit tests for the timestamp_to_bank_holiday function."""
+
+    def test_bank_holiday(self):
+        """Test to check the value returned for a timestamp that is a bank holiday."""
+        holiday_list=['2018-01-01 00:00:00']
+        self.assertEqual(convert_timestamp.timestamp_to_bank_holiday('2018-01-01 00:00:00', holiday_list), 1)
+    
+    def test_non_holiday(self):
+        """Test to check the value returned for a timestamp that isn't a bank holiday."""
+        holiday_list=['2018-01-01 00:00:00']
+        self.assertEqual(convert_timestamp.timestamp_to_bank_holiday('2018-01-02 00:00:00', holiday_list), 0)
+
+
 if __name__ == '__main__':
     unittest.main()

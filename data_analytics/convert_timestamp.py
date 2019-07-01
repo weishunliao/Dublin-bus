@@ -59,3 +59,15 @@ def timestamp_to_weekday_weekend(timestamp):
         return 1
     else:
         return 0 
+
+def timestamp_to_bank_holiday(timestamp, holiday_list):
+    """Takes a timestamp and list of timestamps as input and returns 1 if the timestamp is in the list."""
+    timestamp = pd.to_datetime(timestamp)
+
+    for i in range(len(holiday_list)):
+        holiday_list[i] = pd.to_datetime(holiday_list[i])
+
+    if timestamp in holiday_list:
+        return 1
+    else:
+        return 0
