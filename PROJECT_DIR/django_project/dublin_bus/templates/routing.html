@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Routing test</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 0;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="col-md-6" style="margin-top: 10px">
+    <div class="input-group" style="height: 100%">
+        <input type="text" aria-label="start" class="form-control" id="route_start" placeholder="From...">
+        <input type="text" aria-label="destination" class="form-control" id="route_end"
+               placeholder="Destination">
+        <div id="route_btn" class="input-group-prepend">
+            <button id="route_btn" type="button" class="btn btn-success" onclick="routing()">
+                Go
+            </button>
+        </div>
+    </div>
+</div>
+<div>
+    <ul id="routes">
+        <li>Route         Stops</li>
+    </ul>
+</div>
+<div id="map" style="margin-top: 20px"></div>
+<script>
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+    function initMap() {
+        let map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 53.3471, lng: -6.26059},
+            zoom: 13
+        });
+        let defaultBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(53.281561, -6.364376),
+            new google.maps.LatLng(53.400044, -6.215727));
+
+        let input1 = document.getElementById('route_start');
+        let input2 = document.getElementById('route_end');
+        let options = {
+            bounds: defaultBounds,
+            types: ['establishment']
+        };
+        let autocomplete1 = new google.maps.places.Autocomplete(input1, options);
+        let autocomplete2 = new google.maps.places.Autocomplete(input2, options);
+
+    }
+
+    let direction_points = {};
+
+    function routing() {
+        let end = document.getElementById('route_end').value;
+        let start = document.getElementById('route_start').value;
+        direction_points = {};
+        let x_promise = get_location(start, 'start');
+        let y_promise = get_location(end, 'end');
+        Promise.all([x_promise, y_promise]).then(display_direction)
+    }
+
+    let possible_route;
+
+    function display_direction() {
+        console.log(direction_points);
+        $.post("/routing", direction_points, function (data, status) {
+            possible_route = data;
+            $("#route_list").remove();
+            for (const [key, value] of Object.entries(data)) {
+                $('#routes').append('<li id="route_list">' + key + " - From: " + value[0] + " to " + value[1] + '</li>');
+            }
+        });
+    }
+
+    function get_location(address, point) {
+        return new Promise(function (resolve) {
+            $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyDWzLgQQDEJhMSc0ZUEr876LyzAlLN-S3k", function (data, status) {
+                let lat = (data.results)[0].geometry.location.lat;
+                let lng = (data.results)[0].geometry.location.lng;
+                direction_points[point] = [lat, lng];
+                resolve();
+            });
+        });
+    }
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWzLgQQDEJhMSc0ZUEr876LyzAlLN-S3k&libraries=places&callback=initMap"
+        async defer></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
