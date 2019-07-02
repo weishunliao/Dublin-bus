@@ -21,3 +21,4 @@ PROJECT_DIR/.idea/
 PROJECT_DIR/django_project/.DS_Store
 PROJECT_DIR/django_project/.idea/
 
+__pycache__
