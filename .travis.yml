@@ -1,9 +1,12 @@
 dist: xenial   # required for Python >= 3.7
 sudo: required
-language: python
+language: 
+    - python
+    - node_js
 python:
     - "3.7"
-
+node_js:
+    - '8'
 services:
   - docker
   - mysql
@@ -11,9 +14,11 @@ services:
 env:
   - DJANGO=2.2 DB=mysql
 
+
 before_install:
   - sudo apt-get update
   - sudo apt-get install sshpass
+  - npm update
 install:
   - pip install -r ./PROJECT_DIR/requirements.txt
 
@@ -21,9 +26,15 @@ before_script:
   - echo DATABASE_PASSWORD = $SERVER_PASSWORD"\n"SECRET_KEY = $SECRET_KEY > ./PROJECT_DIR/django_project/.env
   - mysql -e 'CREATE DATABASE unit_test;'
   - cd ./PROJECT_DIR/django_project/
+  - npm install
 
 script:
   - python manage.py test
+  - npm test
+
+after_script:
+  - cd ./django_project/
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 after_success:
   - cd ..
