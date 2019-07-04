@@ -84,7 +84,7 @@ def routing(request):
             for k in route_list:
                 if k.contain(s1) and k.contain(s2) and (k.stops.index(s1) < k.stops.index(s2)):
                     if (k.route_id + "_" + k.direction) not in potential_route:
-                        potential_route[k.route_id + "_" + k.direction] = (s1, s2)
+                        potential_route[k.route_id + "_" + k.direction] = [s1, s2]
 
     # print(potential_route)
 
@@ -98,8 +98,9 @@ def routing(request):
             time_table_cache[stop_id] = bus_on_service
 
         s = i[:i.index('_')]
-        if s in time_table_cache[stop_id]:
+        if s in time_table_cache[stop_id].keys():
             potential_route_clean[i] = potential_route[i]
+            potential_route_clean[i].append(time_table_cache[stop_id][s])
 
     print(potential_route_clean)
     return JsonResponse(potential_route_clean)
@@ -139,9 +140,15 @@ def get_real_time(stop_id):
 
 
 def get_stop_id(table):
-    bus_on_service = set()
+    bus_on_service = {}
     for i in table:
-        bus_on_service.add(i[0])
+        arrival_time = i[2].split(':')
+        if i[2] == 'Due':
+            bus_on_service[i[0]] = "Due"
+        elif i[0] in bus_on_service and bus_on_service[i[0]] != "Due" and bus_on_service[i[0]] > arrival_time:
+            bus_on_service[i[0]] = arrival_time
+        else:
+            bus_on_service[i[0]] = arrival_time
     return bus_on_service
 
 

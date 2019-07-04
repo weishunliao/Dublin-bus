@@ -24,6 +24,10 @@
             padding: 0;
         }
 
+        table {
+            width: 100%;
+        }
+
     </style>
 </head>
 <body>
@@ -40,9 +44,14 @@
     </div>
 </div>
 <div>
-    <ul id="routes">
-        <li>Route         Stops</li>
-    </ul>
+    <table id="routes">
+        <tr>
+            <th>Route</th>
+            <th>Direction</th>
+            <th>Stop</th>
+            <th>Time</th>
+        </tr>
+    </table>
 </div>
 <div id="map" style="margin-top: 20px"></div>
 <script>
@@ -89,7 +98,16 @@
             possible_route = data;
             $("#route_list").remove();
             for (const [key, value] of Object.entries(data)) {
-                $('#routes').append('<li id="route_list">' + key + " - From: " + value[0] + " to " + value[1] + '</li>');
+                let arrival_time = value[2];
+                console.log(arrival_time[0]);
+                let route = key.split('_')[0];
+                let direction = key.split('_')[1];
+                if (direction === 'in') {
+                    direction = 'Inbound';
+                } else {
+                    direction = 'Outbound';
+                }
+                $('#routes').append('<tr><td>' + route + '</td><td>' + direction + '</td><td>' + value[0] + '</td><td>' + arrival_time + '</td></tr>');
             }
         });
     }
