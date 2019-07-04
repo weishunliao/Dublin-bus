@@ -158,3 +158,5 @@ WEBPACK_LOADER = {
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
+
+MODEL_ROOT = os.path.join(STATIC_ROOT, 'models')
