@@ -159,4 +159,4 @@ WEBPACK_LOADER = {
     }
 }
 
-MODEL_ROOT = os.path.join(STATIC_ROOT, 'models')
+ML_MODEL_ROOT = os.path.join(BASE_DIR, 'dublin_bus/ml_models')

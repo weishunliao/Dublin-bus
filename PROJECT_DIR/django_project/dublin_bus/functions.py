@@ -8,7 +8,7 @@ def load_model(route):
         model_name = '15A_model.sav'
     else:
         raise Exception(route + " is not a valid bus route!")
-    path = os.path.join(settings.MODEL_ROOT, model_name)
+    path = os.path.join(settings.ML_MODEL_ROOT, model_name)
     with open(path, 'rb') as file:
         model = pickle.load(file)
     return model
