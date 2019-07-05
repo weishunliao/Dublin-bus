@@ -31,9 +31,11 @@ before_script:
 script:
   - python manage.py test
   - npm test
+  - cd ../../data_analytics
+  - python tests.py
 
 after_script:
-  - cd ./django_project/
+  - cd ../PROJECT_DIR/django_project/django_project/
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 after_success:
