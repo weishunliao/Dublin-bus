@@ -1,5 +1,6 @@
 import os
 import pickle
+import requests
 from django.conf import settings
 
 def load_model(route):
@@ -95,3 +96,27 @@ def route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, w
     # calculate the time for the full trip
     full_trip = predictions[len(predictions)-1] - predictions[0]
     return int(full_trip)
+
+def openweather_forecast():
+    """This function calls the Openweather API to get a weather forecast. 
+    
+    Data is returned as a JSON object."""
+
+    #call the API using the ID for Dublin City: 7778677 
+    api_endpoint = "http://api.openweathermap.org/data/2.5/forecast?id=7778677&units=metric&APPID=" \
+        + settings.OPENWEATHER_KEY
+
+    try:
+        # retrieve weather forecast from the OpenWeather API and convert to JSON object
+        r = requests.get(url=api_endpoint)
+        data = r.json()
+        return data
+    except:
+        raise Exception("There was an issue retrieving data from the OpenWeather API.")
+
+
+def parse_weather_forecast(timestamp, data):
+    """Takes a timestamp and JSON object as input. Returns temp, rainfall, humidity and pressure.
+
+    If there is no weather data for the timestamp entered, then an exception is raised."""
+
