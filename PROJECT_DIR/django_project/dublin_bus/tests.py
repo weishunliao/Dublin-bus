@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from datetime import datetime
 from dublin_bus import functions
 
 
@@ -111,3 +112,20 @@ class TestRoutePrediction15A(TestCase):
         bank_holiday = 0
         self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
              weekday, bank_holiday, rain, temp, rhum, msl), 2646)
+
+
+class TesParseWeatherForecast(TestCase):
+    """Test cases for the parse_weather_forecast function."""
+
+    def test_parse_weather_forecast_found(self):
+        """Function to test the parse_weather_forecast function when forecast is found for the timestamp."""
+        weather_data = {"cod": "200","message": 0.0066,"cnt": 40,"list": [{"dt": 1562338800,"main": {"temp": 18.82,"temp_min": 18.26,"temp_max": 18.82,"pressure": 1019.31,"sea_level": 1019.31,"grnd_level": 1009.87,"humidity": 81,"temp_kf": 0.56},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.94,"deg": 271.353},"rain": {"3h": 0.125},"sys": {"pod": "d"},"dt_txt": "2019-07-05 15:00:00"}, {"dt": 1562349600,"main": {"temp": 18.11,"temp_min": 17.69,"temp_max": 18.11,"pressure": 1017.62,"sea_level": 1017.62,"grnd_level": 1008.18,"humidity": 86,"temp_kf": 0.42},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.59,"deg": 274.17},"rain": {"3h": 0.063},"sys": {"pod": "d"},"dt_txt": "2019-07-05 18:00:00"}],"city": {"id": 7778677,"name": "Dublin City","coord": {"lat": 53.3551,"lon": -6.2493},"country": "IE","timezone": 3600}}
+        timestamp = datetime.strptime('Jul 5 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125,18.82,81,1019.31))
+
+    def test_parse_weather_forecast_not_found(self):
+        """Test that parse_weather_forecast raises an exception when weather info not found for the timestamp."""
+        weather_data = {"cod": "200","message": 0.0066,"cnt": 40,"list": [{"dt": 1562338800,"main": {"temp": 18.82,"temp_min": 18.26,"temp_max": 18.82,"pressure": 1019.31,"sea_level": 1019.31,"grnd_level": 1009.87,"humidity": 81,"temp_kf": 0.56},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.94,"deg": 271.353},"rain": {"3h": 0.125},"sys": {"pod": "d"},"dt_txt": "2019-07-05 15:00:00"}, {"dt": 1562349600,"main": {"temp": 18.11,"temp_min": 17.69,"temp_max": 18.11,"pressure": 1017.62,"sea_level": 1017.62,"grnd_level": 1008.18,"humidity": 86,"temp_kf": 0.42},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.59,"deg": 274.17},"rain": {"3h": 0.063},"sys": {"pod": "d"},"dt_txt": "2019-07-05 18:00:00"}],"city": {"id": 7778677,"name": "Dublin City","coord": {"lat": 53.3551,"lon": -6.2493},"country": "IE","timezone": 3600}}
+        timestamp = datetime.strptime('Jul 4 2019  2:30PM', '%b %d %Y %I:%M%p')
+        with self.assertRaises(Exception):
+            functions.parse_weather_forecast(timestamp, weather_data)

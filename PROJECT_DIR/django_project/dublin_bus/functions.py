@@ -1,5 +1,6 @@
 import os
 import pickle
+import datetime
 import requests
 from django.conf import settings
 
@@ -115,8 +116,36 @@ def openweather_forecast():
         raise Exception("There was an issue retrieving data from the OpenWeather API.")
 
 
-def parse_weather_forecast(timestamp, data):
+def parse_weather_forecast(journey_timestamp, weather_data):
     """Takes a timestamp and JSON object as input. Returns temp, rainfall, humidity and pressure.
 
     If there is no weather data for the timestamp entered, then an exception is raised."""
 
+     # intialise variable to check whether weather data for the timestamp has been found in the JSON file
+    found = False
+    # loop through the weather data to find the closest time/date to the prediction time/date
+    for item in weather_data["list"]:
+        # for each item, get the date and convert
+        dt = item.get("dt")
+        timestamp = datetime.datetime.utcfromtimestamp(dt)
+        # get the time difference between the input and the date in the file
+        time_diff = timestamp - journey_timestamp
+        time_diff_hours = time_diff.total_seconds()/3600    # get time_diff in hours
+        # if the time difference is less than 3, then use this list item for the weather forecast
+        if (0 <= time_diff_hours <= 3):
+            found = True
+            # extract the relevant weather data from the JSON
+            temp = item.get("main").get("temp")
+            rhum = item.get("main").get("humidity")
+            msl = item.get("main").get("pressure")
+            if "rain" in item and "3h" in item["rain"]:
+                    rain = item.get("rain").get("3h")
+            else:
+                rain = 0
+            # once weather is found, break out of the loop
+            break
+    # if weather info was found, return it. Otherwise, raise an exceptions
+    if (found):
+        return rain, temp, rhum, msl
+    else:
+        raise Exception("Weather forecast not available for the specified timestamp.")
