@@ -23,7 +23,7 @@ install:
   - pip install -r ./PROJECT_DIR/requirements.txt
 
 before_script:
-  - echo DATABASE_PASSWORD = $SERVER_PASSWORD"\n"SECRET_KEY = $SECRET_KEY > ./PROJECT_DIR/django_project/.env
+  - echo DATABASE_PASSWORD = $SERVER_PASSWORD"\n"SECRET_KEY = $SECRET_KEY"\n"OPENWEATHER_KEY = $OPENWEATHER_KEY > ./PROJECT_DIR/django_project/.env
   - mysql -e 'CREATE DATABASE unit_test;'
   - cd ./PROJECT_DIR/django_project/
   - npm install
