@@ -15,7 +15,7 @@ class TestLoadModel(TestCase):
     def test_load_model_success(self):
         """Test to ensure that a model is loaded correctly."""
         try:
-            model = functions.load_model("15A")
+            functions.load_model("15A")
         except Exception as e:
             self.fail("load_model() raised an exception unexpectedly!\n Error is:" + e)
 
