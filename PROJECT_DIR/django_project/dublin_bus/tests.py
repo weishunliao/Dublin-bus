@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from dublin_bus import functions
 
 
 class ViewTest(TestCase):
@@ -6,3 +7,107 @@ class ViewTest(TestCase):
         client = Client()
         resp = client.get('/test').content
         self.assertEqual(resp, b"<h3>Hi, we're team 8.</h3>")
+
+
+class TestLoadModel(TestCase):
+    """Test cases for the load_model function."""
+    
+    def test_load_model_success(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            functions.load_model("15A")
+        except Exception as e:
+            self.fail("load_model() raised an exception unexpectedly!\n Error is:" + e)
+
+    def test_load_model_invalid_route(self):
+        """Test to ensure that an error is raised if an invalid route is entered."""
+        with self.assertRaises(Exception):
+            functions.load_model("15K")
+
+
+class TestCreateStopFeatureRef(TestCase):
+    """Test cases for the create_stop_feature_ref function."""
+
+    def test_create_stop_feature_ref(self):
+        """Test for the ouput of the create_stop_feature_ref function."""
+        stop_list = [11,234,1108]
+        stop_feature_ref = {
+            11: [1,0,0],
+            234: [0,1,0],
+            1108: [0,0,1]
+        }
+        self.assertEqual(functions.create_stop_feature_ref(stop_list), stop_feature_ref)
+
+
+class TestCreateDayOfWeekFeatureRef(TestCase):
+    """Test cases for the create_day_of_week_feature_ref function."""
+
+    def test_create_day_of_week_feature_ref(self):
+        """Test for the ouput of the create_day_of_week_feature_ref function."""
+        day_of_week_ref = {
+            0: [1, 0, 0, 0, 0, 0, 0],
+            1: [0, 1, 0, 0, 0, 0, 0],
+            2: [0, 0, 1, 0, 0, 0, 0],
+            3: [0, 0, 0, 1, 0, 0, 0],
+            4: [0, 0, 0, 0, 1, 0, 0],
+            5: [0, 0, 0, 0, 0, 1, 0],
+            6: [0, 0, 0, 0, 0, 0, 1]
+        }
+        self.assertEqual(functions.create_day_of_week_feature_ref(), day_of_week_ref)
+
+class TestCreateMonthFeatureRef(TestCase):
+    """Test cases for the create_month_feature_ref function."""
+
+    def test_create_month_feature_ref(self):
+        """Test for the ouput of the create_month_feature_ref function."""
+        month_ref = {
+            1: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+            6: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+            7: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            8: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            9: [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+            10: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+            11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            12: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+        }
+        self.assertEqual(functions.create_month_feature_ref(), month_ref)
+
+class TestRoutePrediction15A(TestCase):
+    """Test cases for the route_prediction_15A function."""
+
+    def test_route_prediction_15A_limekiln(self):
+        """Test for the ouput of the route_prediction_15A function going in the Limekiln direction."""
+        stops = [395,396,397,398,399,400,7581,1283,7579,1285,1016,1017,1018,1019,1020,1076,1077,1078,1079,1080,\
+            1081,1082,1083,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1101,1102,1103,1104]
+        rain = 0.1
+        temp = 15
+        rhum = 75
+        msl = 1000
+        actualtime_arr_stop_first = 32400 # 9:00
+        day_of_week = 4 # monday
+        month = 7 # july
+        weekday = 1
+        bank_holiday = 0
+        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
+             weekday, bank_holiday, rain, temp, rhum, msl), 2573)
+
+
+    def test_route_prediction_15A_ringsend(self):
+        """Test for the ouput of the route_prediction_15A function going in the Ringsend direction."""
+        stops = [1105,1107,1108,1109,1110,1111,1112,1113,1114,1115,2437,1117,1118,1119,1120,1164,1165,1166,1167,\
+            1168,1169,1170,1069,1070,1071,4528,1072,7577,1353,1354,7578,7582,340,350,351,352,353,354]
+        rain = 0.1
+        temp = 15
+        rhum = 75
+        msl = 1000
+        actualtime_arr_stop_first = 32400 # 9:00
+        day_of_week = 4 # monday
+        month = 7 # july
+        weekday = 1
+        bank_holiday = 0
+        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
+             weekday, bank_holiday, rain, temp, rhum, msl), 2646)

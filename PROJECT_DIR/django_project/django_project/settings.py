@@ -159,3 +159,5 @@ WEBPACK_LOADER = {
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
+
+ML_MODEL_ROOT = os.path.join(BASE_DIR, 'dublin_bus/ml_models')
