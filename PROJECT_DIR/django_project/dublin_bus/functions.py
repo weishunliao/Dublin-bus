@@ -1,5 +1,7 @@
 import os
 import pickle
+import datetime
+import requests
 from django.conf import settings
 
 def load_model(route):
@@ -82,8 +84,8 @@ def route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, w
     predictions = []
     # loop through each set of stops in the list
     for i in range(len(stops)-1):
-        stop_first = stops[i]
-        stop_next = stops[i+1]
+        stop_first = int(stops[i])
+        stop_next = int(stops[i+1])
         # specify the input for the prediction
         input = [[actualtime_arr_stop_first, rain, temp, rhum, msl,weekday,bank_holiday] + first_stop_ref[stop_first] + \
         second_stop_ref[stop_next] + month + day_of_week]
@@ -95,3 +97,129 @@ def route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, w
     # calculate the time for the full trip
     full_trip = predictions[len(predictions)-1] - predictions[0]
     return int(full_trip)
+
+def openweather_forecast():
+    """This function calls the Openweather API to get a weather forecast. 
+    
+    Data is returned as a JSON object."""
+
+    #call the API using the ID for Dublin City: 7778677 
+    api_endpoint = "http://api.openweathermap.org/data/2.5/forecast?id=7778677&units=metric&APPID=" \
+        + settings.OPENWEATHER_KEY
+
+    try:
+        # retrieve weather forecast from the OpenWeather API and convert to JSON object
+        r = requests.get(url=api_endpoint)
+        data = r.json()
+        return data
+    except:
+        raise Exception("There was an issue retrieving data from the OpenWeather API.")
+
+
+def parse_weather_forecast(journey_timestamp, weather_data):
+    """Takes a timestamp and JSON object as input. Returns temp, rainfall, humidity and pressure.
+
+    If there is no weather data for the timestamp entered, then an exception is raised."""
+
+     # intialise variable to check whether weather data for the timestamp has been found in the JSON file
+    found = False
+    # loop through the weather data to find the closest time/date to the prediction time/date
+    for item in weather_data["list"]:
+        # for each item, get the date and convert
+        dt = item.get("dt")
+        timestamp = datetime.datetime.utcfromtimestamp(dt)
+        # get the time difference between the input and the date in the file
+        time_diff = timestamp - journey_timestamp
+        time_diff_hours = time_diff.total_seconds()/3600    # get time_diff in hours
+        # if the time difference is less than 3, then use this list item for the weather forecast
+        if (0 <= time_diff_hours <= 3):
+            found = True
+            # extract the relevant weather data from the JSON
+            temp = item.get("main").get("temp")
+            rhum = item.get("main").get("humidity")
+            msl = item.get("main").get("pressure")
+            if "rain" in item and "3h" in item["rain"]:
+                    rain = item.get("rain").get("3h")
+            else:
+                rain = 0
+            # once weather is found, break out of the loop
+            break
+    # if weather info was found, return it. Otherwise, raise an exceptions
+    if (found):
+        return rain, temp, rhum, msl
+    else:
+        raise Exception("Weather forecast not available for the specified timestamp.")
+
+
+def convert_to_seconds(hour, minute):
+    """Converts the inputted hour and minute values to seconds.
+    
+    If the hour is less than 4, then it should be treated as part of the last day."""
+
+    if hour > 4:
+        seconds = hour*60*60 + minute*60
+    else:
+        seconds = 86400 + hour*60*60 + minute*60
+    return seconds
+
+
+def is_weekday(day_of_week):
+    """Returns 1 if the day of week is mon-fri (0-4), returns 0 otherwise."""
+    
+    if day_of_week in [0,1,2,3,4]:
+        return 1
+    return 0
+
+
+def is_bank_holiday(day, month):
+    """Returns 1 if the day and month entered is a bank holiday, returns 0 otherwise.
+    
+    List of bank holidays will need to be updated periodically. Currently has remaining bank
+    holidays in 2019 only."""
+
+    bank_holidays = [(5,8), (28,10), (25,12), (26,12)]
+    if (day, month) in bank_holidays:
+        return 1
+    return 0
+
+
+def parse_timestamp(timestamp):
+    """Function that takes a datetime object as input and returns time in seconds, 
+    the day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
+
+    time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
+    day_of_week = timestamp.weekday()
+    day = timestamp.day
+    month = timestamp.month
+    weekday = is_weekday(day_of_week)
+    bank_holiday = is_bank_holiday(day, month)
+
+    return time_in_seconds, day_of_week, month, weekday, bank_holiday
+
+
+def format_stop_list(stops):
+    """Takes a list of stops as input, takes the last 4 characters and converts to int for each stop in 
+    the list."""
+    formatted_stops = []
+    for stop in stops:
+        formatted = int(stop[0][-4:])
+        formatted_stops.append(formatted)
+    return formatted_stops
+
+def predict_journey_time(stops, timestamp):
+    """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
+        time in minutes."""
+
+    # convert stops to the correct format
+    stops = format_stop_list(stops)
+    # convert and parse the timestamp
+    timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
+    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday = parse_timestamp(timestamp)
+    # call the OpenWeather API and parse the response
+    weather_data = openweather_forecast()
+    rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
+    # make a prediction based on the input and return it
+    prediction = route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+        weekday, bank_holiday, rain, temp, rhum, msl)
+    # return the prediction
+    return prediction

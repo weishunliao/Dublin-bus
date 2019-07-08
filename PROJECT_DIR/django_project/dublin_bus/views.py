@@ -3,7 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.http import HttpResponse, JsonResponse
 from .models import Stop
-from geopy import distance
+from dublin_bus import functions
+#from geopy import distance
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -37,7 +38,7 @@ def test_routing(request):
 
 
 @csrf_exempt
-def get_stop_list(request):
+def get_travel_time(request):
     route_id = request.POST['route_id']
     start_point = request.POST['start_point']
     end_point = request.POST['end_point']
@@ -76,4 +77,11 @@ def get_stop_list(request):
             if i[0] == start_point_id:
                 index = int(i[1] - 1)
         stop_list = all_stops[index:index + num + 1]
-    return JsonResponse({"list": stop_list, "route_id": route_id})
+    
+    # if the route_id is 15a, get a prediction from the machine learning model
+    if route_id == '15a':
+        journey_time = functions.predict_journey_time(stop_list, departure_time_value)
+    else:
+        journey_time = 0
+
+    return JsonResponse({"journey_time": journey_time})

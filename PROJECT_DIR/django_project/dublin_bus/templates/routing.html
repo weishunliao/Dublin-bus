@@ -108,9 +108,11 @@
                         let departure_time_value = response.routes[i].legs[0].steps[1].transit.departure_time.value.getTime() / 1000 + 3600;
                         let num_stops = response.routes[1].legs[0].steps[1].transit.num_stops;
                         let button = '<button type="button" class="btn btn-secondary" onclick="change_route(' + i + ')">Show</button>';
+                        let walk_to_stop = resp.routes[0].legs[0].steps[0].duration.value;
+                        let walk_to_destination = resp.routes[0].legs[0].steps[2].duration.value;
 
                         $.ajax({
-                            url: "stop_list",
+                            url: "get_travel_time",
                             type: 'POST',
                             data: {
                                 "route_id": route_id,
@@ -121,9 +123,12 @@
                             },
                             success: function (resp) {
                                 console.log(resp);
-                                $("#routes").append("<tr>" + "<td>" + route_id + "</td>" + "<td>" + head_sign + "</td>" +
-                                    "<td>" + departure_stop + "</td>" + "<td>" + departure_time + "</td>" + "<td>" + '0 min' +
-                                    "</td>" + "<td>" + button + "</td>" + "</tr>");
+                                if (route_id == "15a") {
+                                    let full_journey = Math.round((walk_to_stop + resp.journey_time + walk_to_destination)/60);
+                                    $("#routes").append("<tr>" + "<td>" + route_id + "</td>" + "<td>" + head_sign + "</td>" +
+                                        "<td>" + departure_stop + "</td>" + "<td>" + departure_time + "</td>" + "<td>" + 
+                                            full_journey + " min(s)" + "</td>" + "<td>" + button + "</td>" + "</tr>");
+                                }
                             },
                         });
 

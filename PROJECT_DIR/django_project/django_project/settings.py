@@ -24,6 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # key is stored in the .env file
 SECRET_KEY = config('SECRET_KEY')
 MAP_KEY = config('GOOGLE_MAP_KEY')
+# key for the Openweather API: stored in the .env file
+OPENWEATHER_KEY = config('OPENWEATHER_KEY')
 PUBLIC_DIR = os.path.join(BASE_DIR, '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -160,4 +162,5 @@ WEBPACK_LOADER = {
     }
 }
 
+# directory where machine learning models are stored
 ML_MODEL_ROOT = os.path.join(BASE_DIR, 'dublin_bus/ml_models')

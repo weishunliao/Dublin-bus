@@ -22,5 +22,5 @@ urlpatterns = [
     path('', HomeView.as_view()),
     path('test', views.test_view),
     path('map', views.test_routing),
-    path('stop_list', views.get_stop_list),
+    path('get_travel_time', views.get_travel_time),
 ]
