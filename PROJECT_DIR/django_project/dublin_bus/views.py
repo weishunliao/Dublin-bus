@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.views import View
 from .models import Stop
+
+from .forms import JourneyPlannerForm
+
 from dublin_bus import functions
 #from geopy import distance
 import json
@@ -18,6 +22,26 @@ from django_project.settings import MAP_KEY
 # Create your views here.
 class HomeView(TemplateView):
     template_name = "home.html"
+
+    def get(self, request):
+        form = JourneyPlannerForm()
+        return render(request, self.template_name, {'icon': "clear-day", 'form': form })
+
+
+    def post(self, request):
+        if request.method == "POST":
+            form = JourneyPlannerForm(request.POST)
+            if form.is_valid():
+                start = form.cleaned_data['start']
+                end = form.cleaned_data['end']
+                time = form.cleaned_data['time']
+                print(form.cleaned_data)
+            
+            return HttpResponseRedirect('')
+                  
+
+
+
 
 
 def test_view(request):
