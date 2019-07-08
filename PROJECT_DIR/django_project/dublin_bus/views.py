@@ -11,6 +11,7 @@ import os
 from django_project.settings import BASE_DIR
 from django.db import connection
 from datetime import datetime
+from django_project.settings import MAP_KEY
 
 
 # Create your views here.
@@ -32,7 +33,7 @@ def test_db(request):
 
 
 def test_routing(request):
-    return render(request, 'routing.html')
+    return render(request, 'routing.html', {'map_key': MAP_KEY})
 
 
 @csrf_exempt
