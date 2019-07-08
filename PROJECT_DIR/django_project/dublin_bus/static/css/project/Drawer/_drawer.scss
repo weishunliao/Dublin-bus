@@ -36,24 +36,22 @@
       &__form {
           
           position: absolute;
-          top: 20%;
+          top: 15rem;
           left: 50%;
           transform: translateX(-50%);
-          width: 90%;
+          width: 80%;
+          height: 50%;
           text-align: center;
 
-        //   & input {
-        //       display: inline-block;
-        //       width: 80%;
-        //       margin-top: 2rem;
-        //       padding: 2rem;
-        //       border-radius: 1rem;
-        //       border: .5px solid grey;
-        //   }
-
-          & button {
-
+          & ion-input, ion-item, ion-datetime {
+            --padding-start: 0;
           }
+
+          & ion-button {
+              margin-top: 2rem;
+          }
+
+        
       }
   }
 

@@ -19,7 +19,6 @@ function initMap() {
 // const script = document.createElement('script')
 // script.async = true
 // script.defer = true
-// script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDLPk6ReuCReOqGbnOM4s_dpoIMMBB9r0I&callback=initMap"
 // document.head.appendChild(script)
 
 
