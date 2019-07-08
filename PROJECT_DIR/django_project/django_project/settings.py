@@ -23,10 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 # key is stored in the .env file
 SECRET_KEY = config('SECRET_KEY')
-
+MAP_KEY = config('GOOGLE_MAP_KEY')
 # key for the Openweather API: stored in the .env file
 OPENWEATHER_KEY = config('OPENWEATHER_KEY')
-
 PUBLIC_DIR = os.path.join(BASE_DIR, '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,7 +79,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
 
 DATABASES = {
     'default': {
@@ -89,9 +88,10 @@ DATABASES = {
         # 137.43.49.50 is for development.
 
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dublinbus',  # database name
+        'NAME': 'db_raw_data',  # database name
         'USER': 'team8',
         'PASSWORD': config('DATABASE_PASSWORD'),
+        # 'HOST': '127.0.0.1',
         'HOST': 'localhost',
         # 'HOST': '137.43.49.50',
         'PORT': '3306',
