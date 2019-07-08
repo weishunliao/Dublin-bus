@@ -11,3 +11,6 @@ PROJECT_DIR/django_project/webpack-stats.json
 
 rt*
 hly*
+
+__pycache__
+.env
