@@ -129,3 +129,72 @@ class TesParseWeatherForecast(TestCase):
         timestamp = datetime.strptime('Jul 4 2019  2:30PM', '%b %d %Y %I:%M%p')
         with self.assertRaises(Exception):
             functions.parse_weather_forecast(timestamp, weather_data)
+
+
+class TestConvertToSeconds(TestCase):
+    """Test cases for the convert_to_seconds function."""
+
+    def test_convert_to_seconds_before_midnight(self):
+        """Test that correct value is returned for a timestamp between 4:00 am and midnight."""
+        self.assertEqual(functions.convert_to_seconds(9, 30), 34200)
+
+    def test_convert_to_seconds_after_midnight(self):
+        """Test that correct value is returned for a timestamp after midnight (but before 4am)."""
+        self.assertEqual(functions.convert_to_seconds(00, 20), 87600)
+
+    def test_convert_to_seconds_after_one_am(self):
+        """Test that correct value is returned for a timestamp after 1am (but before 4am)."""
+        self.assertEqual(functions.convert_to_seconds(1, 20), 91200)
+
+
+class TestIsWeekday(TestCase):
+    """Test cases for the is_weekday function."""
+
+    def test_is_weekday_mon(self):
+        """Test that the value 1 is returned for Monday"""
+        self.assertEqual(functions.is_weekday(0), 1)
+
+    def test_is_weekday_tue(self):
+        """Test that the value 1 is returned for Tuesday"""
+        self.assertEqual(functions.is_weekday(1), 1)
+        
+    def test_is_weekday_wed(self):
+        """Test that the value 1 is returned for Wednesday"""
+        self.assertEqual(functions.is_weekday(2), 1)
+
+    def test_is_weekday_thu(self):
+        """Test that the value 1 is returned for Thursday"""
+        self.assertEqual(functions.is_weekday(3), 1)
+
+    def test_is_weekday_fri(self):
+        """Test that the value 1 is returned for Friday"""
+        self.assertEqual(functions.is_weekday(4), 1)
+
+    def test_is_weekday_sat(self):
+        """Test that the value 0 is returned for Saturday"""
+        self.assertEqual(functions.is_weekday(5), 0)
+
+    def test_is_weekday_sun(self):
+        """Test that the value 0 is returned for Sunday"""
+        self.assertEqual(functions.is_weekday(6), 0)
+
+
+class TestIsBankHoliday(TestCase):
+    """Test cases for the is_bank_holiday function."""
+
+    def test_is_bank_holiday(self):
+        """Test that the value 1 is returned for a bank holiday"""
+        self.assertEqual(functions.is_bank_holiday(5,8), 1)
+
+    def test_not_bank_holiday(self):
+        """Test that the value 0 is returned for a normal day"""
+        self.assertEqual(functions.is_bank_holiday(4,8), 0)
+
+
+class TestParseTimestamp(TestCase):
+    """Test cases for the parse_timestamp function."""
+
+    def test_parse_timestamp(self):
+        """Test that the correct values are returned for a given timestamp."""
+        timestamp = datetime.utcfromtimestamp(1562581800)
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 0, 7, 1, 0))

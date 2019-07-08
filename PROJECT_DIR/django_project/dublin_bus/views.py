@@ -29,24 +29,33 @@ def test_db(request):
 class predict(APIView):
     """View for returning predictions for journey time."""
 
-    def get(self, request):
+    def post(self, request):
         """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
         time in seconds."""
-
         # get stops and timestamp from the request
-
+        stops = str(request.POST.get('stops', None))
+        stops = stops.split(",")
+        timestamp = int(request.POST.get('timestamp', None))
+        # return a response if stops or timestamp is not in the request
+        if stops is None or timestamp is None:
+            return Response('Invalid request: stops and timestamp must be entered.')
+        # try to convert the timestamp and return a response if cannot
+        try:
+            timestamp = datetime.utcfromtimestamp(timestamp)
+            actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday = functions.parse_timestamp(timestamp)
+        except:
+            return Response('Invalid timestamp: must be in unix format.')
         # call the OpenWeather API and parse the response
-        timestamp = datetime.strptime('Jul 5 2019  4:30PM', '%b %d %Y %I:%M%p')
-        weather_data = functions.openweather_forecast()
-        rain, temp, rhum, msl = functions.parse_weather_forecast(timestamp, weather_data)
-
-        
-        # do some stuff here to split the timestamp out
-
+        try:
+            weather_data = functions.openweather_forecast()
+            rain, temp, rhum, msl = functions.parse_weather_forecast(timestamp, weather_data)
+        except:
+            return Response('Error obtaining a weather forecast.')
         # make a prediction based on the input and return it
-        # prediction = functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, weekday, \
-        #     bank_holiday, rain, temp, rhum, msl)
-        prediction = 20000
-
+        try:
+            prediction = functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+                weekday, bank_holiday, rain, temp, rhum, msl)
+        except:
+            return Response('Error with prediction.')
         # return the prediction
         return Response(prediction)

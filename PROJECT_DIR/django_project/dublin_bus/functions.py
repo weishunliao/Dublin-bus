@@ -84,8 +84,8 @@ def route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, w
     predictions = []
     # loop through each set of stops in the list
     for i in range(len(stops)-1):
-        stop_first = stops[i]
-        stop_next = stops[i+1]
+        stop_first = int(stops[i])
+        stop_next = int(stops[i+1])
         # specify the input for the prediction
         input = [[actualtime_arr_stop_first, rain, temp, rhum, msl,weekday,bank_holiday] + first_stop_ref[stop_first] + \
         second_stop_ref[stop_next] + month + day_of_week]
@@ -149,3 +149,49 @@ def parse_weather_forecast(journey_timestamp, weather_data):
         return rain, temp, rhum, msl
     else:
         raise Exception("Weather forecast not available for the specified timestamp.")
+
+
+def convert_to_seconds(hour, minute):
+    """Converts the inputted hour and minute values to seconds.
+    
+    If the hour is less than 4, then it should be treated as part of the last day."""
+
+    if hour > 4:
+        seconds = hour*60*60 + minute*60
+    else:
+        seconds = 86400 + hour*60*60 + minute*60
+    return seconds
+
+
+def is_weekday(day_of_week):
+    """Returns 1 if the day of week is mon-fri (0-4), returns 0 otherwise."""
+    
+    if day_of_week in [0,1,2,3,4]:
+        return 1
+    return 0
+
+
+def is_bank_holiday(day, month):
+    """Returns 1 if the day and month entered is a bank holiday, returns 0 otherwise.
+    
+    List of bank holidays will need to be updated periodically. Currently has remaining bank
+    holidays in 2019 only."""
+
+    bank_holidays = [(5,8), (28,10), (25,12), (26,12)]
+    if (day, month) in bank_holidays:
+        return 1
+    return 0
+
+
+def parse_timestamp(timestamp):
+    """Function that takes a datetime object as input and returns time in seconds, 
+    the day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
+
+    time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
+    day_of_week = timestamp.weekday()
+    day = timestamp.day
+    month = timestamp.month
+    weekday = is_weekday(day_of_week)
+    bank_holiday = is_bank_holiday(day, month)
+
+    return time_in_seconds, day_of_week, month, weekday, bank_holiday
