@@ -36,11 +36,11 @@ Follow the steps below to load data into the tables:
 11. Remove the files that are no longer needed:
         > rm *prepared*
 12. Import the data using mysqlimport:
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtaa
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtab
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtac
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtad
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtae
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtaf
+        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txta
+        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtb
+        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtc
+        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtd
+        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txte
+        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtf
 13. Remove the files that are no longer needed:
         > rm rt_leavetimes*
