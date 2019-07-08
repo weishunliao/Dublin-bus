@@ -21,5 +21,6 @@ from dublin_bus import views
 urlpatterns = [
     path('', HomeView.as_view()),
     path('test', views.test_view),
-    path('stops', views.test_db)
+    path('map', views.test_routing),
+    path('stop_list', views.get_stop_list),
 ]

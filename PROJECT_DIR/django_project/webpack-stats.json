@@ -1,1 +1,5 @@
+<<<<<<< HEAD
+{"status":"done","chunks":{"main":[{"name":"styles.css","path":"/Users/chris/PycharmProjects/COMP47360/PROJECT_DIR/django_project/dist/styles.css"},{"name":"main.js","path":"/Users/chris/PycharmProjects/COMP47360/PROJECT_DIR/django_project/dist/main.js"}]}}
+=======
 {"status":"done","chunks":{"main":[{"name":"styles.css","path":"/mnt/c/WSL_git/COMP47360/PROJECT_DIR/django_project/dist/styles.css"},{"name":"main.js","path":"/mnt/c/WSL_git/COMP47360/PROJECT_DIR/django_project/dist/main.js"}]}}
+>>>>>>> 8de4332ed3321337e0fa2d2e1fea1c8556231d56
