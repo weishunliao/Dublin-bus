@@ -9,9 +9,9 @@ from .views import home, redirectSomewhere
 
 
 urlpatterns = [
-    url(r'^home/$', home, name='home'),
-    url(r'^redirect/$', redirectSomewhere, name='home'),
-    path('', HomeView.as_view())
-    # path("/journey_planner", FormSubmits.as_view())
+    path('', HomeView.as_view()),
+    path('test', views.test_view),
+    path('map', views.test_routing),
+    path('get_travel_time', views.get_travel_time),
 ]
 
