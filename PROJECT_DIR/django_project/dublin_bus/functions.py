@@ -195,3 +195,31 @@ def parse_timestamp(timestamp):
     bank_holiday = is_bank_holiday(day, month)
 
     return time_in_seconds, day_of_week, month, weekday, bank_holiday
+
+
+def format_stop_list(stops):
+    """Takes a list of stops as input, takes the last 4 characters and converts to int for each stop in 
+    the list."""
+    formatted_stops = []
+    for stop in stops:
+        formatted = int(stop[0][-4:])
+        formatted_stops.append(formatted)
+    return formatted_stops
+
+def predict_journey_time(stops, timestamp):
+    """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
+        time in minutes."""
+
+    # convert stops to the correct format
+    stops = format_stop_list(stops)
+    # convert and parse the timestamp
+    timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
+    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday = parse_timestamp(timestamp)
+    # call the OpenWeather API and parse the response
+    weather_data = openweather_forecast()
+    rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
+    # make a prediction based on the input and return it
+    prediction = route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+        weekday, bank_holiday, rain, temp, rhum, msl)
+    # return the prediction
+    return prediction

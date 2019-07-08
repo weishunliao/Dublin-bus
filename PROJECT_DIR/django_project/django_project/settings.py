@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'livereload',
     'webpack_loader',
     'dublin_bus',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [

@@ -198,3 +198,15 @@ class TestParseTimestamp(TestCase):
         """Test that the correct values are returned for a given timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
         self.assertEqual(functions.parse_timestamp(timestamp), (37800, 0, 7, 1, 0))
+
+
+class TestFormatStopList(TestCase):
+    """Test cases for the format_stop_list function."""
+
+    def test_format_stop_list(self):
+        """Test that a list is formatted correctly."""
+        stop_list = (('8220DB001170', 22), ('8220DB001069', 23), ('8220DB001070', 24), ('8220DB001071', 25), \
+            ('8220DB004528', 26), ('8220DB001072', 27), ('8220DB007577', 28), ('8220DB001353', 29), \
+                ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
+        self.assertEqual(functions.format_stop_list(stop_list), [1170, 1069, 1070, 1071, 4528, 1072, 7577, \
+            1353, 1354, 7578, 7582, 340])
