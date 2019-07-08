@@ -70,9 +70,9 @@ def get_stop_list(request):
         sql = "SELECT stop_id,stop_sequence FROM stop_times WHERE stop_times.trip_id = %s"
         cursor.execute(sql, [trip_id])
         all_stops = cursor.fetchall()
+        index = 0
         for i in all_stops:
             if i[0] == start_point_id:
-                start = int(i[1] - 1)
-        stop_list = all_stops[start:start + num + 1]
-
+                index = int(i[1] - 1)
+        stop_list = all_stops[index:index + num + 1]
     return JsonResponse({"list": stop_list, "route_id": route_id})
