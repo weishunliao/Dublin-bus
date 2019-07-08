@@ -32,10 +32,11 @@ if (window.PointerEvent || window.navigator.msPointerEnabled) {
 //  ^ REFACTORING TO USE ES6 CLASS SYNTAX
 
 class Swiper {
-  constructor(element, position, otherSwiper) {
+  constructor(element, position, otherSwiper, search) {
+    this.search = search;
     this.element = element;
     this.position = position;
-    this.otherSwiper = otherSwiper
+    this.otherSwiper = otherSwiper;
 
     this.IN_STATE = 1;
     this.OUT_STATE = 2;
@@ -59,6 +60,10 @@ class Swiper {
       this.outTransformVal = element.offsetHeight * 0.08;
       this.OTHER_ONE_inTransformVal = -(element.offsetHeight * 0.85);
       this.OTHER_ONE_outTransformVal = -(element.offsetHeight * 0.08);
+    }
+
+    if (this.position == "top"){
+        this.inputs = document.querySelectorAll(".drawer__jp__input");
     }
 
     this.startTransform = this.inTransformVal;
@@ -86,13 +91,13 @@ class Swiper {
   }
 
   handleGestureStart(evt) {
-    evt.preventDefault();
 
 
-    if (this.otherSwiper.currentState !== this.otherSwiper.IN_STATE){
-        this.otherSwiper.changeState(this.otherSwiper.IN_STATE)
+   
+
+    if (this.otherSwiper.currentState !== this.otherSwiper.IN_STATE) {
+      this.otherSwiper.changeState(this.otherSwiper.IN_STATE);
     }
-
 
     if (evt.touches && evt.touches.length > 1) {
       return;
@@ -103,6 +108,7 @@ class Swiper {
       evt.target.setPointerCapture(evt.pointerId);
     } else {
       // Add Mouse Listeners
+ 
       document.addEventListener("mousemove", this.handleGestureMove, true);
       document.addEventListener("mouseup", this.handleGestureEnd, true);
     }
@@ -202,17 +208,24 @@ class Swiper {
   }
 
   changeState(newState) {
-
-
-
+      
     let transformStyle;
     switch (newState) {
       case this.IN_STATE:
         this.startTransform = this.inTransformVal;
-
+        if (this.position === "top"){
+            this.inputs.forEach(input => {
+                input.style.opacity = 0;
+            })
+        }
         break;
       case this.OUT_STATE:
         this.startTransform = this.outTransformVal;
+        if (this.position === "top"){
+            this.inputs.forEach(input => {
+                input.style.opacity = 1;
+            })
+        }
         break;
     }
 
@@ -225,6 +238,12 @@ class Swiper {
     this.element.style.transform = this.transformStyle;
 
     this.currentState = newState;
+
+    if (this.position === "top" && this.currentState === this.OUT_STATE){
+        Swiper.underline.classList.add("open")
+      } else {
+          Swiper.underline.classList.remove("open")
+      }
   }
 
   getGesturePointFromEvent(evt) {
@@ -251,15 +270,20 @@ class Swiper {
     let differenceInY = this.initialTouchPos.y - this.lastTouchPos.y;
 
     let newYTransform = this.startTransform - differenceInY;
-
-
+    console.log(differenceInY)
     let transformStyle;
     let otherTransformStyle;
 
-    
     if (this.position === "top") {
       if (newYTransform < -5) {
         transformStyle = `translateY(${newYTransform}px) translateX(-50%)`;
+        if (this.currentState === this.OUT_STATE) {
+            this.inputs.forEach(input => {
+                input.style.opacity = 1 - (differenceInY / 100);
+            })
+        } else {
+            
+        }
       }
     } else {
       if (newYTransform > 5) {
@@ -267,20 +291,16 @@ class Swiper {
       }
     }
 
-
     this.element.style.webkitTransform = transformStyle;
     this.element.style.MozTransform = transformStyle;
     this.element.style.msTransform = transformStyle;
     this.element.style.transform = transformStyle;
 
-   
-
-   
-
     this.rafPending = false;
   }
 
   addListeners() {
+    
     if (window.PointerEvent) {
       // Add Pointer Event Listener
       this.element.addEventListener(
@@ -309,27 +329,64 @@ class Swiper {
       this.element.addEventListener("touchmove", this.handleGestureMove, true);
       this.element.addEventListener("touchend", this.handleGestureEnd, true);
       this.element.addEventListener("touchcancel", this.handleGestureEnd, true);
-
+      
       // Add Mouse Listener
       this.element.addEventListener("mousedown", this.handleGestureStart, true);
+
     }
+
+    if (this.search) {
+        this.search.addEventListener("click", (e) => {
+            if (this.currentState === this.IN_STATE){
+                this.changeState(this.OUT_STATE)
+            }
+        }, true)
+    }
+    
   }
 }
 
-
-
-
-
 window.addEventListener("load", function() {
   setTimeout(() => {
+    var h = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight || 0
+    );
+    console.log(h)
+    const main = document.querySelector(".main");
+
+
+    
+    
+     this.console.log(main)
+    window.onresize = function() {
+        main.setAttribute("style",`height:${h}px`);
+    };
+
+    Swiper.underline = document.querySelector('.jp__header__underline');
+
+    window.onresize();
+
     const topDrawer = document.querySelector(".drawer__container--top");
     const bottomDrawer = document.querySelector(".drawer__container--bottom");
-    Swiper.active = null
+    Swiper.active = null;
+
+    const search = document.querySelector(".drawer__search__form");
+    const bottomSwiper = new Swiper(bottomDrawer, "bottom", null, search);
+    const topSwiper = new Swiper(topDrawer, "top", bottomSwiper, null);
+    bottomSwiper.otherSwiper = topSwiper;
+
+
+    const wrapper = document.querySelector(".searchbar-input")
     
-    const bottomSwiper = new Swiper(bottomDrawer, "bottom", null);
-    const topSwiper = new Swiper(topDrawer, "top", bottomSwiper);
-    bottomSwiper.otherSwiper = topSwiper
-    
+    const map = document.querySelector(".map__container")
+    const searchInput = document.querySelector(".drawer__search__input");
+
+    map.addEventListener("click", () => {
+        bottomSwiper.changeState(bottomSwiper.IN_STATE)
+        topSwiper.changeState(topSwiper.IN_STATE)
+        searchInput.value = "";
+    })
   
   }, 500);
 });

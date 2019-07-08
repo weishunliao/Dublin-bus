@@ -1,24 +1,38 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.views import View
 from .models import Stop
 import requests
-
+from .forms import JourneyPlannerForm
     
     
 
 
 # Create your views here.
-# class HomeView(TemplateView):
-#     template_name = "home.html"
-#     weather_json = None
+class HomeView(TemplateView):
+    template_name = "home.html"
 
-def home_view(request):
-    # url = "https://api.darksky.net/forecast/af244fb72403c52972f85dc3b0513431/37.8267,-122.4233"
-    # response = requests.get(url)
-    # r = response.json()
-    # 
-    return render(request, "home.html", {'icon': "clear-day"})
+    def get(self, request):
+        form = JourneyPlannerForm()
+        return render(request, self.template_name, {'icon': "clear-day", 'form': form })
+
+
+    def post(self, request):
+        if request.method == "POST":
+            form = JourneyPlannerForm(request.POST)
+            if form.is_valid():
+                start = form.cleaned_data['start']
+                end = form.cleaned_data['end']
+                time = form.cleaned_data['time']
+                print(form.cleaned_data)
+            
+            return HttpResponseRedirect('')
+                  
+
+
+
+
 
 def test_view(request):
     return HttpResponse("<h3>Hi, we're team 8.</h3>")

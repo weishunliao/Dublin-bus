@@ -1,21 +1,12 @@
 
-
+@import './normalize.scss';
 @import 'project/Variables/variables';
 @import 'project/Drawer/drawer';
 @import 'project/Map/map';
 @import 'project/JourneyPlanner/journey_planner';
 
 
-body, html {
-    margin: 0;
-    padding: 0;
-    background: grey;
-}
 
-body {
-    // height: 200vh;
-   
-}
 
 :root {
     margin: 0;
@@ -25,15 +16,23 @@ body {
     letter-spacing: 0rem;
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
 
 
 .main {
     position: relative;
-    height: 100vh;
     width: 100%;
     overflow: hidden;
-  
 }
+
+// input {
+//     pointer-events: none;
+// }
 
 
 

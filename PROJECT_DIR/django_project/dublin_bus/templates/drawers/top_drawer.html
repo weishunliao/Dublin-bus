@@ -1,16 +1,35 @@
-
-
-
 <div class="drawer drawer__container drawer__container--top">
-    <div class="jp__header">
-        <div class="jp__header__textrel">
-            <div class="jp__header__textabs">
-                <h1>Journey Planner</h1>
-            </div>
-            <div class="jp__header__weatherabs">
-                <canvas id="icon2"></canvas>
-            </div>
-            <div class="jp__header__underline"></div>
-        </div>
-    </div>
+  <div class="drawer__jp__wrapper">
+    
+      <form method="POST" class="drawer__jp__form">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">Submit</button>
+      </form>
+  
+  </div>
 </div>
+
+<!-- 
+<ion-item>
+        <ion-label>DDD. MMM DD, YY (custom locale)</ion-label>
+        <ion-datetime
+          id="customDayShortNames"
+          value="1995-04-15"
+          min="1990-02"
+          max="2000"
+          display-format="DDD. MMM DD, YY"
+          month-short-names="jan, feb, mar, apr, mai, jun, jul, aug, sep, okt, nov, des"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Enter a start stop</ion-label>
+        <ion-input></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Enter an end stop</ion-label>
+        <ion-input></ion-input>
+      </ion-item>
+ <ion-button buttonType="submit" color="primary">Search</ion-button>
+      <button type="submit">click here</button>
+      {% csrf_token %} -->
