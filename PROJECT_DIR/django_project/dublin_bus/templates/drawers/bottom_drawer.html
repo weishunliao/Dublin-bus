@@ -1,50 +1,27 @@
 <div class="drawer__container drawer__container--bottom">
     <div class="drawer__search__wrapper">
-        <ion-item>
-            <ion-input class="drawer__search__input" placeholder="Search for stop or line"></ion-input>
-        </ion-item>
+        <ion-toolbar>
+            <ion-searchbar placeholder="Search for stop or line" search-icon='search' id="route_stop_info"></ion-searchbar>
+        </ion-toolbar>
     </div>
     <div class="drawer__search__title">
         <div class="drawer__search__title__label">
-            <span>15a</span>
+            <span id="drawer__search__title__label">15a</span>
         </div>
     </div>
+
+{#    TODO: infinite scroll#}
     <div id="timeline-wrapper" class="timeline-wrapper">
-        <h1>Current running</h1>
-        <ul class="timeline-wrapper__content">
-            <li class="timeline-wrapper__content__event">
-                <h3 id="">Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
-            <li class="timeline-wrapper__content__event">
-                <h3>Dinosaurs Roamed the Earth <i id="">-1123</i></h3>
-            </li>
+        <span>Inbound</span>
+        <label class="timeline-wrapper_switch">
+            <input type="checkbox" id="direction_switch">
+            <span class="slider round"></span>
+        </label>
+        <span>Outbound</span>
+        <ul class="timeline-wrapper__content" id="timeline__content">
+{#            <li class="timeline-wrapper__content__event">#}
+{#                <h3 class="timeline-wrapper__content__h3">Dinosaurs Roamed the Earth <i id="">-1123</i></h3>#}
+{#            </li>#}
         </ul>
     </div>
 </div>

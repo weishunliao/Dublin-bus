@@ -8,7 +8,7 @@ from .models import Stop
 from .forms import JourneyPlannerForm
 
 from dublin_bus import functions
-#from geopy import distance
+# from geopy import distance
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -24,9 +24,8 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get(self, request):
-        
-        return render(request, self.template_name, {'icon': "clear-day", "map_key": MAP_KEY })
 
+        return render(request, self.template_name, {'icon': "clear-day", "map_key": MAP_KEY})
 
     def post(self, request):
         if request.method == "POST":
@@ -36,12 +35,8 @@ class HomeView(TemplateView):
                 end = form.cleaned_data['end']
                 time = form.cleaned_data['time']
                 print(form.cleaned_data)
-            
+
             return HttpResponseRedirect('')
-                  
-
-
-
 
 
 def test_view(request):
@@ -101,7 +96,7 @@ def get_travel_time(request):
             if i[0] == start_point_id:
                 index = int(i[1] - 1)
         stop_list = all_stops[index:index + num + 1]
-    
+
     # if the route_id is 15a, get a prediction from the machine learning model
     if route_id == '15a':
         journey_time = functions.predict_journey_time(stop_list, departure_time_value)
@@ -109,3 +104,18 @@ def get_travel_time(request):
         journey_time = 0
 
     return JsonResponse({"journey_time": journey_time})
+
+
+def get_bus_stop_list(request):
+    route_id = request.GET['route_id']
+    direction = request.GET['direction']
+    path = os.path.join(BASE_DIR, '../static/cache/stops_by_route.json')
+    with open(path, 'r') as jsonfile:
+        stops = json.load(jsonfile)[route_id][direction]
+    path2 = os.path.join(BASE_DIR, '../static/cache/stops.json')
+    stops_name = []
+    with open(path2, 'r') as jsonfile2:
+        stops_json = json.load(jsonfile2)
+        for stop_id in stops:
+            stops_name.append([stop_id, stops_json[stop_id][0]])
+    return JsonResponse({"stops_list": stops_name})
