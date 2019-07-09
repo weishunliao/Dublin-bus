@@ -1,0 +1,52 @@
+<div class="drawer drawer__container drawer__container--top">
+  <div class="drawer__hidearea"></div>
+  <div class="drawer__jp__wrapper">
+    <div class="drawer__jp__form">
+      <div class="drawer__jp__form__conceal">
+        <h2>Please enter your journey details</h2>
+      </div>
+      <div class="drawer__jp__form__cover">
+        <ion-item>
+          <ion-datetime
+            id="date"
+            day-names
+            display-format="MMM DD, H:mm"
+            placeholder="Select Date"
+          ></ion-datetime>
+        </ion-item>
+        <input type="text" class="route_start" placeholder="Start location" />
+        <input type="text" placeholder="End location" class="route_end" />
+        <ion-button id="route_btn" expand="full">Submit</ion-button>
+      </div>
+    </div>
+
+
+    
+    <div class="drawer__jp__form__titles">
+      <h3>Travelling from: <span id="from-span">START</span></h3>
+      <h3>Travelling to: <span id="to-span">START</span></h3>
+    </div>
+
+    <div class="drawer__jp__routes">
+      <!-- <div class="drawer__jp__routes__option">
+
+        <div class="drawer__jp__routes__busnumber-container">
+            <p id="busnumber">39</p>
+        </div>
+
+        <div class="drawer__jp__routes__stops-container">
+            <div class="drawer__jp__routes__stops-inner drawer__jp__routes__stops-inner--leaves">
+                <p>Leaves from: <span id="leave-span">here</span></p>
+            </div>
+            <div class="drawer__jp__routes__stops-inner drawer__jp__routes__stops-inner--arrives">
+                <p>Arrives: <span id="arrive-span">here</span></p>
+            </div>
+            <div class="drawer__jp__routes__stops-inner drawer__jp__routes__stops-inner--time">
+                <p>Departure time: <span id="time-span">3:30pm</span></p>
+            </div>
+        </div>
+
+      </div>  -->
+    </div>
+  </div>
+</div>

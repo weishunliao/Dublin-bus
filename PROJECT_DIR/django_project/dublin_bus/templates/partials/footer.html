@@ -2,34 +2,30 @@
 
 
 {% load render_bundle from webpack_loader %}
+{% load static %}
 
-
-<ion-footer>
-        <ion-toolbar>
-                <ion-tabs>
-                        <ion-tab tab="home">Home Content</ion-tab>
-                        <ion-tab tab="settings">Settings Content</ion-tab>
-                      
-                        <ion-tab-bar slot="bottom">
-                      
-                          <ion-tab-button tab="home">
-                            <ion-label>Home</ion-label>
-                            <ion-icon name="home"></ion-icon>
-                            <ion-badge>6</ion-badge>
-                          </ion-tab-button>
-                      
-                          <ion-tab-button tab="settings">
-                            <ion-label>Settings</ion-label>
-                            <ion-icon name="settings"></ion-icon>
-                          </ion-tab-button>
-                      
-                        </ion-tab-bar>
-                      </ion-tabs>
-        </ion-toolbar>
-      </ion-footer>
   
-</ion-app>
-<ion-menu-controller></ion-menu-controller>
-{% render_bundle 'main' 'js' 'DEFAULT' %}
+
+{% render_bundle  'main' 'js' 'DEFAULT' %}
+<script>
+
+
+
+function changer(e){
+    console.log(e.target.value)
+}
+
+function ss(){
+    console.log("yes")
+}
+
+
+</script>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}=places&callback=initMap"
+        async defer></script>
+
 </body>
 </html>

@@ -21,3 +21,11 @@ PROJECT_DIR/.idea/
 PROJECT_DIR/django_project/.DS_Store
 PROJECT_DIR/django_project/.idea/
 
+PROJECT_DIR/static/
+coverage/
+
+
+__pycache__
+
+rt*
+hly*

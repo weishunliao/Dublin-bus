@@ -1,5 +1,4 @@
-{% load render_bundle from webpack_loader %}
-
+{% load render_bundle from webpack_loader %} {% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,33 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-   
-
-    <script src="https://unpkg.com/@ionic/core@latest/dist/ionic.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.js"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
     <link
       href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
-
-   
 
     {% render_bundle 'main' 'css' %}
+
+    <link href="https://fonts.googleapis.com/css?family=Actor&display=swap" rel="stylesheet">
+
     <title>Document</title>
   </head>
-  <body onclick="hello()">
-    <ion-app>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Header</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      
-
-
-
-      
+  <body></body>
+</html>
