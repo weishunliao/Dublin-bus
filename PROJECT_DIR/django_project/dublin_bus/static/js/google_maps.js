@@ -149,13 +149,19 @@ function AddMarkers(data, map) {
       let longitude = data[key][2];
       let stopName = data[key][0];
       let latLng = new google.maps.LatLng(latitude, longitude);
-
+      // create an object for the bus stop icon
+      let busStopIcon = {
+        url: '/static/images/marker.png', // url for the image
+        scaledSize: new google.maps.Size(60, 60), // size of the image
+        origin: new google.maps.Point(0, 0), // origin
+        anchor: new google.maps.Point(30, 60) // anchor
+      };
       // generate a marker object for bus stop
-        var busMarker = new google.maps.Marker({
-          position: latLng,  
-          map: map,
-          //icon: busIcon,  
-          title: stopName
+      let busMarker = new google.maps.Marker({
+        position: latLng,  
+        map: map,
+        icon: busStopIcon,  
+        title: stopName
       });
     }
 }
