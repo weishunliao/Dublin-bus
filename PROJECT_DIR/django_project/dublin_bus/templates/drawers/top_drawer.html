@@ -1,25 +1,20 @@
 <div class="drawer drawer__container drawer__container--top">
-  <!-- <div class="drawer__jp__wrapper">
+  <div class="drawer__jp__wrapper">
     
     <div class="drawer__jp__form">
 
         <h2>Please enter your journey details</h2>
         <ion-item>
-            <ion-datetime day-names display-format="MMM DD, H:mm" placeholder="Select Date"></ion-datetime>
+            <ion-datetime id="date" ionChange="changer(this)" ionFocus='ss' day-names display-format="MMM DD, H:mm" placeholder="Select Date"></ion-datetime>
           </ion-item>
-          <ion-item>
-            <ion-label position="floating">Leaving from</ion-label>
-            <ion-input></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Going to</ion-label>
-            <ion-input></ion-input>
-          </ion-item>
-          <ion-button expand="full">Submit</ion-button>
+          <input type="text" class="route_start" placeholder="Start location">
+          <div class="drawer__jp__form__span"></div>
+          <input type="text" placeholder="End location" class="route_end">
+          <div class="drawer__jp__form__span"></div>
+          <ion-button id="route_btn" expand="full">Submit</ion-button>
     </div>
 
    
-      
-  
-  </div> -->
+      <button class="drawer__jp__toggler">click</button>
+  </div>
 </div>

@@ -1,12 +1,15 @@
-window.requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            function( callback ){
-              window.setTimeout(callback, 1000 / 60);
-            };
-  })();
+import "./hammer";
 
+window.requestAnimFrame = (function() {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    }
+  );
+})();
 
 // ^ Check for pointer events support...
 
@@ -28,11 +31,10 @@ if (window.PointerEvent || window.navigator.msPointerEnabled) {
 
 class Swiper {
   constructor(element, position, otherSwiper) {
-
     this.element = element;
     this.position = position;
     this.otherSwiper = otherSwiper;
-    
+
     this.IN_STATE = 1;
     this.OUT_STATE = 2;
     this.differenceInY = 0;
@@ -46,19 +48,19 @@ class Swiper {
     this.itemHeight = element.offsetHeight;
 
     if (this.position === "top") {
-      this.inTransformVal = -(element.offsetHeight * 0.85);
+      this.inTransformVal = -(element.offsetHeight * 0.8);
       this.outTransformVal = -(element.offsetHeight * 0.08);
-      this.OTHER_ONE_inTransformVal = element.offsetHeight * 0.85;
+      this.OTHER_ONE_inTransformVal = element.offsetHeight * 0.8;
       this.OTHER_ONE_outTransformVal = element.offsetHeight * 0.08;
     } else {
-      this.inTransformVal = element.offsetHeight * 0.85;
+      this.inTransformVal = element.offsetHeight * 0.8;
       this.outTransformVal = element.offsetHeight * 0.08;
-      this.OTHER_ONE_inTransformVal = -(element.offsetHeight * 0.85);
+      this.OTHER_ONE_inTransformVal = -(element.offsetHeight * 0.8);
       this.OTHER_ONE_outTransformVal = -(element.offsetHeight * 0.08);
     }
 
-    if (this.position == "top"){
-        this.inputs = document.querySelectorAll(".drawer__jp__input");
+    if (this.position == "top") {
+      this.inputs = document.querySelectorAll(".drawer__jp__input");
     }
 
     this.startTransform = this.inTransformVal;
@@ -83,12 +85,13 @@ class Swiper {
     this.addListeners = this.addListeners.bind(this);
     this.onAnimFrame = this.onAnimFrame.bind(this);
     this.addListeners();
+
+    if (this.position =="bottom"){
+        this.changeState(this.OUT_STATE);
+    }
   }
 
   handleGestureStart(evt) {
-    
-    
-
     if (this.otherSwiper.currentState !== this.otherSwiper.IN_STATE) {
       this.otherSwiper.changeState(this.otherSwiper.IN_STATE);
     }
@@ -100,7 +103,6 @@ class Swiper {
     // Add the move and end listeners
     if (window.PointerEvent) {
       evt.target.setPointerCapture(evt.pointerId);
-      
     } else {
       // Add Mouse Listeners
       document.addEventListener("mousemove", this.handleGestureMove, true);
@@ -112,7 +114,6 @@ class Swiper {
   }
 
   handleGestureMove(evt) {
- 
     evt.preventDefault();
 
     if (!this.initialTouchPos) {
@@ -131,9 +132,7 @@ class Swiper {
   }
 
   handleGestureEnd(evt) {
-      
     evt.preventDefault();
-    
 
     if (evt.touches && evt.touches.length > 0) {
       return;
@@ -156,7 +155,6 @@ class Swiper {
   }
 
   updateSwipeRestPosition() {
-      
     let differenceInY = this.initialTouchPos.y - this.lastTouchPos.y;
     let currentTransform = this.startTransform - differenceInY;
     let newState = this.currentState;
@@ -206,24 +204,22 @@ class Swiper {
   }
 
   changeState(newState) {
-
-      
     let transformStyle;
     switch (newState) {
       case this.IN_STATE:
         this.startTransform = this.inTransformVal;
-        if (this.position === "top"){
-            this.inputs.forEach(input => {
-                input.style.opacity = 0;
-            })
+        if (this.position === "top") {
+          this.inputs.forEach(input => {
+            input.style.opacity = 0;
+          });
         }
         break;
       case this.OUT_STATE:
         this.startTransform = this.outTransformVal;
-        if (this.position === "top"){
-            this.inputs.forEach(input => {
-                input.style.opacity = 1;
-            })
+        if (this.position === "top") {
+          this.inputs.forEach(input => {
+            input.style.opacity = 1;
+          });
         }
         break;
     }
@@ -238,15 +234,14 @@ class Swiper {
 
     this.currentState = newState;
 
-    if (this.position === "top" && this.currentState === this.OUT_STATE){
-        Swiper.underline.classList.add("open")
-      } else {
-          Swiper.underline.classList.remove("open")
-      }
+    if (this.position === "top" && this.currentState === this.OUT_STATE) {
+      Swiper.underline.classList.add("open");
+    } else {
+      Swiper.underline.classList.remove("open");
+    }
   }
 
   getGesturePointFromEvent(evt) {
-
     var point = {};
 
     if (evt.targetTouches) {
@@ -257,13 +252,11 @@ class Swiper {
       point.x = evt.clientX;
       point.y = evt.clientY;
     }
-    
 
     return point;
   }
 
   onAnimFrame() {
-
     if (!this.rafPending) {
       return;
     }
@@ -273,18 +266,16 @@ class Swiper {
     let newYTransform = this.startTransform - differenceInY;
     let transformStyle;
 
-
     if (this.position === "top") {
       if (newYTransform < -5) {
         transformStyle = `translateY(${newYTransform}px) translateX(-50%)`;
         if (this.currentState === this.OUT_STATE) {
-            this.inputs.forEach(input => {
-                input.style.opacity = 1 - (differenceInY / 100);
-            })
-        } 
+          this.inputs.forEach(input => {
+            input.style.opacity = 1 - differenceInY / 100;
+          });
+        }
       }
-    } 
-    else {
+    } else {
       if (newYTransform > 5) {
         transformStyle = `translateY(${newYTransform}px) translateX(-50%)`;
       }
@@ -300,51 +291,56 @@ class Swiper {
   }
 
   addListeners() {
-    
-    if (window.PointerEvent) {
-      
-      // Add Pointer Event Listener
-      this.element.addEventListener(
-        "pointerdown",
-        this.handleGestureStart,
-        true
-      );
-      this.element.addEventListener(
-        "pointermove",
-        this.handleGestureMove,
-        true
-      );
-      this.element.addEventListener("pointerup", this.handleGestureEnd, true);
-      this.element.addEventListener(
-        "pointercancel",
-        this.handleGestureEnd,
-        true
-      );
-    } 
-    else {
-      // Add Touch Listener
-      this.element.addEventListener(
-        "touchstart",
-        this.handleGestureStart,
-        true
-      );
-      this.element.addEventListener("touchmove", this.handleGestureMove, true);
-      this.element.addEventListener("touchend", this.handleGestureEnd, true);
-      this.element.addEventListener("touchcancel", this.handleGestureEnd, true);
-      
-      // Add Mouse Listener
-      this.element.addEventListener("mousedown", this.handleGestureStart, true);
+    const toggler = document.querySelector(".drawer__jp__toggler");
 
-    }
+    toggler.addEventListener("click", (evt) =>{
+        if(this.position == "top"){
+            if (this.currentState == this.IN_STATE){
+                this.changeState(this.OUT_STATE)
+            } else {
+                this.changeState(this.IN_STATE)
+            }
+        }
+    }, false)
 
-  
-    
+   
+
+    // if (window.PointerEvent) {
+    //   // Add Pointer Event Listener
+    //   this.element.addEventListener(
+    //     "pointerdown",
+    //     this.handleGestureStart,
+    //     true
+    //   );
+    //   this.element.addEventListener(
+    //     "pointermove",
+    //     this.handleGestureMove,
+    //     true
+    //   );
+    //   this.element.addEventListener("pointerup", this.handleGestureEnd, true);
+    //   this.element.addEventListener(
+    //     "pointercancel",
+    //     this.handleGestureEnd,
+    //     true
+    //   );
+    // } else {
+    //   // Add Touch Listener
+    //   this.element.addEventListener(
+    //     "touchstart",
+    //     this.handleGestureStart,
+    //     true
+    //   );
+    //   this.element.addEventListener("touchmove", this.handleGestureMove, true);
+    //   this.element.addEventListener("touchend", this.handleGestureEnd, true);
+    //   this.element.addEventListener("touchcancel", this.handleGestureEnd, true);
+
+    //   // Add Mouse Listener
+    //   this.element.addEventListener("mousedown", this.handleGestureStart, true);
+    // }
   }
 }
 
 window.addEventListener("load", function() {
-
-
   setTimeout(() => {
     var h = Math.max(
       document.documentElement.clientHeight,
@@ -353,39 +349,39 @@ window.addEventListener("load", function() {
 
     const main = document.querySelector(".main");
 
-
-    
-    
-
     window.onresize = function() {
-        main.setAttribute("style",`height:${h}px`);
+      main.setAttribute("style", `height:${h}px`);
     };
 
-    Swiper.underline = document.querySelector('.jp__header__underline');
+    Swiper.underline = document.querySelector(".jp__header__underline");
 
     window.onresize();
 
     const topDrawer = document.querySelector(".drawer__container--top");
     const bottomDrawer = document.querySelector(".drawer__container--bottom");
 
+    
 
+    
 
     const bottomSwiper = new Swiper(bottomDrawer, "bottom", null);
     const topSwiper = new Swiper(topDrawer, "top", bottomSwiper);
     bottomSwiper.otherSwiper = topSwiper;
 
+    const drawers = [bottomSwiper, topSwiper]
 
-    const wrapper = document.querySelector(".searchbar-input")
+
+    const wrapper = document.querySelector(".searchbar-input");
     
-    const map = document.querySelector(".map__container")
+    const map = document.querySelector(".map__container");
     const searchInput = document.querySelector(".drawer__search__input");
 
     map.addEventListener("click", () => {
-        bottomSwiper.changeState(bottomSwiper.IN_STATE)
-        topSwiper.changeState(topSwiper.IN_STATE)
-        searchInput.value = "";
-        
-    })
+      bottomSwiper.changeState(bottomSwiper.IN_STATE);
+      topSwiper.changeState(topSwiper.IN_STATE);
+      searchInput.value = "";
+    });
+
 
   }, 500);
 });
