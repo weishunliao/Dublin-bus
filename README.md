@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/the-8-team/COMP47360.svg?branch=develop)](https://travis-ci.org/the-8-team/COMP47360) [![Coverage Status](https://coveralls.io/repos/github/the-8-team/COMP47360/badge.svg?branch=feature/js_test)](https://coveralls.io/github/the-8-team/COMP47360?branch=develop)
+
 # COMP47360
 
 - dev_environment = the virtual environment for development; activate with 'source dev_environment/bin/activate'

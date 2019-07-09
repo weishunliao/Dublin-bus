@@ -1,5 +1,31 @@
 
+
+
 {% load render_bundle from webpack_loader %}
-{% render_bundle 'main' 'js' 'DEFAULT' %}
+{% load static %}
+
+  
+
+{% render_bundle  'main' 'js' 'DEFAULT' %}
+<script>
+
+
+
+function changer(e){
+    console.log(e.target.value)
+}
+
+function ss(){
+    console.log("yes")
+}
+
+
+</script>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ map_key }}=places&callback=initMap"
+        async defer></script>
+
 </body>
 </html>

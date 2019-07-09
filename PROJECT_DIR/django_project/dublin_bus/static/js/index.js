@@ -1,26 +1,15 @@
-import '../css/main.scss'
+import "../css/main.scss";
+import "./google_maps";
 
 
-var el = document.getElementById('lol')
+import buildWeather from "./skycons.js"
+import { nodes } from "./nodes";
+import "./touches.js";
 
-el.innerHTML = "Hi Chris "
 
-const UCD =  () => {
-    return "hi there!"
+buildWeather(icon)
+
+window.onresize = () => {
+    console.log("resized")
 }
-
-let people = {
-    first: "Chris",
-    second: "Fionnuala",
-    third: "Raph"
-}
-
-let nums = [ 1,2,3,4] 
-
-nums.forEach((num) =>{
-    console.log(num)
-})
-
-
-
 
