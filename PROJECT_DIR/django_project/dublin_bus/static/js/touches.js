@@ -86,9 +86,9 @@ class Swiper {
     this.onAnimFrame = this.onAnimFrame.bind(this);
     this.addListeners();
 
-    if (this.position =="bottom"){
-        this.changeState(this.OUT_STATE);
-    }
+    // if (this.position =="bottom"){
+    //     this.changeState(this.OUT_STATE);
+    // }
   }
 
   handleGestureStart(evt) {

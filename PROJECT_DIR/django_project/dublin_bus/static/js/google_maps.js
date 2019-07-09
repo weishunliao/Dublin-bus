@@ -6,6 +6,12 @@ function initMap() {
     center: { lat: 53.3471, lng: -6.26059 },
     zoom: 13
   });
+
+  // add markers to the map for all bus stops
+  $.getJSON('/static/cache/stops.json', function(data) {         
+    AddMarkers(data, map);
+  });  
+
   let directionsService = new google.maps.DirectionsService();
   directionsDisplay = new google.maps.DirectionsRenderer({
     map: map
@@ -134,3 +140,22 @@ function change_route(route_index) {
 }
 
 window.initMap = initMap;
+
+// function for adding markers to a map based on input
+function AddMarkers(data, map) {
+  // get the latitude, longitude and name of each bus stop
+  for (let key in data) {
+      let latitude = data[key][1];
+      let longitude = data[key][2];
+      let stopName = data[key][0];
+      let latLng = new google.maps.LatLng(latitude, longitude);
+
+      // generate a marker object for bus stop
+        var busMarker = new google.maps.Marker({
+          position: latLng,  
+          map: map,
+          //icon: busIcon,  
+          title: stopName
+      });
+    }
+}
