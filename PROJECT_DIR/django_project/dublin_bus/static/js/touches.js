@@ -1,4 +1,3 @@
-import "./hammer";
 
 window.requestAnimFrame = (function() {
   return (
@@ -86,12 +85,13 @@ class Swiper {
     this.onAnimFrame = this.onAnimFrame.bind(this);
     this.addListeners();
 
-    if (this.position =="bottom"){
-        this.changeState(this.OUT_STATE);
-    }
+    // if (this.position =="bottom"){
+    //     this.changeState(this.OUT_STATE);
+    // }
   }
 
   handleGestureStart(evt) {
+    // evt.preventDefault()
     if (this.otherSwiper.currentState !== this.otherSwiper.IN_STATE) {
       this.otherSwiper.changeState(this.otherSwiper.IN_STATE);
     }
@@ -132,8 +132,6 @@ class Swiper {
   }
 
   handleGestureEnd(evt) {
-    evt.preventDefault();
-
     if (evt.touches && evt.touches.length > 0) {
       return;
     }
@@ -291,52 +289,46 @@ class Swiper {
   }
 
   addListeners() {
-    const toggler = document.querySelector(".drawer__jp__toggler");
+    if (window.PointerEvent) {
+      // Add Pointer Event Listener
+      this.element.addEventListener(
+        "pointerdown",
+        this.handleGestureStart,
+        false
+      );
+      this.element.addEventListener(
+        "pointermove",
+        this.handleGestureMove,
+        false
+      );
+      this.element.addEventListener("pointerup", this.handleGestureEnd, false);
+      this.element.addEventListener(
+        "pointercancel",
+        this.handleGestureEnd,
+        false
+      );
+    } else {
+      // Add Touch Listener
+      this.element.addEventListener(
+        "touchstart",
+        this.handleGestureStart,
+        false
+      );
+      this.element.addEventListener("touchmove", this.handleGestureMove, false);
+      this.element.addEventListener("touchend", this.handleGestureEnd, false);
+      this.element.addEventListener(
+        "touchcancel",
+        this.handleGestureEnd,
+        false
+      );
 
-    toggler.addEventListener("click", (evt) =>{
-        if(this.position == "top"){
-            if (this.currentState == this.IN_STATE){
-                this.changeState(this.OUT_STATE)
-            } else {
-                this.changeState(this.IN_STATE)
-            }
-        }
-    }, false)
-
-   
-
-    // if (window.PointerEvent) {
-    //   // Add Pointer Event Listener
-    //   this.element.addEventListener(
-    //     "pointerdown",
-    //     this.handleGestureStart,
-    //     true
-    //   );
-    //   this.element.addEventListener(
-    //     "pointermove",
-    //     this.handleGestureMove,
-    //     true
-    //   );
-    //   this.element.addEventListener("pointerup", this.handleGestureEnd, true);
-    //   this.element.addEventListener(
-    //     "pointercancel",
-    //     this.handleGestureEnd,
-    //     true
-    //   );
-    // } else {
-    //   // Add Touch Listener
-    //   this.element.addEventListener(
-    //     "touchstart",
-    //     this.handleGestureStart,
-    //     true
-    //   );
-    //   this.element.addEventListener("touchmove", this.handleGestureMove, true);
-    //   this.element.addEventListener("touchend", this.handleGestureEnd, true);
-    //   this.element.addEventListener("touchcancel", this.handleGestureEnd, true);
-
-    //   // Add Mouse Listener
-    //   this.element.addEventListener("mousedown", this.handleGestureStart, true);
-    // }
+      // Add Mouse Listener
+      this.element.addEventListener(
+        "mousedown",
+        this.handleGestureStart,
+        false
+      );
+    }
   }
 }
 
@@ -360,28 +352,26 @@ window.addEventListener("load", function() {
     const topDrawer = document.querySelector(".drawer__container--top");
     const bottomDrawer = document.querySelector(".drawer__container--bottom");
 
-    
-
-    
+    const wrapper = document.querySelector(".drawer__jp__wrapper");
 
     const bottomSwiper = new Swiper(bottomDrawer, "bottom", null);
     const topSwiper = new Swiper(topDrawer, "top", bottomSwiper);
     bottomSwiper.otherSwiper = topSwiper;
 
-    const drawers = [bottomSwiper, topSwiper]
+    const drawers = [bottomSwiper, topSwiper];
 
+    const end = document.querySelector(".route_end");
 
-    const wrapper = document.querySelector(".searchbar-input");
-    
+    end.addEventListener("click", e => {
+      e.preventDefault();
+    });
+
     const map = document.querySelector(".map__container");
     const searchInput = document.querySelector(".drawer__search__input");
 
-    map.addEventListener("click", () => {
-      bottomSwiper.changeState(bottomSwiper.IN_STATE);
-      topSwiper.changeState(topSwiper.IN_STATE);
-      searchInput.value = "";
-    });
+    
 
+    
 
   }, 500);
 });

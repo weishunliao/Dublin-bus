@@ -24,8 +24,8 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get(self, request):
-        
-        return render(request, self.template_name, {'icon': "clear-day", "map_key": MAP_KEY })
+        form = JourneyPlannerForm()
+        return render(request, self.template_name, {'icon': "clear-day", 'form': form })
 
 
     def post(self, request):

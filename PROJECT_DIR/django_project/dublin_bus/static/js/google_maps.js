@@ -1,6 +1,10 @@
 let resp;
 let directionsDisplay;
 
+let cover = $(".drawer__jp__form__cover")[0];
+$('.drawer__jp__routes').hide();
+// $('.drawer__jp__routes').css('transform', styler);
+
 function initMap() {
   let map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 53.3471, lng: -6.26059 },
@@ -18,10 +22,7 @@ function initMap() {
 
   let input1 = document.querySelector(".route_start");
   let input2 = document.querySelector(".route_end");
-   let date = document.getElementById("date");
-
-  
-
+  let date = document.getElementById("date");
 
   let options = {
     bounds: defaultBounds,
@@ -31,6 +32,30 @@ function initMap() {
   let autocomplete2 = new google.maps.places.Autocomplete(input2, options);
 
   document.getElementById("route_btn").addEventListener("click", function() {
+    let styler = "translateY(-100%)";
+    $(".drawer__jp__routes").fadeIn("slow");
+    // $(".drawer__jp__routes").css("transform", styler);
+    cover.style.webkitTransform = styler;
+    cover.style.MozTransform = styler;
+    cover.style.msTransform = styler;
+    cover.style.webkitTransform = styler;
+    cover.style.transform = styler;
+
+    let slice1 = input1.value.split(" ");
+    let slice2 = input2.value.split(" ");
+
+    let sl1 = "";
+    let sl2 = "";
+    for (let i = 0; i < 3; i++) {
+      sl1 = sl1 + " " + slice1[i];
+      sl2 = sl2 + " " + slice2[i];
+    }
+
+    $("#from-span").text(sl1);
+    $("#to-span").text(sl2);
+
+    $(".drawer__jp__routes").fadeIn("slow");
+
     directionsService.route(
       {
         origin: input1.value,
@@ -76,6 +101,13 @@ function initMap() {
             let walk_to_destination =
               resp.routes[0].legs[0].steps[2].duration.value;
 
+            let properData = {
+              route_id,
+              departure_stop,
+              arrival_stop,
+
+            };
+
             $.ajax({
               url: "get_travel_time",
               type: "POST",
@@ -87,34 +119,56 @@ function initMap() {
                 departure_time_value: departure_time_value
               },
               success: function(resp) {
-                console.log(resp);
+                console.log(resp, properData);
                 if (route_id == "15a") {
                   let full_journey = Math.round(
                     (walk_to_stop + resp.journey_time + walk_to_destination) /
                       60
                   );
-                  $("#routes").append(
-                    "<tr>" +
-                      "<td>" +
-                      route_id +
-                      "</td>" +
-                      "<td>" +
-                      head_sign +
-                      "</td>" +
-                      "<td>" +
-                      departure_stop +
-                      "</td>" +
-                      "<td>" +
-                      departure_time +
-                      "</td>" +
-                      "<td>" +
-                      full_journey +
-                      " min(s)" +
-                      "</td>" +
-                      "<td>" +
-                      button +
-                      "</td>" +
-                      "</tr>"
+                  //   $("#routes").append(
+                  //     "<tr>" +
+                  //       "<td>" +
+                  //       route_id +
+                  //       "</td>" +
+                  //       "<td>" +
+                  //       head_sign +
+                  //       "</td>" +
+                  //       "<td>" +
+                  //       departure_stop +
+                  //       "</td>" +
+                  //       "<td>" +
+                  //       departure_time +
+                  //       "</td>" +
+                  //       "<td>" +
+                  //       full_journey +
+                  //       " min(s)" +
+                  //       "</td>" +
+                  //       "<td>" +
+                  //       button +
+                  //       "</td>" +
+                  //       "</tr>"
+                  //   );
+
+                  $(".drawer__jp__routes").append(
+                    `<div class="drawer__jp__routes__option">
+
+                    <div class="drawer__jp__routes__busnumber-container">
+                        <p id="busnumber">${route_id}</p>
+                    </div>
+
+                    <div class="drawer__jp__routes__stops-container">
+                        <div class="drawer__jp__routes__stops-inner drawer__jp__routes__stops-inner--leaves">
+                            <p>Leaves from: <span id="leave-span">${departure_stop}</span></p>
+                        </div>
+                        <div class="drawer__jp__routes__stops-inner drawer__jp__routes__stops-inner--arrives">
+                            <p>Arrives: <span id="arrive-span">${arrival_stop}</span></p>
+                        </div>
+                        <div class="drawer__jp__routes__stops-inner drawer__jp__routes__stops-inner--time">
+                <p>Departure time: <span id="time-span">${departure_time}</span></p>
+            </div>
+                    </div>
+                    </div> 
+`
                   );
                 }
               }
