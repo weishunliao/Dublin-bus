@@ -83,7 +83,8 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
 
-        'NAME': 'db_raw_data',  # database name
+        'NAME': 'db_route_info',  # database name
+        # 'NAME': 'db_raw_data',
         'USER': 'team8',
         'ENGINE': 'django.db.backends.mysql',
         'PASSWORD': config('DATABASE_PASSWORD'),
