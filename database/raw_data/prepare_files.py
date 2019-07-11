@@ -80,8 +80,6 @@ def process_bus_file(directory, filename):
 
     if filename.startswith("rt_trips"):
         new_file = open("rt_trips_DB_2018_prepared.txt", "w")
-    elif filename.startswith("rt_vehicles"):
-        new_file = open("rt_vehicles_DB_2018_prepared.txt", "w")
     elif filename.startswith("rt_leavetimes"):
         new_file = open("rt_leavetimes_DB_2018_prepared.txt", "w")
 
@@ -96,8 +94,6 @@ def process_bus_file(directory, filename):
                     row[1] = convert_bus_timestamp(row[1])
                     if filename.startswith("rt_trips"):
                         row[14] = convert_bus_timestamp(row[14])
-                    elif filename.startswith("rt_vehicles"):
-                        row[5] = convert_bus_timestamp(row[5])
                     elif filename.startswith("rt_leavetimes"):
                         row[16] = convert_bus_timestamp(row[16])
                     row = ';'.join(map(str, row)) 
@@ -117,9 +113,6 @@ if os.path.isfile(os.path.join(directory, "hly175.csv")):
 
 if os.path.isfile(os.path.join(directory, "rt_trips_DB_2018.txt")):
     process_bus_file(directory, "rt_trips_DB_2018.txt")
-
-if os.path.isfile(os.path.join(directory, "rt_vehicles_DB_2018.txt")):
-    process_bus_file(directory, "rt_vehicles_DB_2018.txt")
 
 if os.path.isfile(os.path.join(directory, "rt_leavetimes_DB_2018.txt")):
     process_bus_file(directory, "rt_leavetimes_DB_2018.txt")

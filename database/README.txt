@@ -15,8 +15,8 @@ Follow the steps below to load data into the tables:
 1. Copy contents of the database folder to the CS server if this has not already been done.
 3. Navigate to the raw_data folder.
 4. Download the full Dublin Bus data set into the folder (follow the instructions on Brightspace). 
-   The files should be named 'rt_leavetimes_DB_2018.txt', 'rt_trips_DB_2018_prepared.txt' & 
-   'rt_vehicles_DB_2018_prepared.txt'.
+   The files should be named 'rt_leavetimes_DB_2018.txt', 'rt_trips_DB_2018.txt' & 
+   'rt_vehicles_DB_2018.txt'. Delete 'rt_vehicles_DB_2018.txt'.
 5. Copy the Met Eireann data set to the same folder (can be downloaded from the Met Eireann website).
    The file should be named 'hly175.csv'.
 6. Run the data prep script as follows:
@@ -27,7 +27,6 @@ Follow the steps below to load data into the tables:
 8. Run the SQL scripts as follows, replacing USER & PASSWORD with the login details for mysql:
         > sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_weather_data.SQL &'
         > sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_bus_data_trips.SQL &'
-        > sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_bus_data_vehicles.SQL &'
 9. Navigate to the directory where the files are stored:
         > sudo -i
         > cd /var/lib/mysql-files/
