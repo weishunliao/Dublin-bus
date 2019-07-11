@@ -94,8 +94,10 @@ def process_bus_file(directory, filename):
                     row[1] = convert_bus_timestamp(row[1])
                     if filename.startswith("rt_trips"):
                         row[14] = convert_bus_timestamp(row[14])
+                        row = row[1:6] + row[8:10]
                     elif filename.startswith("rt_leavetimes"):
                         row[16] = convert_bus_timestamp(row[16])
+                        row = row[1:5] + row[7:9]
                     row = ';'.join(map(str, row)) 
                     new_file.write(row + '\n')
                     row_count = endrow(filename, row_count)
