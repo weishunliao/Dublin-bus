@@ -94,7 +94,7 @@ DATABASES = {
 
         # UCD
         # 'HOST': '137.43.49.50',
-        137.43.49.50 is for development. 
+        # 137.43.49.50 is for development. 
     }
 
 
