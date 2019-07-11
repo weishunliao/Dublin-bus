@@ -3,16 +3,16 @@ This file outlines the steps required to set up the database schema and tables, 
 
 Follow the steps below to set up the database schema and tables:
 
-1. Copy contents of the database_setup folder to the CS server (e.g. using WinSCP).
+1. Copy contents of the database folder to the CS server (e.g. using WinSCP).
 2. Log in to the server and navigate to the directory.
 3. Run the following command, replacing USER & PASSWORD with the login details for mysql:
-    mysql -u USER -pPASSWORD < create_tables.SQL
+    mysql -u USER -pPASSWORD < db_raw_data_setup.SQL
 (Note: there should NOT be a space between -p and PASSWORD, it's not a typo!)
 
 
 Follow the steps below to load data into the tables:
 
-1. Copy contents of the database_setup folder to the CS server if this has not already been done.
+1. Copy contents of the database folder to the CS server if this has not already been done.
 3. Navigate to the raw_data folder.
 4. Download the full Dublin Bus data set into the folder (follow the instructions on Brightspace). 
    The files should be named 'rt_leavetimes_DB_2018.txt', 'rt_trips_DB_2018_prepared.txt' & 

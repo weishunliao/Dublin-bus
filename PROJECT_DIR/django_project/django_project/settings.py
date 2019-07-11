@@ -84,7 +84,6 @@ DATABASES = {
     'default': {
 
         'NAME': 'db_route_info',  # database name
-        # 'NAME': 'db_raw_data',
         'USER': 'team8',
         'ENGINE': 'django.db.backends.mysql',
         'PASSWORD': config('DATABASE_PASSWORD'),
@@ -93,20 +92,9 @@ DATABASES = {
         # PRODUCTION
         'HOST': 'localhost',
 
-
-
         # UCD
         # 'HOST': '137.43.49.50',
-        # 137.43.49.50 is for development.
-
-
-      
-        
-
-
-    
-       
-        
+        137.43.49.50 is for development. 
     }
 
 
