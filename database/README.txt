@@ -4,9 +4,9 @@ This file outlines the steps required to set up the database schema and tables, 
 Follow the steps below to set up the database schema and tables:
 
 1. Copy contents of the database folder to the CS server (e.g. using WinSCP).
-2. Log in to the server and navigate to the directory.
+2. Log in to the server and navigate to the database directory.
 3. Run the following command, replacing USER & PASSWORD with the login details for mysql:
-    mysql -u USER -pPASSWORD < db_raw_data_setup.SQL
+    > mysql -u USER -pPASSWORD < db_raw_data_setup.SQL
 (Note: there should NOT be a space between -p and PASSWORD, it's not a typo!)
 
 
