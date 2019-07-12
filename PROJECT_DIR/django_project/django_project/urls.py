@@ -14,5 +14,6 @@ urlpatterns = [
     path('map', views.test_routing),
     path('get_travel_time', views.get_travel_time),
     path('bus_stop_list_by_route', views.get_bus_stop_list),
+    path('get_real_time', views.get_real_time),
 ]
 

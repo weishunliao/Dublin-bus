@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from datetime import datetime
 from dublin_bus import functions
+from dublin_bus.views import get_trip_info
 
 
 class ViewTest(TestCase):
@@ -12,7 +13,7 @@ class ViewTest(TestCase):
 
 class TestLoadModel(TestCase):
     """Test cases for the load_model function."""
-    
+
     def test_load_model_success(self):
         """Test to ensure that a model is loaded correctly."""
         try:
@@ -31,11 +32,11 @@ class TestCreateStopFeatureRef(TestCase):
 
     def test_create_stop_feature_ref(self):
         """Test for the ouput of the create_stop_feature_ref function."""
-        stop_list = [11,234,1108]
+        stop_list = [11, 234, 1108]
         stop_feature_ref = {
-            11: [1,0,0],
-            234: [0,1,0],
-            1108: [0,0,1]
+            11: [1, 0, 0],
+            234: [0, 1, 0],
+            1108: [0, 0, 1]
         }
         self.assertEqual(functions.create_stop_feature_ref(stop_list), stop_feature_ref)
 
@@ -55,6 +56,7 @@ class TestCreateDayOfWeekFeatureRef(TestCase):
             6: [0, 0, 0, 0, 0, 0, 1]
         }
         self.assertEqual(functions.create_day_of_week_feature_ref(), day_of_week_ref)
+
 
 class TestCreateMonthFeatureRef(TestCase):
     """Test cases for the create_month_feature_ref function."""
@@ -77,41 +79,45 @@ class TestCreateMonthFeatureRef(TestCase):
         }
         self.assertEqual(functions.create_month_feature_ref(), month_ref)
 
+
 class TestRoutePrediction15A(TestCase):
     """Test cases for the route_prediction_15A function."""
 
     def test_route_prediction_15A_limekiln(self):
         """Test for the ouput of the route_prediction_15A function going in the Limekiln direction."""
-        stops = [395,396,397,398,399,400,7581,1283,7579,1285,1016,1017,1018,1019,1020,1076,1077,1078,1079,1080,\
-            1081,1082,1083,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1101,1102,1103,1104]
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
         rain = 0.1
         temp = 15
         rhum = 75
         msl = 1000
-        actualtime_arr_stop_first = 32400 # 9:00
-        day_of_week = 4 # monday
-        month = 7 # july
+        actualtime_arr_stop_first = 32400  # 9:00
+        day_of_week = 4  # monday
+        month = 7  # july
         weekday = 1
         bank_holiday = 0
-        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
-             weekday, bank_holiday, rain, temp, rhum, msl), 2573)
-
+        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+                                                        weekday, bank_holiday, rain, temp, rhum, msl), 2573)
 
     def test_route_prediction_15A_ringsend(self):
         """Test for the ouput of the route_prediction_15A function going in the Ringsend direction."""
-        stops = [1105,1107,1108,1109,1110,1111,1112,1113,1114,1115,2437,1117,1118,1119,1120,1164,1165,1166,1167,\
-            1168,1169,1170,1069,1070,1071,4528,1072,7577,1353,1354,7578,7582,340,350,351,352,353,354]
+        stops = [1105, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 2437, 1117, 1118, 1119, 1120, 1164, 1165,
+                 1166, 1167, \
+                 1168, 1169, 1170, 1069, 1070, 1071, 4528, 1072, 7577, 1353, 1354, 7578, 7582, 340, 350, 351, 352, 353,
+                 354]
         rain = 0.1
         temp = 15
         rhum = 75
         msl = 1000
-        actualtime_arr_stop_first = 32400 # 9:00
-        day_of_week = 4 # monday
-        month = 7 # july
+        actualtime_arr_stop_first = 32400  # 9:00
+        day_of_week = 4  # monday
+        month = 7  # july
         weekday = 1
         bank_holiday = 0
-        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
-             weekday, bank_holiday, rain, temp, rhum, msl), 2646)
+        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+                                                        weekday, bank_holiday, rain, temp, rhum, msl), 2646)
 
 
 class TesParseWeatherForecast(TestCase):
@@ -119,13 +125,75 @@ class TesParseWeatherForecast(TestCase):
 
     def test_parse_weather_forecast_found(self):
         """Function to test the parse_weather_forecast function when forecast is found for the timestamp."""
-        weather_data = {"cod": "200","message": 0.0066,"cnt": 40,"list": [{"dt": 1562338800,"main": {"temp": 18.82,"temp_min": 18.26,"temp_max": 18.82,"pressure": 1019.31,"sea_level": 1019.31,"grnd_level": 1009.87,"humidity": 81,"temp_kf": 0.56},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.94,"deg": 271.353},"rain": {"3h": 0.125},"sys": {"pod": "d"},"dt_txt": "2019-07-05 15:00:00"}, {"dt": 1562349600,"main": {"temp": 18.11,"temp_min": 17.69,"temp_max": 18.11,"pressure": 1017.62,"sea_level": 1017.62,"grnd_level": 1008.18,"humidity": 86,"temp_kf": 0.42},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.59,"deg": 274.17},"rain": {"3h": 0.063},"sys": {"pod": "d"},"dt_txt": "2019-07-05 18:00:00"}],"city": {"id": 7778677,"name": "Dublin City","coord": {"lat": 53.3551,"lon": -6.2493},"country": "IE","timezone": 3600}}
+        weather_data = {"cod": "200", "message": 0.0066, "cnt": 40, "list": [{"dt": 1562338800,
+                                                                              "main": {"temp": 18.82, "temp_min": 18.26,
+                                                                                       "temp_max": 18.82,
+                                                                                       "pressure": 1019.31,
+                                                                                       "sea_level": 1019.31,
+                                                                                       "grnd_level": 1009.87,
+                                                                                       "humidity": 81, "temp_kf": 0.56},
+                                                                              "weather": [{"id": 500, "main": "Rain",
+                                                                                           "description": "light rain",
+                                                                                           "icon": "10d"}],
+                                                                              "clouds": {"all": 100},
+                                                                              "wind": {"speed": 3.94, "deg": 271.353},
+                                                                              "rain": {"3h": 0.125},
+                                                                              "sys": {"pod": "d"},
+                                                                              "dt_txt": "2019-07-05 15:00:00"},
+                                                                             {"dt": 1562349600,
+                                                                              "main": {"temp": 18.11, "temp_min": 17.69,
+                                                                                       "temp_max": 18.11,
+                                                                                       "pressure": 1017.62,
+                                                                                       "sea_level": 1017.62,
+                                                                                       "grnd_level": 1008.18,
+                                                                                       "humidity": 86, "temp_kf": 0.42},
+                                                                              "weather": [{"id": 500, "main": "Rain",
+                                                                                           "description": "light rain",
+                                                                                           "icon": "10d"}],
+                                                                              "clouds": {"all": 100},
+                                                                              "wind": {"speed": 3.59, "deg": 274.17},
+                                                                              "rain": {"3h": 0.063},
+                                                                              "sys": {"pod": "d"},
+                                                                              "dt_txt": "2019-07-05 18:00:00"}],
+                        "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
+                                 "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 5 2019  2:30PM', '%b %d %Y %I:%M%p')
-        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125,18.82,81,1019.31))
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125, 18.82, 81, 1019.31))
 
     def test_parse_weather_forecast_not_found(self):
         """Test that parse_weather_forecast raises an exception when weather info not found for the timestamp."""
-        weather_data = {"cod": "200","message": 0.0066,"cnt": 40,"list": [{"dt": 1562338800,"main": {"temp": 18.82,"temp_min": 18.26,"temp_max": 18.82,"pressure": 1019.31,"sea_level": 1019.31,"grnd_level": 1009.87,"humidity": 81,"temp_kf": 0.56},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.94,"deg": 271.353},"rain": {"3h": 0.125},"sys": {"pod": "d"},"dt_txt": "2019-07-05 15:00:00"}, {"dt": 1562349600,"main": {"temp": 18.11,"temp_min": 17.69,"temp_max": 18.11,"pressure": 1017.62,"sea_level": 1017.62,"grnd_level": 1008.18,"humidity": 86,"temp_kf": 0.42},"weather": [{"id": 500,"main": "Rain","description": "light rain","icon": "10d"}],"clouds": {"all": 100},"wind": {"speed": 3.59,"deg": 274.17},"rain": {"3h": 0.063},"sys": {"pod": "d"},"dt_txt": "2019-07-05 18:00:00"}],"city": {"id": 7778677,"name": "Dublin City","coord": {"lat": 53.3551,"lon": -6.2493},"country": "IE","timezone": 3600}}
+        weather_data = {"cod": "200", "message": 0.0066, "cnt": 40, "list": [{"dt": 1562338800,
+                                                                              "main": {"temp": 18.82, "temp_min": 18.26,
+                                                                                       "temp_max": 18.82,
+                                                                                       "pressure": 1019.31,
+                                                                                       "sea_level": 1019.31,
+                                                                                       "grnd_level": 1009.87,
+                                                                                       "humidity": 81, "temp_kf": 0.56},
+                                                                              "weather": [{"id": 500, "main": "Rain",
+                                                                                           "description": "light rain",
+                                                                                           "icon": "10d"}],
+                                                                              "clouds": {"all": 100},
+                                                                              "wind": {"speed": 3.94, "deg": 271.353},
+                                                                              "rain": {"3h": 0.125},
+                                                                              "sys": {"pod": "d"},
+                                                                              "dt_txt": "2019-07-05 15:00:00"},
+                                                                             {"dt": 1562349600,
+                                                                              "main": {"temp": 18.11, "temp_min": 17.69,
+                                                                                       "temp_max": 18.11,
+                                                                                       "pressure": 1017.62,
+                                                                                       "sea_level": 1017.62,
+                                                                                       "grnd_level": 1008.18,
+                                                                                       "humidity": 86, "temp_kf": 0.42},
+                                                                              "weather": [{"id": 500, "main": "Rain",
+                                                                                           "description": "light rain",
+                                                                                           "icon": "10d"}],
+                                                                              "clouds": {"all": 100},
+                                                                              "wind": {"speed": 3.59, "deg": 274.17},
+                                                                              "rain": {"3h": 0.063},
+                                                                              "sys": {"pod": "d"},
+                                                                              "dt_txt": "2019-07-05 18:00:00"}],
+                        "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
+                                 "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 4 2019  2:30PM', '%b %d %Y %I:%M%p')
         with self.assertRaises(Exception):
             functions.parse_weather_forecast(timestamp, weather_data)
@@ -157,7 +225,7 @@ class TestIsWeekday(TestCase):
     def test_is_weekday_tue(self):
         """Test that the value 1 is returned for Tuesday"""
         self.assertEqual(functions.is_weekday(1), 1)
-        
+
     def test_is_weekday_wed(self):
         """Test that the value 1 is returned for Wednesday"""
         self.assertEqual(functions.is_weekday(2), 1)
@@ -184,11 +252,11 @@ class TestIsBankHoliday(TestCase):
 
     def test_is_bank_holiday(self):
         """Test that the value 1 is returned for a bank holiday"""
-        self.assertEqual(functions.is_bank_holiday(5,8), 1)
+        self.assertEqual(functions.is_bank_holiday(5, 8), 1)
 
     def test_not_bank_holiday(self):
         """Test that the value 0 is returned for a normal day"""
-        self.assertEqual(functions.is_bank_holiday(4,8), 0)
+        self.assertEqual(functions.is_bank_holiday(4, 8), 0)
 
 
 class TestParseTimestamp(TestCase):
@@ -206,7 +274,74 @@ class TestFormatStopList(TestCase):
     def test_format_stop_list(self):
         """Test that a list is formatted correctly."""
         stop_list = (('8220DB001170', 22), ('8220DB001069', 23), ('8220DB001070', 24), ('8220DB001071', 25), \
-            ('8220DB004528', 26), ('8220DB001072', 27), ('8220DB007577', 28), ('8220DB001353', 29), \
-                ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
+                     ('8220DB004528', 26), ('8220DB001072', 27), ('8220DB007577', 28), ('8220DB001353', 29), \
+                     ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
         self.assertEqual(functions.format_stop_list(stop_list), [1170, 1069, 1070, 1071, 4528, 1072, 7577, \
-            1353, 1354, 7578, 7582, 340])
+                                                                 1353, 1354, 7578, 7582, 340])
+
+
+class TestGetTripInfo(TestCase):
+
+    def test_get_trip_info(self):
+        t = datetime(2019, 6, 1, hour=13, minute=17, second=30)
+        self.assertEqual(get_trip_info('in', t), {
+            '1': ['8230DB001105', 'Greenhills, Greenhills College', 46800, 'Greenhills College - Barrow Street'],
+            '2': ['8230DB001107', 'Greenhills, Limekiln Road (Limekiln Ave)', 46864,
+                  'Greenhills College - Barrow Street'],
+            '3': ['8230DB001108', "Greenhills, Saint Peter's School", 46896, 'Greenhills College - Barrow Street'],
+            '4': ['8230DB001109', 'Greenhills, Limekiln Road (Mountdown Park)', 46920,
+                  'Greenhills College - Barrow Street'],
+            '5': ['8230DB001110', 'Greenhills, Limekiln Road', 46939, 'Greenhills College - Barrow Street'],
+            '6': ['8230DB001111', 'Greenhills, Wellington Lane (Limekiln Drive)', 46962,
+                  'Greenhills College - Barrow Street'],
+            '7': ['8230DB001112', 'Whitehall Park', 47027, 'Greenhills College - Barrow Street'],
+            '8': ['8220DB001113', 'Walkinstown, Glendale Park', 47065, 'Greenhills College - Barrow Street'],
+            '9': ['8220DB001114', 'Kimmage, Manor Grove', 47115, 'Greenhills College - Barrow Street'],
+            '10': ['8220DB001115', 'Kimmage, Whitehall Gardens', 47154, 'Greenhills College - Barrow Street'],
+            '11': ['8220DB002437', 'Kimmage, Kimmage Road West (Whitehall Road)', 47213,
+                   'Greenhills College - Barrow Street'],
+            '12': ['8220DB001117', 'Terenure, Lavarna Grove', 47280, 'Greenhills College - Barrow Street'],
+            '13': ['8220DB001118', 'Kimmage, Terenure Road', 47349, 'Greenhills College - Barrow Street'],
+            '14': ['8220DB001119', 'Kimmage, Terenure Road West', 47401, 'Greenhills College - Barrow Street'],
+            '15': ['8220DB001120', 'Terenure, Garda Station', 47496, 'Greenhills College - Barrow Street'],
+            '16': ['8220DB001164', 'Terenure, Terenure Road East', 47635, 'Greenhills College - Barrow Street'],
+            '17': ['8220DB001165', 'Rathgar, Terenure Road East', 47701, 'Greenhills College - Barrow Street'],
+            '18': ['8220DB001166', 'Rathgar, Rathgar Road, Winton Avenue', 47767, 'Greenhills College - Barrow Street'],
+            '19': ['8220DB001167', 'Rathgar, Rathgar Road (Garville)', 47810, 'Greenhills College - Barrow Street'],
+            '20': ['8220DB001168', 'Rathmines, Rathgar Road', 47853, 'Greenhills College - Barrow Street'],
+            '21': ['8220DB001169', 'Rathmines, Rathmines Park', 47925, 'Greenhills College - Barrow Street'],
+            '22': ['8220DB001170', 'Rathmines, Rathgar Road (Lower Rathmines Road)', 47992,
+                   'Greenhills College - Barrow Street'],
+            '23': ['8220DB001069', 'Rathmines, Lower Rathmines Road', 48062, 'Greenhills College - Barrow Street'],
+            '24': ['8220DB001070', 'Rathmines, Rathmines Town Centre', 48126, 'Greenhills College - Barrow Street'],
+            '25': ['8220DB001071', 'Ranelagh, Rathmines Road Lower (Richmond Hill)', 48214,
+                   'Greenhills College - Barrow Street'],
+            '26': ['8220DB004528', "Kelly's Corner, Lower Rathmines Road", 48254, 'Greenhills College - Barrow Street'],
+            '27': ['8220DB001072', 'Portobello, Richmond Street Sth (Lennox Street)', 48309,
+                   'Greenhills College - Barrow Street'],
+            '28': ['8220DB007577', 'Camden Street', 48380, 'Greenhills College - Barrow Street'],
+            '29': ['8220DB001353', 'Dublin City South, Camden Street', 48441, 'Greenhills College - Barrow Street'],
+            '30': ['8220DB001354', 'Dublin City South, Aungier Street', 48522, 'Greenhills College - Barrow Street'],
+            '31': ['8220DB007578', "Dublin City South, South Great George's Street", 48645,
+                   'Greenhills College - Barrow Street'],
+            '32': ['8220DB007582', 'Temple Bar, Central Bank', 48776, 'Greenhills College - Barrow Street'],
+            '33': ['8220DB000340', 'Dublin City South, Pearse Street Garda Station', 49010,
+                   'Greenhills College - Barrow Street'],
+            '34': ['8220DB000350', 'Dublin City South, Lower Sandwith Street', 49089,
+                   'Greenhills College - Barrow Street'],
+            '35': ['8220DB000351', 'Pearse Station, Pearse Street', 49182, 'Greenhills College - Barrow Street'],
+            '36': ['8220DB000352', 'Grand Canal Dock, Pearse Square', 49225, 'Greenhills College - Barrow Street'],
+            '37': ['8220DB000353', 'Grand Canal Dock, Pearse Street', 49266, 'Greenhills College - Barrow Street'],
+            '38': ['8220DB000354', 'Grand Canal Dock, Barrow Street', 49314, 'Greenhills College - Barrow Street']})
+
+
+class GetServiceId(TestCase):
+
+    def test_get_service_id1(self):
+        self.assertEqual(functions.get_service_id(1, 0), 1)
+
+    def test_get_service_id3(self):
+        self.assertEqual(functions.get_service_id(5, 0), 3)
+
+    def test_get_service_id2(self):
+        self.assertEqual(functions.get_service_id(3, 0), 2)

@@ -1,28 +1,31 @@
 <div class="drawer__container drawer__container--bottom">
     <div class="drawer__search__wrapper">
         <ion-toolbar>
-            <ion-searchbar placeholder="Search for stop or line" search-icon='search' id="route_stop_info"></ion-searchbar>
+            <ion-searchbar placeholder="Search for stop or line" search-icon='search'
+                           id="route_stop_info"></ion-searchbar>
         </ion-toolbar>
     </div>
     <div class="drawer__search__title">
         <div class="drawer__search__title__label">
-            <span id="drawer__search__title__label">15a</span>
+            <span id="drawer__search__title__label"></span><br>
+            <span class="drawer__search__title__direction" id="drawer__search__title__direction"></span>
         </div>
     </div>
 
-{#    TODO: infinite scroll#}
     <div id="timeline-wrapper" class="timeline-wrapper">
-        <span>Inbound</span>
+        <span>Change direction</span>
         <label class="timeline-wrapper_switch">
             <input type="checkbox" id="direction_switch">
             <span class="slider round"></span>
         </label>
-        <span>Outbound</span>
-        <ul class="timeline-wrapper__content" id="timeline__content">
-{#            <li class="timeline-wrapper__content__event">#}
-{#                <h3 class="timeline-wrapper__content__h3">Dinosaurs Roamed the Earth <i id="">-1123</i></h3>#}
-{#            </li>#}
-        </ul>
+{#        <span>Outbound</span>#}
+        <div class="timeline-wrapper__content__box">
+            <ul class="timeline-wrapper__content" id="timeline__content">
+                {#            <li class="timeline-wrapper__content__event">#}
+                {#                <h3 class="timeline-wrapper__content__h3">Dinosaurs Roamed the Earth <i id="">-1123</i></h3>#}
+                {#            </li>#}
+            </ul>
+        </div>
     </div>
 </div>
 
