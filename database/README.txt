@@ -25,8 +25,8 @@ Follow the steps below to load data into the tables:
         > sudo mv *prepared* /var/lib/mysql-files/
    (The files that were downloaded in steps 4 and 5 can now be deleted to clear up space.)
 8. Run the SQL scripts as follows, replacing USER & PASSWORD with the login details for mysql:
-        > sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_weather_data.SQL &'
-        > sudo sh -c 'nohup mysql -vv -u USER -pPASSWORD < load_bus_data_trips.SQL &'
+        > sudo sh -c 'nohup mysql -u USER -pPASSWORD < load_weather_data.SQL &'
+        > sudo sh -c 'nohup mysql -u USER -pPASSWORD < load_bus_data_trips.SQL &'
 9. Navigate to the directory where the files are stored:
         > sudo -i
         > cd /var/lib/mysql-files/
@@ -35,11 +35,11 @@ Follow the steps below to load data into the tables:
 11. Remove the files that are no longer needed:
         > rm *prepared*
 12. Import the data using mysqlimport:
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txta
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtb
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtc
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtd
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txte
-        > nohup mysqlimport -u USER -pPASSWORD --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtf
+        > nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txta
+        > nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtb
+        > nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtc
+        > nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtd
+        > nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txte
+        > nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=';' --fields-enclosed-by='"' --lines-terminated-by='\n' db_raw_data /var/lib/mysql-files/rt_leavetimes.txtf
 13. Remove the files that are no longer needed:
         > rm rt_leavetimes*
