@@ -115,10 +115,9 @@ def get_bus_stop_list(request):
     weekday = is_weekday(time.weekday())
     bank_holiday = is_bank_holiday(time.day, time.month)
     service_id = get_service_id(weekday, bank_holiday)
-    print(current)
-    trip_id_list = get_trip_id(direction, service_id, current)
+    trip_id_list = get_trip_id(direction, service_id, current, route_id)
     print(trip_id_list)
-    trip_info = get_trip_info(trip_id_list, service_id, direction)
+    trip_info = get_trip_info(trip_id_list, service_id, direction, route_id)
     stops_list = calculate_time_diff(trip_info, current)
     return JsonResponse({"stops_list": stops_list})
 
@@ -126,7 +125,6 @@ def get_bus_stop_list(request):
 def get_real_time(request):
     stop_id = request.GET['stop_id']
     route_id = request.GET['route_id']
-    print(stop_id, route_id)
     headers = {
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
     resp = requests.get(
@@ -156,21 +154,23 @@ def get_real_time(request):
             temp.append(item)
 
     current = datetime.now()
-    close = 9999
+    t = 9999
     current_min = current.hour * 60 + current.minute
     for i in real_time_info[stop_id]:
         if i[0] == route_id:
+            if i[2] == 'Due':
+                return JsonResponse({'time': 'Due'})
             hr = int(i[2].split(":")[0])
             min = int(i[2].split(":")[1])
             time = hr * 60 + min - current_min
-            if time < close:
-                close = time
-    if close == 0:
-        close = 'Due'
-    return JsonResponse({'time': close})
+            if time < t:
+                t = time
+    if t == 0:
+        t = 'Due'
+    return JsonResponse({'time': t})
 
 
-def get_trip_id(direction, service_id, current_time):
+def get_trip_id(direction, service_id, current_time, route_id):
     path = os.path.join(BASE_DIR, '../static/cache/route_15a_timetable.json')
     slots = []
     with open(path, 'r') as json_file:
@@ -186,7 +186,7 @@ def get_trip_id(direction, service_id, current_time):
     return slots
 
 
-def get_trip_info(trip_ids, service_id, direction):
+def get_trip_info(trip_ids, service_id, direction, route_id):
     path = os.path.join(BASE_DIR, '../static/cache/route_15a.json')
     infos = []
     with open(path, 'r') as json_file:

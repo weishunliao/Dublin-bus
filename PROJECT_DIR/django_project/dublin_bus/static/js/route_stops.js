@@ -32,7 +32,7 @@ let autoComplete = function () {
                 renderItem: function (e, t) {
                     t = t.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
                     var o = new RegExp("(" + t.split(" ").join("|") + ")", "gi");
-                    return '<div class="autocomplete-suggestion" data-val="' + e + '">' + e.replace(o, "<b>$1</b>") + "</div>"
+                    return '<div class="autocomplete-suggestion" data-val="' + e + '"><ion-icon name="bus"></ion-icon>' + e.replace(o, "<b>$1</b>") + "</div>"
                 },
                 onSelect: function () {
                 }
@@ -164,13 +164,10 @@ const get_bus_stop_list = (route_id, direction) => {
         })
         .then(function (data) {
             return display_stops(data['stops_list']);
-        }).then(function (num) {
-        let elem = document.querySelectorAll("li")[num];
-        elem.getElementsByTagName('span')[0].style.display = 'inline';
-        elem.classList.remove('timeline-wrapper__content__event');
-        elem.classList.add('timeline-wrapper__content__event__fill');
-        let stop_id = elem.getElementsByTagName('h6')[0].innerText.substring(0, 4);
-        update_real_time(num, stop_id, route_id);
+        }).then(function (stops) {
+        for (let i = 0; i < stops.length; i++) {
+            update_real_time(i, stops[i][0], route_id);
+        }
     }).catch(function (error) {
         return error;
     })
@@ -193,8 +190,9 @@ const display_stops = (stops) => {
         timeline__content.appendChild(li);
     }
     document.getElementById("drawer__search__title__direction").innerText = stops[0][3];
-    return Math.floor(stops.length / 2);
+    return stops;
 };
+
 
 const direction_switch = document.getElementById("direction_switch");
 direction_switch.addEventListener("change", () => {
@@ -206,20 +204,32 @@ direction_switch.addEventListener("change", () => {
 });
 
 const update_real_time = (num, stop_id, route_id) => {
-    fetch('get_real_time?stop_id='+stop_id+'&route_id=' + route_id, {method: 'get'})
+    fetch('get_real_time?stop_id=' + stop_id + '&route_id=' + route_id, {method: 'get'})
         .then(function (data) {
             return data.json();
 
         }).then(function (data) {
         let elem = document.querySelectorAll("li")[num];
-        elem.getElementsByTagName('span')[0].innerText = data['time'] + 'mins';
-    })
+        if (data['time'] === 'Due') {
+            display_bus_arrival_time(num);
+            elem.getElementsByTagName('span')[0].innerHTML = 'Due    ' + '<ion-icon name="ios-radio"></ion-icon>';
+        } else{
+            elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ' + '<ion-icon name="ios-radio"></ion-icon>';;
 
+        }
+    })
         .catch(function (error) {
             console.log(error)
         });
 };
 
+
+const display_bus_arrival_time = (num) => {
+    let elem = document.querySelectorAll("li")[num];
+    elem.getElementsByTagName('span')[0].style.display = 'inline';
+    elem.classList.remove('timeline-wrapper__content__event');
+    elem.classList.add('timeline-wrapper__content__event__fill');
+};
 
 const route_list = ['1', '102', '104', '11', '111', '114', '116', '118', '120', '122', '123', '13', '130', '14', '140',
     '142', '145', '14c', '15', '150', '151', '155', '15a', '15b', '15d', '16', '161', '16c', '16d', '17', '17a', '18',

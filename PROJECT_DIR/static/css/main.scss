@@ -1,4 +1,43 @@
 
-@import 'test';
-@import 'project/variables';
+@import './normalize.scss';
+@import 'project/Variables/variables';
+@import 'project/Drawer/drawer';
+@import 'project/Map/map';
+@import 'project/JourneyPlanner/journey_planner';
+@import 'project/Timeline/timeline';
+@import 'project/Timeline/switch';
+@import 'project/AutoComplete/auto-complete';
+
+
+
+
+
+:root {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 62.5%;
+    letter-spacing: 0rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+
+.main {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+// input {
+//     pointer-events: none;
+// }
+
+
+
 
