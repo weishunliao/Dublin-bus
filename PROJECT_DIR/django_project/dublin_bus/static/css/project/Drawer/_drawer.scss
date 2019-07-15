@@ -1,3 +1,14 @@
+
+
+.grabber {
+    height: 10rem;
+    width: 100%;
+    background: transparent;
+    position: absolute;
+    left: 0;
+    transform: translateY(-5rem);
+}
+
 .drawer {
 
     &__hidearea{
@@ -42,22 +53,32 @@
     position: absolute;
     height: 80vh;
     touch-action: none;
-    width: 90%;
+    width: 100%;
     background: white;
 
     left: 50%;
     transition: all 0.3s ease-in-out;
-    border-radius: 1rem;
+    border-radius: 3rem;
     box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
     z-index: 3;
-    &--top {
-      top: 0;
-      transform: translateY(-80%) translateX(-50%);
+
+    &__grab {
+        position: absolute;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgb(180, 180, 180);
+        height: .5rem;
+        width: 3rem;
+        z-index: 10;
+        border-radius: 3rem;
+        margin-bottom: 10rem;
+
     }
 
     &--bottom {
       bottom: 0;
-      transform: translateY(80%) translateX(-50%);
+      transform: translateY(82%) translateX(-50%);
     }
   }
 
@@ -238,8 +259,22 @@
   &__search {
     &__wrapper {
       // z-index: 2000;
-      height: 10rem;
+     
       width: 100%;
+      position: relative;
+
+      &::after {
+          content: "";
+          position: absolute;
+          top:.75rem;
+          left: 50%;
+          transform: translateX(-50%);
+          border-radius: 2rem;
+          height: 5px;
+          width: 2.6rem;
+          background: #D0D0D0;
+
+      }
     }
 
     &__form {

@@ -1,9 +1,12 @@
 
 @import './normalize.scss';
 @import 'project/Variables/variables';
+@import 'project/Variables/mixins';
 @import 'project/Drawer/drawer';
 @import 'project/Map/map';
 @import 'project/JourneyPlanner/journey_planner';
+@import 'project/Components/tabs';
+@import 'project/Components/action-button';
 
 
 
@@ -27,7 +30,16 @@ button:focus {
 .main {
     position: relative;
     width: 100%;
-    overflow: hidden;
+}
+
+.main-cover {
+    height: 100%;
+    width: 100%;
+    background: blue;
+    z-index: 1000000;
+    position: absolute;
+    top: 0;
+    left:0;
 }
 
 // input {
@@ -35,5 +47,12 @@ button:focus {
 // }
 
 
+ion-tabs {
+    z-index: 1;
+}
 
-
+ion-fab-button {
+    margin-top: 1rem;
+    margin-right: 1rem;
+    
+}
