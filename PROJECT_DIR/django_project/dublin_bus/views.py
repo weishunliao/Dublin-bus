@@ -122,9 +122,7 @@ def get_bus_stop_list(request):
     return JsonResponse({"stops_list": stops_list})
 
 
-def get_real_time(request):
-    stop_id = request.GET['stop_id']
-    route_id = request.GET['route_id']
+def get_real_time_data(stop_id):
     headers = {
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
     resp = requests.get(
@@ -152,7 +150,39 @@ def get_real_time(request):
                 temp = []
                 continue
             temp.append(item)
+    data.sort(key=lambda x: x[2])
+    return real_time_info
 
+
+def real_time_info_for_bus_stop(request):
+    stop_id = request.GET['stop_id']
+    path = os.path.join(BASE_DIR, '../static/cache/stops_new.json')
+    with open(path, 'r') as json_file:
+        stop_name = json.load(json_file)[str(stop_id)][2]
+    current = datetime.now()
+    current_min = current.hour * 60 + current.minute
+    real_time_data = get_real_time_data(stop_id)
+    for i in real_time_data[stop_id]:
+        if i[2] == 'Due':
+            i.append('Due')
+        else:
+            hr = int(i[2].split(":")[0])
+            min = int(i[2].split(":")[1])
+            remain = hr * 60 + min - current_min
+            if remain == 0:
+                i.append('Due')
+            else:
+                i.append(remain)
+        i.append(stop_name)
+    print(real_time_data)
+    return JsonResponse(real_time_data)
+
+
+def real_time_for_route(request):
+    stop_id = request.GET['stop_id']
+    route_id = request.GET['route_id']
+    print(route_id)
+    real_time_info = get_real_time_data(stop_id)
     current = datetime.now()
     t = 9999
     current_min = current.hour * 60 + current.minute

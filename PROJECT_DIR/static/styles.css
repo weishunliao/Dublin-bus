@@ -399,6 +399,7 @@ template {
   font-weight: bold; }
 
 .drawer__search__title__direction {
+  margin-top: 15px;
   font-size: 1.5rem;
   text-align: center;
   font-weight: bold; }
@@ -615,7 +616,6 @@ input:checked + .slider:before {
   border: 1px solid #ccc;
   border-top: 0;
   background: #fff;
-  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.1);
   /* core styles should not be changed */
   position: absolute;
   display: none;
@@ -641,6 +641,49 @@ input:checked + .slider:before {
 
 .autocomplete-suggestion.selected {
   background: #f0f0f0; }
+
+.stops__chips ion-chip {
+  background-color: #4c8dff;
+  color: white;
+  font-size: 1.3rem; }
+
+.stops__chips ion-icon {
+  font-size: 1.5rem; }
+
+.stops__depart_label {
+  font-size: 2rem;
+  font-weight: bold; }
+
+.stops__content__wrapper {
+  overflow: scroll;
+  height: 350px; }
+
+.stops__content__card {
+  margin-top: 0; }
+
+.stops__content__card-header {
+  padding-bottom: 0;
+  font-size: 3rem;
+  color: #333333; }
+  .stops__content__card-header__icon {
+    margin-right: 10px;
+    font-size: 3rem;
+    color: #333333; }
+  .stops__content__card-header__time {
+    font-size: 3rem;
+    text-align: end;
+    color: #3880ff; }
+
+.stops__content__card-content {
+  padding-top: 5px;
+  padding-bottom: 0;
+  color: #333333;
+  font-size: 1.5rem; }
+  .stops__content__card-content__time {
+    padding-top: 0;
+    padding-bottom: 0;
+    text-align: end;
+    font-size: 1.8rem; }
 
 :root {
   margin: 0;
