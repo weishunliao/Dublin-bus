@@ -1,15 +1,22 @@
-
-
-
 <div class="drawer__container drawer__container--bottom">
-  <div class="drawer__search__wrapper">
-    
-   <form action="" class="drawer__search__form">
-       <input type="text" placeholder="Enter a station or a route" onfocus="this.placeholder = ''"
-       onblur="this.placeholder = 'Enter a station or a route'" class="drawer__search__input"/>
-   </form>
+  <div class="grabber"></div>
+  <div class="drawer__container__grab"></div>
 
-  </div>
-  
+  {% include "../tabs/journey_planner.html" %}
+
+  <ion-tab tab="live-data">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>Live Data</h1>
+    </ion-content>
+  </ion-tab>
+  <ion-tab tab="sights">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>Sights</h1>
+    </ion-content>
+  </ion-tab>
+  <ion-tab tab="user">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>User</h1>
+    </ion-content>
+  </ion-tab>
 </div>
-
