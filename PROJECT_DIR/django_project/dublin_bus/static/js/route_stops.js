@@ -122,9 +122,9 @@ const update_real_time = (num, stop_id, route_id) => {
         let elem = document.querySelectorAll("li")[num];
         if (data['time'] === 'Due') {
             display_bus_arrival_time(num);
-            elem.getElementsByTagName('span')[0].innerHTML = 'Due    ' + '<ion-icon name="ios-radio"></ion-icon>';
+            elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon name="ios-bus"></ion-icon>';
         } else {
-            elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ' + '<ion-icon name="ios-radio"></ion-icon>';
+            elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ' + '<ion-icon name="ios-bus"></ion-icon>';
             ;
 
         }

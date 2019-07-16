@@ -91,8 +91,8 @@ DATABASES = {
         'USER': 'team8',
         'PASSWORD': config('DATABASE_PASSWORD'),
         # 'HOST': '127.0.0.1',
-        # 'HOST': 'localhost',
-        'HOST': '137.43.49.50',
+        'HOST': 'localhost',
+        # 'HOST': '137.43.49.50',
         'PORT': '3306',
     }
 }
