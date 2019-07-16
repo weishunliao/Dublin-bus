@@ -82,19 +82,22 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        # There are two host addresses:
-        # localhost is for production,
-        # 137.43.49.50 is for development.
 
-        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db_route_info',  # database name
         'USER': 'team8',
+        'ENGINE': 'django.db.backends.mysql',
         'PASSWORD': config('DATABASE_PASSWORD'),
-        # 'HOST': '127.0.0.1',
-        'HOST': 'localhost',
-        # 'HOST': '137.43.49.50',
         'PORT': '3306',
+
+        # # PRODUCTION
+        # 'HOST': 'localhost',
+
+        # UCD
+        # 'HOST': '137.43.49.50',
+        # 137.43.49.50 is for development. 
     }
+
+
 }
 
 # these setting is uni-test use

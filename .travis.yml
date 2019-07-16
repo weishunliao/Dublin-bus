@@ -34,12 +34,14 @@ script:
   - cd ../../data_analytics
   - python tests.py
 
-after_script:
-  - cd ../PROJECT_DIR/django_project/django_project/
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+# after_script:
+  # - cd ../PROJECT_DIR/django_project/django_project/
+  # - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 after_success:
-  - cd ..
+  - cd ../PROJECT_DIR/django_project/django_project/
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - cd ../..
   - docker build -t $DOCKER_USERNAME/dublin-bus:$TRAVIS_BRANCH .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push $DOCKER_USERNAME/dublin-bus

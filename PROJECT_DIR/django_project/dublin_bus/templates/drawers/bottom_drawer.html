@@ -1,4 +1,7 @@
 <div class="drawer__container drawer__container--bottom">
+  <div class="grabber"></div>
+  <div class="drawer__container__grab"></div>
+<div class="drawer__container drawer__container--bottom">
     <ion-grid class="search-container">
         <ion-row>
             <ion-col size="12">
@@ -34,7 +37,23 @@
         </div>
     </div>
 
+  {% include "../tabs/journey_planner.html" %}
 
+  <ion-tab tab="live-data">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>Live Data</h1>
+    </ion-content>
+  </ion-tab>
+  <ion-tab tab="sights">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>Sights</h1>
+    </ion-content>
+  </ion-tab>
+  <ion-tab tab="user">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>User</h1>
+    </ion-content>
+  </ion-tab>
     <div id="drawer_container_stops" style="">
         <div class="drawer__search__title__direction">
             <span id="drawer__search__title__stop-name"></span>
@@ -59,4 +78,3 @@
         </div>
     </div>
 </div>
-

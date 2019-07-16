@@ -1,0 +1,66 @@
+.journey-planner {
+
+    height: 100%;
+    width: 100%;
+    
+
+
+    // ^ FORM CONTAINER
+
+    &__form-container {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        text-align: center;
+
+        // background: $db_yellow;  it will be yellow on transform
+    }
+
+    // * styles for converting to smaller version
+    & .converted {
+        background: blue;
+    }
+
+    &__title {
+        font-size: 3.2rem;
+        color: $db_blue;
+    }
+
+    &__form {
+        padding: 1rem 4rem;
+        width: 100%;
+
+
+        &__input-container {
+            position: relative;
+        }
+
+        &__label {
+            position: absolute;
+            left: 0; 
+            top: 1rem;
+            transition: all .3s linear;
+
+            
+
+            & h3 {
+                margin: 0;
+                color: $db_blue;
+
+            }
+
+            
+        }
+
+        &__input {
+            width: 100%;
+            font-size: 1.8rem;
+            display: block;
+            border: none;
+            border-bottom: 1px solid $db_blue;
+            padding: 1rem;
+            padding-left: 0;
+            margin-bottom: 2rem;
+        }
+    }
+}
