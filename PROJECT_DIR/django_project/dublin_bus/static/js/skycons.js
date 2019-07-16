@@ -644,25 +644,25 @@ export default function buildWeather(weather_type){
     switch (weather_type) {
         case "snow":
             obj = Skycons.SNOW
-            color = "lightgrey"
+            color = "white"
             break;
         case "partly-cloudy-day":
             obj = Skycons.PARTLY_CLOUDY_DAY
-            color = "grey"
+            color = "white"
             break;
         case "clear-day":
             obj = Skycons.CLEAR_DAY
-            color = "yellow"
+            color = "white"
             break;
         default:
             obj = Skycons.SNOW
-            color = "blue"
+            color = "white"
             break;
     }
 
-    console.log(obj, color)
+   
 
-    var skycons = new Skycons();
+    var skycons = new Skycons({"color": "#3D5F7E"});
     
     skycons.add("icon2", obj);
 

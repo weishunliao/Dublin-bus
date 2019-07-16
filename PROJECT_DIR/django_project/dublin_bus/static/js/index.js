@@ -16,7 +16,24 @@ window.onresize = () => {
 
 const { searchButton, searchContainer } = search
 
-searchButton.addEventListener('click', () => {
+export const searchToggle = () => {
     searchContainer.classList.toggle("search-out")
     searchButton.classList.toggle("search-out-button")
-})
+}
+
+searchButton.addEventListener('click', searchToggle);
+
+$('.temperature-show').hide()
+
+$(".weather-button").click(() => {
+    if ($('#icon2').css('display') !== "none"){
+        $('#icon2').fadeOut(() => {
+            $('.temperature-show').fadeIn();
+        });
+        
+    } else {
+        $('.temperature-show').fadeOut(() => {
+            $('#icon2').fadeIn();
+        });
+    }
+});

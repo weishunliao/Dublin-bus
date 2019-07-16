@@ -1,43 +1,22 @@
 <div class="drawer__container drawer__container--bottom">
-        <div class="grabber"></div>
-    <div class="drawer__container__grab">
+  <div class="grabber"></div>
+  <div class="drawer__container__grab"></div>
 
-        
-    </div>
-  
-    <ion-tab tab="journey">
-        
-      <ion-content fullscreen class="ion-padding drawer-content">
-          <div class="" style="height: 300rem;">
-            <ion-card>
-                <ion-card-header>
-                  <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-                  <ion-card-title>Card Title</ion-card-title>
-                </ion-card-header>
-              
-                <ion-card-content>
-                  Keep close to Nature's heart... and break clear away, once in awhile,
-                  and climb a mountain or spend a week in the woods. Wash your spirit clean.
-                </ion-card-content>
-              </ion-card>
-          </div>
-        
-      </ion-content>
-    </ion-tab>
-    <ion-tab tab="live-data">
-      <ion-content fullscreen class="ion-padding drawer-content">
-        <h1>Live Data</h1>
-      </ion-content>
-    </ion-tab>
-    <ion-tab tab="sights">
-      <ion-content fullscreen class="ion-padding drawer-content">
-        <h1>Sights</h1>
-      </ion-content>
-    </ion-tab>
-    <ion-tab tab="user">
-      <ion-content fullscreen class="ion-padding drawer-content">
-        <h1>User</h1>
-      </ion-content>
-    </ion-tab>
+  {% include "../tabs/journey_planner.html" %}
 
+  <ion-tab tab="live-data">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>Live Data</h1>
+    </ion-content>
+  </ion-tab>
+  <ion-tab tab="sights">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>Sights</h1>
+    </ion-content>
+  </ion-tab>
+  <ion-tab tab="user">
+    <ion-content fullscreen class="ion-padding drawer-content">
+      <h1>User</h1>
+    </ion-content>
+  </ion-tab>
 </div>

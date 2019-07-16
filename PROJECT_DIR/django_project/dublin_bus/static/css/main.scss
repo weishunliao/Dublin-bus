@@ -3,8 +3,8 @@
 @import 'project/Variables/variables';
 @import 'project/Variables/mixins';
 @import 'project/Drawer/drawer';
+@import 'project/tabs/journey_planner';
 @import 'project/Map/map';
-@import 'project/JourneyPlanner/journey_planner';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
 
@@ -17,6 +17,7 @@
     font-family: 'Actor', sans-serif;
     font-size: 62.5%;
     letter-spacing: 0rem;
+    --ion-color-primary: #3D5F7E;
 }
 
 input:focus,
@@ -45,6 +46,7 @@ button:focus {
 // input {
 //     pointer-events: none;
 // }
+
 
 
 ion-tabs {

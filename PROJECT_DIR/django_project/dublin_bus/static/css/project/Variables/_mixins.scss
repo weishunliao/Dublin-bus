@@ -47,10 +47,10 @@
     width: 100%;
   }
 
-  @mixin absolute($position, $translate) {
+  @mixin absolute($left, $top, $translate) {
     position: absolute;
-    top: 50%;
-    left: $position;
+    top: $top;
+    left: $left;
     transform: $translate;
   }
   

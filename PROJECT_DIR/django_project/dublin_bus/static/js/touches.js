@@ -1,3 +1,6 @@
+import { initMap } from './google_maps'
+
+
 window.requestAnimFrame = (function() {
   return (
     window.requestAnimationFrame ||
@@ -39,7 +42,7 @@ class Swiper {
     this.scrollThreshold;
     this.itemHeight = element.offsetHeight;
 
-    this.inTransformVal = element.offsetHeight * 0.82;
+    this.inTransformVal = element.offsetHeight * 0.92;
     this.outTransformVal = element.offsetHeight * 0.08;
     this.startTransform = this.inTransformVal;
 
@@ -218,9 +221,10 @@ class Swiper {
   //   }
 }
 
-window.addEventListener("load", function() {
 
-    let bottomSwiper;
+
+window.addEventListener("load", function() {
+  let bottomSwiper;
   var h = Math.max(
     document.documentElement.clientHeight,
     window.innerHeight || 0
@@ -242,49 +246,44 @@ window.addEventListener("load", function() {
   let tabs = document.querySelector(".tabs");
 
   function handleOut(e) {
-
     if (bottomSwiper.currentState === bottomSwiper.IN_STATE) {
       bottomSwiper.changeState(bottomSwiper.OUT_STATE);
     }
   }
 
   function tabClick(e) {
-       console.log(e.target.id)
-   
+    console.log(e.target.id);
+
     if (e.target.id === currentTab) {
-        console.log("yes")
-        if (bottomSwiper.currentState === bottomSwiper.OUT_STATE){
-            bottomSwiper.changeState(bottomSwiper.IN_STATE);
-        } else {
-            bottomSwiper.changeState(bottomSwiper.OUT_STATE);
-        }
-    } else {
+      console.log("yes");
+      if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {
+        bottomSwiper.changeState(bottomSwiper.IN_STATE);
+      } else {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+      }
+    } else {
+      bottomSwiper.changeState(bottomSwiper.OUT_STATE);
     }
 
     currentTab = e.target.id;
-   
   }
-
-
 
   setTimeout(() => {
     bottomSwiper = new Swiper(bottomDrawer);
     tabs.addEventListener("ionTabsWillChange", handleOut);
+    
   }, 200);
 
-  const tab_buttons = document.querySelectorAll('ion-tab-button');
-//   console.log(tab_buttons)
+  const tab_buttons = document.querySelectorAll("ion-tab-button");
+  //   console.log(tab_buttons)
   tab_buttons.forEach(tab => {
-      tab.addEventListener('click', tabClick, true)
-  })
- 
+    tab.addEventListener("click", tabClick, true);
+  });
+
+  
 
   const map = document.querySelector(".map__container");
   const searchInput = document.querySelector(".drawer__search__input");
+
+
 });
-
-
-function test(){
-    console.log("this is a test")
-}

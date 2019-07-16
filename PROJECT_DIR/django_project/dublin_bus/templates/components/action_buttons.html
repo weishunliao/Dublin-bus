@@ -6,16 +6,31 @@
       <ion-icon name="search" class="action_button__icon"></ion-icon>
     </div>
     <div class="action_button__search__container search-container">
-        <div class="action_button__search__rel-container">
+        <div class="action_button__rel-container">
             <div class="action_button__search__input-container">
-                    <input ondblclick="this.select()" onfocus="this.placeholder = ''" onblur="this.value= ''"
+                    <input ondblclick="this.select()" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search for somewhere in Dublin!'"
                     class="action_button__search__input search-input" type="text" placeholder="Search for somewhere in Dublin!">
             </div>
                
         </div>
         
     </div>
-    <div class="action_button__button action_button__button--weather"></div>
-    <div class="action_button__button action_button__button--location"></div>
+    <div class="action_button__button action_button__button--weather weather-button">
+        <div class="action_button__rel-container">
+            <div class="action_button__weather-container">
+                <canvas id="icon2" width="30" height="30"></canvas>
+                <div class="action_button__temperature temperature-show">{{ temperature }}&deg;</div>
+            </div>
+            
+        </div>
+       
+    </div>
+    <div class="action_button__button action_button__button--location location-button">
+        <div class="action_button__rel-container">
+            <div class="action_button__location-container">
+                <ion-icon name="md-locate"></ion-icon>
+            </div>
+        </div>
+    </div>
   </div>
 </div>

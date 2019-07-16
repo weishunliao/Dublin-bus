@@ -17,7 +17,3 @@ export const search = {
     
 
 
-// export const nodes = {
-//     drawers,
-//     search
-// }

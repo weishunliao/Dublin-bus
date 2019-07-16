@@ -1,19 +1,20 @@
-import { search } from './nodes';
+import { search } from "./nodes";
+import { searchToggle } from "./index";
 
 const { searchInput } = search;
 let resp;
 let directionsDisplay;
 
-// let cover = $(".drawer__jp__form__cover")[0];
-// $('.drawer__jp__routes').hide();
-// $('.drawer__jp__routes').css('transform', styler);
 
-function initMap() {
-  let map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 53.3471, lng: -6.26059 },
-    zoom: 13,
-    disableDefaultUI: true
-  });
+
+export default function initMap() {
+  setTimeout(() => {
+    let map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 53.3471, lng: -6.26059 },
+      zoom: 13,
+      disableDefaultUI: true
+    });
+ 
   let directionsService = new google.maps.DirectionsService();
   directionsDisplay = new google.maps.DirectionsRenderer({
     map: map
@@ -24,18 +25,145 @@ function initMap() {
     new google.maps.LatLng(53.400044, -6.215727)
   );
 
-  
-
-//   let input1 = document.querySelector(".route_start");
-//   let input2 = document.querySelector(".route_end");
-//   let date = document.getElementById("date");
-
   let options = {
     bounds: defaultBounds,
     types: ["establishment"]
   };
 
-  const searchAutocomplete = new google.maps.places.Autocomplete(searchInput, options);
+
+  const searchAutocomplete = new google.maps.places.Autocomplete(
+    searchInput,
+    options
+  );
+
+  searchAutocomplete.addListener("place_changed", function() {
+    var place = searchAutocomplete.getPlace();
+    if (!place.geometry) {
+      // User entered the name of a Place that was not suggested and
+      // pressed the Enter key, or the Place Details request failed.
+      window.alert("No details available for input: '" + place.name + "'");
+      return;
+    }
+
+    // If the place has a geometry, then present it on a map.
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(17); // Why 17? Because it looks good.
+    }
+
+    searchToggle();
+    searchInput.value = "";
+    // marker.setPosition(place.geometry.location);
+    // marker.setVisible(true);
+
+    // var address = '';
+    // if (place.address_components) {
+    //   address = [
+    //     (place.address_components[0] && place.address_components[0].short_name || ''),
+    //     (place.address_components[1] && place.address_components[1].short_name || ''),
+    //     (place.address_components[2] && place.address_components[2].short_name || '')
+    //   ].join(' ');
+    // }
+
+    // infowindowContent.children['place-icon'].src = place.icon;
+    // infowindowContent.children['place-name'].textContent = place.name;
+    // infowindowContent.children['place-address'].textContent = address;
+    // infowindow.open(map, marker);
+  });
+
+  let mainPosition;
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          mainPosition = pos;
+
+          var marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            title: "Hello World!",
+            icon: "./static/images/location32.png"
+          });
+        },
+        function() {
+          handleLocationError(true, map.getCenter());
+        }
+      );
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, map.getCenter());
+    }
+
+    function handleLocationError(browserHasGeolocation, pos) {
+      alert(
+        browserHasGeolocation
+          ? "Error: The Geolocation service failed."
+          : "Error: Your browser doesn't support geolocation."
+      );
+    }
+  }
+
+  getLocation();
+
+  const centerOfDublin = new google.maps.LatLng(53.350287, -6.260574);
+  map.setCenter(centerOfDublin);
+  map.setZoom(15);
+
+  $(".location-button").click(() => {
+    getLocation();
+    map.setCenter(mainPosition);
+    map.setZoom(17);
+  });
+}, 200);
+
+ 
+}
+
+function change_route(route_index) {
+  directionsDisplay.setRouteIndex(route_index);
+}
+
+window.initMap = initMap;
+
+//   function() {
+//     handleLocationError(true, infoWindow, map.getCenter());
+//   }
+
+// else {
+//     // Browser doesn't support Geolocation
+//     handleLocationError(false, infoWindow, map.getCenter());
+//   }
+
+//         var startPos;
+
+//         var geoSuccess = function(position) {
+//         //   hideNudgeBanner();
+//         //   // We have the location, don't display banner
+//         //   clearTimeout(nudgeTimeoutId);
+
+//           // Do magic with location
+//           startPos = position;
+//           document.getElementById('startLat').innerHTML = startPos.coords.latitude;
+//           document.getElementById('startLon').innerHTML = startPos.coords.longitude;
+//         };
+
+//         let currentPosition = navigator.geolocation.getCurrentPosition(geoSuccess);
+//         console.log(currentPosition)
+
+//   })
+
+//   let input1 = document.querySelector(".route_start");
+//   let input2 = document.querySelector(".route_end");
+//   let date = document.getElementById("date");
+
 //   let autocomplete1 = new google.maps.places.Autocomplete(input1, options);
 //   let autocomplete2 = new google.maps.places.Autocomplete(input2, options);
 
@@ -175,7 +303,7 @@ function initMap() {
 //                 <p>Departure time: <span id="time-span">${departure_time}</span></p>
 //             </div>
 //                     </div>
-//                     </div> 
+//                     </div>
 // `
 //                   );
 //                 }
@@ -189,10 +317,3 @@ function initMap() {
 //       }
 //     );
 //   });
-}
-
-function change_route(route_index) {
-  directionsDisplay.setRouteIndex(route_index);
-}
-
-window.initMap = initMap;

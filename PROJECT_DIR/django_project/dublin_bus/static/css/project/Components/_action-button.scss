@@ -11,6 +11,10 @@
     }
 
     &__rel-container {
+        @include relative;
+    }
+
+    &__rel-container {
         position: relative;
         height: 100%;
         width: 100%;
@@ -24,22 +28,51 @@
         margin-bottom: 1rem;
         position: absolute;
         right: 0;
+        background: white;
 
         &--search {
             z-index: 3;
-            @include blue_gradient;
+            
         }
 
         &--weather {
-            @include orange_gradient;
+           
             top: 6rem;
         }
 
         &--location {
-            @include pink_gradient;
+           
             top: 12rem;
         }
 
+    }
+
+    &__temperature {
+        @include absolute(50%, 50%, translate(-50%, -50%));
+        font-size: 2rem;
+        color: $db_blue;
+        opacity: 1;
+        font-family: sans-serif !important;
+    }
+
+    &__weather-container {
+        @include absolute(50%, 52%, translate(-50%, -50%));
+
+        & canvas {
+        
+        
+            opacity: 1;
+        }
+    }
+
+    &__location-container {
+        @include absolute(50%, 52%, translate(-50%, -50%));
+        
+        & ion-icon {
+            height: 3.5rem;
+            width: 3.5rem;
+            color: $db_blue;
+        }
     }
 
     &__icon {
@@ -51,7 +84,7 @@
         left: 50%;
 
 
-         color: white;
+         color: $db_blue;
         
     }
 
@@ -66,18 +99,15 @@
             top: 0;
             background: white;
             border-radius: 5rem;
-            opacity: 0;
+            opacity: 1;
             transition: all .2s ease-out;
             z-index: 2;
         }
 
-        &__rel-container {
-            @include relative;
-        }
+      
 
         &__input-container {
-            @include absolute(2rem, translateY(-50%));
-            background: blue;
+            @include absolute(2rem, 50%, translateY(-50%));
             width: calc(100% - 9rem);
             
             & input {
@@ -102,7 +132,7 @@
 
     &-button {
         & ion-icon {
-            color: white;
+            color: $db_blue;
         }
     }
 }
