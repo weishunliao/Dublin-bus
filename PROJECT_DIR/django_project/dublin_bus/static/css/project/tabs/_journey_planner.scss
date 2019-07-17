@@ -41,7 +41,7 @@
         padding: 1rem 4rem;
         width: 100%;
         margin-top: 4rem;
-
+        position: relative;
 
         &__input-container {
             position: relative;
@@ -71,7 +71,8 @@
             position: absolute;
             transform-origin: left;
             left: 0; 
-            top: .5rem;
+            top: 50%;
+            transform: translateY(-50%);
             transition: all .3s linear;
             z-index: 10;
 
@@ -86,11 +87,15 @@
 
         &__submit {
             padding: 2rem;
-            margin-top: 3rem;
+     
             background: $db_yellow;
             border: none;
             border-radius: 1.5rem;
             font-size: 1.8rem;
+            width: 10rem;
+            height: 10rem;
+            margin: 3rem auto;
+            position: relative;
         }
 
         &__input {
@@ -148,16 +153,18 @@ ion-datetime {
     & .journey-planner__form {
         padding-left: 2rem;
         margin-top: 3rem;
+        width: 100%;
     }
 
     & .journey-planner__form__label {
-       transform: translateX(3rem);
+       transform: translateX(3rem) translateY(-50%);
     }
 
     & .journey-planner__form-container {
         transform: translateY(-3rem);
         background: $db_yellow;
         padding-top: 2rem;
+        height: 48%;
 
         &::after {
             display: none;
@@ -165,8 +172,10 @@ ion-datetime {
     }
 
     & .journey-planner__form__input-container {
-
+        border-radius: 1.5rem;
+        background: white;
         margin-bottom: 2.5rem;
+        width: 80%;
         & ion-icon {
             left: .5rem;
             z-index: 2000;
@@ -178,7 +187,6 @@ ion-datetime {
 
         & input {
             border-radius: 1.5rem;
-
             padding: 1rem 0;
             padding-left: 2.8rem;
             
@@ -196,4 +204,35 @@ ion-datetime {
         padding-left: 3rem;
       
     }
+
+    & .form-submit {
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid $db_blue;
+        height: 5rem;
+        width: 5rem;
+        font-size: 1.2rem;
+      
+    }
+
+    .submitter {
+        position: absolute;
+        right: 10%;
+        bottom: 16%;
+    }
+}
+
+
+
+.form-abs {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    & h3 {
+        margin: 0;
+        color: $db_blue;
+    }
+    
 }

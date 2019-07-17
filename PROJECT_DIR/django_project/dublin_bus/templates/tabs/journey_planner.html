@@ -5,34 +5,53 @@
         <h1 class="journey-planner__title">Journey Planner</h1>
 
         <form action="" class="journey-planner__form">
-          <div class="journey-planner__form__input-container" id="from-container">
-                <ion-icon name="pin"></ion-icon>
+          <div
+            class="journey-planner__form__input-container"
+            id="from-container"
+          >
+            <ion-icon name="pin"></ion-icon>
             <div class="journey-planner__form__label">
               <h3>From</h3>
             </div>
-            <input type="text" class="journey-planner__form__input" id="from" placeholder=""/>
-
+            <input
+              type="text"
+              class="journey-planner__form__input"
+              id="from"
+              placeholder=""
+            />
           </div>
           <div class="journey-planner__form__input-container" id="to-container">
-                <ion-icon name="pin"></ion-icon>
+            <ion-icon name="pin"></ion-icon>
             <div class="journey-planner__form__label focus">
               <h3>To</h3>
             </div>
-            <input type="text" class="journey-planner__form__input" id="to"  placeholder=""/>
+            <input
+              type="text"
+              class="journey-planner__form__input"
+              id="to"
+              placeholder=""
+            />
           </div>
-          <div class="journey-planner__form__input-container" id="departing-container">
-                <ion-icon name="md-time"></ion-icon>
+          <div
+            class="journey-planner__form__input-container"
+            id="departing-container"
+          >
+            <ion-icon name="md-time"></ion-icon>
             <div class="journey-planner__form__label focus">
               <h3>Departing</h3>
             </div>
-            <ion-datetime id="departing" 
-            display-format="DD MMM, HH:mm"
+            <ion-datetime
+              id="departing"
+              display-format="DD MMM, HH:mm"
             ></ion-datetime>
           </div>
-
-          <button type="submit" class="journey-planner__form__submit form-submit">
-              Submit
-          </button>
+          <div class="submitter">
+            <div class="journey-planner__form__submit form-submit">
+              <div class="form-abs">
+                <h3>Go!</h3>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>
