@@ -42,6 +42,15 @@
                 bottom: 0;
                 left: 0;
             }
+
+            & ion-icon {
+                font-size: 2rem;
+                position: absolute;
+                top: 50%;
+                right:0;
+                color: $db_blue;
+                transform: translateY(-50%);
+            }
         }
 
         &__label {
@@ -61,7 +70,7 @@
         }
 
         &__input {
-            width: 70%;
+            width: 90%;
             font-size: 1.8rem;
             display: block;
             border: none;
