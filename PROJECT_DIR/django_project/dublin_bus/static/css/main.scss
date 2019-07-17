@@ -18,6 +18,7 @@
     font-size: 62.5%;
     letter-spacing: 0rem;
     --ion-color-primary: #3D5F7E;
+    --ion-font-family: Actor, sans-serif;
 }
 
 input:focus,
@@ -25,6 +26,12 @@ select:focus,
 textarea:focus,
 button:focus {
     outline: none;
+}
+
+input,
+textarea,
+[contenteditable] {
+  caret-color: $db_blue;
 }
 
 

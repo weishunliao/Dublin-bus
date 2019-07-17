@@ -5,17 +5,25 @@
         <h1 class="journey-planner__title">Journey Planner</h1>
 
         <form action="" class="journey-planner__form">
-          <div class="journey-planner__form__input-container">
+          <div class="journey-planner__form__input-container" id="from-container">
             <div class="journey-planner__form__label">
               <h3>From</h3>
             </div>
-            <input type="text" class="journey-planner__form__input" />
+            <input type="text" class="journey-planner__form__input" id="from"/>
           </div>
-          <div class="journey-planner__form__input-container">
+          <div class="journey-planner__form__input-container" id="to-container">
             <div class="journey-planner__form__label focus">
               <h3>To</h3>
             </div>
-            <input type="text" class="journey-planner__form__input" />
+            <input type="text" class="journey-planner__form__input" id="to" />
+          </div>
+          <div class="journey-planner__form__input-container" id="departing-container">
+            <div class="journey-planner__form__label focus">
+              <h3>Departing</h3>
+            </div>
+            <ion-datetime id="departing" 
+            display-format="DD MMM, HH:mm"
+            ></ion-datetime>
           </div>
         </form>
       </div>

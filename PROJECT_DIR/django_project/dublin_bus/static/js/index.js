@@ -1,6 +1,7 @@
 import "../css/main.scss";
 import "./google_maps";
 import { drawers, search } from './nodes';
+import "./journey_planner"
 
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";

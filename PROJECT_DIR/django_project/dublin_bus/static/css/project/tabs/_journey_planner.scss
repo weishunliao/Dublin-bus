@@ -4,7 +4,6 @@
     width: 100%;
     
 
-
     // ^ FORM CONTAINER
 
     &__form-container {
@@ -33,10 +32,21 @@
 
         &__input-container {
             position: relative;
+
+            &:after {
+                content: "";
+                width: 100%;
+                height: 1px;
+                background: $db_blue;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
         }
 
         &__label {
             position: absolute;
+            transform-origin: left;
             left: 0; 
             top: 1rem;
             transition: all .3s linear;
@@ -48,8 +58,6 @@
                 color: $db_blue;
 
             }
-
-            
         }
 
         &__input {
@@ -57,10 +65,31 @@
             font-size: 1.8rem;
             display: block;
             border: none;
-            border-bottom: 1px solid $db_blue;
+            color: $db_blue;
             padding: 1rem;
             padding-left: 0;
             margin-bottom: 2rem;
+           
         }
+    }
+}
+
+ion-datetime {
+    font-size: 1.8rem;
+    padding: 0;
+    padding-top:1.5rem;
+    padding-bottom: 0.5rem;
+    color: $db_blue;
+    text-align: left;
+    
+
+}
+
+.focussed {
+
+    & .journey-planner__form__label {
+        top:-1rem;
+        transform: scale(0.4);
+        
     }
 }
