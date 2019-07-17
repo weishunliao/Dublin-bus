@@ -4,7 +4,7 @@ const searchButton = document.querySelector('.search-button')
 const searchContainer = document.querySelector('.search-container')
 const searchInput = document.querySelector('.search-input');
 
-
+export let selectedTab = $('ion-tab-button#tab-button-journey');
 export const jpFormInputs = $('.journey-planner__form__input')
 export const fromInput = document.querySelector("#from")
 export const toInput = document.querySelector("#to")

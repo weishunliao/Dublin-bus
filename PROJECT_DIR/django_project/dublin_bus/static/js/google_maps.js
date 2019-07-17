@@ -1,4 +1,4 @@
-import { search, fromInput, toInput } from "./nodes";
+import { search, fromInput, toInput, selectedTab } from "./nodes";
 import { searchToggle } from "./index";
 
 const { searchInput } = search;
@@ -52,6 +52,8 @@ export default function initMap() {
     
   );
 
+
+    $('ion-tab-button').addClass('color-add')
   searchAutocomplete.addListener("place_changed", function() {
     var place = searchAutocomplete.getPlace();
     if (!place.geometry) {

@@ -1,5 +1,6 @@
-import { initMap } from './google_maps'
+import { initMap } from "./google_maps";
 
+import { selectedTab } from "./nodes";
 
 window.requestAnimFrame = (function() {
   return (
@@ -11,8 +12,6 @@ window.requestAnimFrame = (function() {
     }
   );
 })();
-
-
 
 // ^ Check for pointer events support...
 
@@ -43,8 +42,8 @@ class Swiper {
     this.open = true;
     this.scrollThreshold;
     this.itemHeight = element.offsetHeight;
-
-    this.inTransformVal = element.offsetHeight * 0.92;
+    this.tabs = $('ion-tab-button')
+    this.inTransformVal = element.offsetHeight * 1;
     this.outTransformVal = element.offsetHeight * 0.08;
     this.startTransform = this.inTransformVal;
 
@@ -121,6 +120,7 @@ class Swiper {
     let differenceInY = this.initialTouchPos.y - this.lastTouchPos.y;
     let currentTransform = this.startTransform - differenceInY;
     let newState = this.currentState;
+    let n = null;
 
     if (Math.abs(differenceInY) > this.slopValue) {
       if (this.currentState === this.IN_STATE) {
@@ -132,6 +132,7 @@ class Swiper {
       } else {
         if (this.currentState === this.OUT_STATE && differenceInY < 0) {
           newState = this.IN_STATE;
+      
         } else if (this.currentState === this.OUT_STATE && differenceInY > 0) {
           newState = this.OUT_STATE;
         }
@@ -141,25 +142,27 @@ class Swiper {
     }
 
     this.element.style.transition = "all 150ms ease-out";
-    this.changeState(newState);
+    this.changeState(newState, n);
   }
 
-  changeState(newState) {
+  changeState(newState, selectedTab) {
+
+    console.log("change state called");
+    if (selectedTab !== null) {
+    } else {
+      console.log("it's null");
+    }
     let transformStyle;
     switch (newState) {
       case this.IN_STATE:
         this.startTransform = this.inTransformVal;
-        // $(".drawer-content").each(function() {
-        //   $(this).css("opacity", "0");
-        // });
+        console.log(this.tabs)
+        this.tabs.addClass('color-add')
 
         break;
       case this.OUT_STATE:
         this.startTransform = this.outTransformVal;
-        // $(".drawer-content").each(function() {
-        //   $(this).animate({ opacity: 1 }, 1000);
-        // });
-
+        this.tabs.removeClass('color-add')
         break;
     }
 
@@ -225,14 +228,14 @@ class Swiper {
   //   }
 }
 
-
-
 window.addEventListener("load", function() {
   let bottomSwiper;
   var h = Math.max(
     document.documentElement.clientHeight,
     window.innerHeight || 0
   );
+
+  $('.drawer__container').css('height', h * 0.95);
 
   const main = document.querySelector(".main");
 
@@ -249,51 +252,44 @@ window.addEventListener("load", function() {
   const wrapper = document.querySelector(".drawer__jp__wrapper");
   let tabs = document.querySelector(".tabs");
 
-  const ionTabBar = document.querySelector('ion-tab-bar')
-  
-  const ionTabs = document.querySelector('ion-tabs')
-   ionTabs.select("dummy")
- 
+  const ionTabBar = document.querySelector("ion-tab-bar");
+
+  const ionTabs = document.querySelector("ion-tabs");
 
   function handleOut(e) {
     if (bottomSwiper.currentState === bottomSwiper.IN_STATE) {
-      bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+      bottomSwiper.changeState(bottomSwiper.OUT_STATE, null);
     }
   }
 
-
-
   function tabClick(e) {
-
-
     
-    console.log(e.target.id)
-    
+
+    console.log(e.target.id);
+
+    if (e.target.id == "tab-button-journey") {
+      
+    }
 
     if (e.target.id === currentTab) {
-      
-     
       if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {
-  
-            bottomSwiper.changeState(bottomSwiper.IN_STATE);
+     
+        bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
        
-        
-        
       } else {
-        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+        bottomSwiper.changeState(bottomSwiper.OUT_STATE, null);
+       
       }
     } else {
-      bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+      bottomSwiper.changeState(bottomSwiper.OUT_STATE, null);
     }
 
     currentTab = e.target.id;
-   
   }
 
   setTimeout(() => {
     bottomSwiper = new Swiper(bottomDrawer);
     tabs.addEventListener("ionTabsWillChange", handleOut);
-    
   }, 200);
 
   const tab_buttons = document.querySelectorAll("ion-tab-button");
@@ -302,11 +298,6 @@ window.addEventListener("load", function() {
     tab.addEventListener("click", tabClick, true);
   });
 
-  
-
   const map = document.querySelector(".map__container");
   const searchInput = document.querySelector(".drawer__search__input");
-
-
-
 });

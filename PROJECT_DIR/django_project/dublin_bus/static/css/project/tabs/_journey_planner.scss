@@ -1,5 +1,5 @@
 .journey-planner {
-
+    overflow:hidden;
     height: 100%;
     width: 100%;
     
@@ -139,9 +139,8 @@ ion-datetime {
 
    & .focussed {
     & .journey-planner__form__label {
-        top:-2.5rem;
-       
-        transform: scale(0.7) translateX(1rem);
+        
+        transform: scale(0.7) translateX(1rem) translateY(-6px);
         
     }
    }
@@ -152,19 +151,22 @@ ion-datetime {
 
     & .journey-planner__form {
         padding-left: 2rem;
-        margin-top: 3rem;
+        margin-top: 2.5rem;
         width: 100%;
     }
 
     & .journey-planner__form__label {
        transform: translateX(3rem) translateY(-50%);
+        & h3 {
+            font-size: 1.2rem;
+        }
     }
 
     & .journey-planner__form-container {
         transform: translateY(-3rem);
         background: $db_yellow;
         padding-top: 2rem;
-        height: 48%;
+        height: 20rem;
 
         &::after {
             display: none;
@@ -174,7 +176,7 @@ ion-datetime {
     & .journey-planner__form__input-container {
         border-radius: 1.5rem;
         background: white;
-        margin-bottom: 2.5rem;
+        margin-bottom: 1.5rem;
         width: 80%;
         & ion-icon {
             left: .5rem;
@@ -186,6 +188,7 @@ ion-datetime {
         }
 
         & input {
+            font-size: 1.2rem;
             border-radius: 1.5rem;
             padding: 1rem 0;
             padding-left: 2.8rem;
@@ -202,6 +205,7 @@ ion-datetime {
         background: white;
         padding: 1rem 0;
         padding-left: 3rem;
+        font-size: 1.2rem;
       
     }
 
@@ -220,7 +224,7 @@ ion-datetime {
         display: block;
         position: absolute;
         right: 10%;
-        top: 16%;
+        top: 1rem;
         width: 5rem;
         height: 5rem;
     }
@@ -228,7 +232,7 @@ ion-datetime {
     .submitter {
         position: absolute;
         right: 10%;
-        bottom: 16%;
+        bottom: 0;
     }
     
 }
@@ -250,4 +254,14 @@ ion-datetime {
         color: $db_blue;
     }
     
+}
+
+
+ion-tab-button {
+    --color: #3D5F7E;
+}
+
+
+.color-add {
+    color: #3D5F7E;
 }
