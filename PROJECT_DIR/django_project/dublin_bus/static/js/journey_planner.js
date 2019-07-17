@@ -1,4 +1,4 @@
-import { jpFormInputs } from './nodes'
+import { jpFormInputs, fromInput, toInput } from './nodes'
 
 
 
@@ -24,7 +24,20 @@ const formSubmit = $('.form-submit')
 
 formSubmit.click((e) => {
     e.preventDefault();
+
+ 
+
     $('.journey-planner').addClass('converted');
 })
 
+
+// ^ switch Button
+
+const switcher = $('.img-button')
+
+switcher.click(() => {
+    let temp = toInput.value;
+    toInput.value = fromInput.value
+    fromInput.value = temp
+})
 
