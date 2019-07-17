@@ -11,6 +11,7 @@
         width: 100%;
         position: relative;
         text-align: center;
+        transition: all .3s linear;
 
         &::after {
             position: absolute;
@@ -44,7 +45,7 @@
 
         &__input-container {
             position: relative;
-
+            
             &:after {
                 content: "";
                 width: 100%;
@@ -62,6 +63,7 @@
                 right:0;
                 color: $db_blue;
                 transform: translateY(-50%);
+                transition: all .5s linear;
             }
         }
 
@@ -71,6 +73,7 @@
             left: 0; 
             top: .5rem;
             transition: all .3s linear;
+            z-index: 10;
 
             
 
@@ -112,7 +115,8 @@ ion-datetime {
     padding-bottom: 0.5rem;
     color: $db_blue;
     text-align: left;
-    
+ 
+    width: 90%;
 
 }
 
@@ -121,12 +125,75 @@ ion-datetime {
     & .journey-planner__form__label {
         top:-1rem;
         transform: scale(0.4);
-        
     }
 }
 
 // Styles for when the submit button is clicked
 
 .converted {
-    background: blue;
+
+   & .focussed {
+    & .journey-planner__form__label {
+        top:-2.5rem;
+       
+        transform: scale(0.7) translateX(1rem);
+        
+    }
+   }
+
+    & .journey-planner__title {
+        display: none;
+    }
+
+    & .journey-planner__form {
+        padding-left: 2rem;
+        margin-top: 3rem;
+    }
+
+    & .journey-planner__form__label {
+       transform: translateX(3rem);
+    }
+
+    & .journey-planner__form-container {
+        transform: translateY(-3rem);
+        background: $db_yellow;
+        padding-top: 2rem;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    & .journey-planner__form__input-container {
+
+        margin-bottom: 2.5rem;
+        & ion-icon {
+            left: .5rem;
+            z-index: 2000;
+        }
+
+        &::after {
+            display: none;
+        }
+
+        & input {
+            border-radius: 1.5rem;
+
+            padding: 1rem 0;
+            padding-left: 2.8rem;
+            
+        }
+    }
+
+    & .journey-planner__form__input {
+        margin-bottom: 1rem;
+    }
+
+    & ion-datetime {
+        border-radius: 1.5rem;
+        background: white;
+        padding: 1rem 0;
+        padding-left: 3rem;
+      
+    }
 }
