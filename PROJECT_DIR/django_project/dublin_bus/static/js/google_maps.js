@@ -1,4 +1,4 @@
-import { search } from "./nodes";
+import { search, fromInput, toInput } from "./nodes";
 import { searchToggle } from "./index";
 
 const { searchInput } = search;
@@ -39,6 +39,17 @@ export default function initMap() {
   const searchAutocomplete = new google.maps.places.Autocomplete(
     searchInput,
     options
+  );
+
+  const fromAutocomplete = new google.maps.places.Autocomplete(
+    fromInput,
+    options,
+
+  );
+  const toAutocomplete = new google.maps.places.Autocomplete(
+    toInput,
+    options,
+    
   );
 
   searchAutocomplete.addListener("place_changed", function() {

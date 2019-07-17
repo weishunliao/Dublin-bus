@@ -1,22 +1,23 @@
-const fromInput = $("")
+import { jpFormInputs } from './nodes'
 
 
-const inputs = $('.journey-planner__form__input')
+
 const dateInput = document.querySelector('ion-datetime')
 
-inputs.focus((e) => {
+jpFormInputs.focus((e) => {
     $(`#${e.target.id}-container`).addClass('focussed');
+})
+
+jpFormInputs.blur((e) => {
+    if (e.target.value == "") {
+        $(`#${e.target.id}-container`).removeClass('focussed');
+    }
 })
 
 dateInput.addEventListener('ionFocus', (e) => {
     $(`#${e.target.id}-container`).addClass('focussed');
 })
 
-inputs.blur((e) => {
-    if (e.target.value == "") {
-        $(`#${e.target.id}-container`).removeClass('focussed');
-    }
-   
-})
+
 
 
