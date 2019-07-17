@@ -12,6 +12,8 @@ window.requestAnimFrame = (function() {
   );
 })();
 
+
+
 // ^ Check for pointer events support...
 
 var pointerDownName = "pointerdown";
@@ -147,15 +149,16 @@ class Swiper {
     switch (newState) {
       case this.IN_STATE:
         this.startTransform = this.inTransformVal;
-        $(".drawer-content").each(function() {
-          $(this).css("opacity", "0");
-        });
+        // $(".drawer-content").each(function() {
+        //   $(this).css("opacity", "0");
+        // });
+
         break;
       case this.OUT_STATE:
         this.startTransform = this.outTransformVal;
-        $(".drawer-content").each(function() {
-          $(this).animate({ opacity: 1 }, 1000);
-        });
+        // $(".drawer-content").each(function() {
+        //   $(this).animate({ opacity: 1 }, 1000);
+        // });
 
         break;
     }
@@ -246,19 +249,36 @@ window.addEventListener("load", function() {
   const wrapper = document.querySelector(".drawer__jp__wrapper");
   let tabs = document.querySelector(".tabs");
 
+  const ionTabBar = document.querySelector('ion-tab-bar')
+  
+  const ionTabs = document.querySelector('ion-tabs')
+   ionTabs.select("dummy")
+ 
+
   function handleOut(e) {
     if (bottomSwiper.currentState === bottomSwiper.IN_STATE) {
       bottomSwiper.changeState(bottomSwiper.OUT_STATE);
     }
   }
 
+
+
   function tabClick(e) {
-    console.log(e.target.id);
+
+
+    
+    console.log(e.target.id)
+    
 
     if (e.target.id === currentTab) {
-      console.log("yes");
+      
+     
       if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {
-        bottomSwiper.changeState(bottomSwiper.IN_STATE);
+  
+            bottomSwiper.changeState(bottomSwiper.IN_STATE);
+       
+        
+        
       } else {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE);
       }
@@ -267,6 +287,7 @@ window.addEventListener("load", function() {
     }
 
     currentTab = e.target.id;
+   
   }
 
   setTimeout(() => {
@@ -285,6 +306,7 @@ window.addEventListener("load", function() {
 
   const map = document.querySelector(".map__container");
   const searchInput = document.querySelector(".drawer__search__input");
+
 
 
 });
