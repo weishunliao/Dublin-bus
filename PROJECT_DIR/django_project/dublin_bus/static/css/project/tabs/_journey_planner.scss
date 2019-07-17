@@ -12,6 +12,17 @@
         position: relative;
         text-align: center;
 
+        &::after {
+            position: absolute;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: $light_grey;
+            width: 40%;
+            height: 1px;
+            content: "";
+        }
+
         // background: $db_yellow;  it will be yellow on transform
     }
 
@@ -28,6 +39,7 @@
     &__form {
         padding: 1rem 4rem;
         width: 100%;
+        margin-top: 4rem;
 
 
         &__input-container {
@@ -69,6 +81,15 @@
             }
         }
 
+        &__submit {
+            padding: 2rem;
+            margin-top: 3rem;
+            background: $db_yellow;
+            border: none;
+            border-radius: 1.5rem;
+            font-size: 1.8rem;
+        }
+
         &__input {
             width: 90%;
             font-size: 1.8rem;
@@ -102,4 +123,10 @@ ion-datetime {
         transform: scale(0.4);
         
     }
+}
+
+// Styles for when the submit button is clicked
+
+.converted {
+    background: blue;
 }

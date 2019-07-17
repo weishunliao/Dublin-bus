@@ -18,6 +18,13 @@ dateInput.addEventListener('ionFocus', (e) => {
     $(`#${e.target.id}-container`).addClass('focussed');
 })
 
+// ^ Submit
 
+const formSubmit = $('.form-submit')
+
+formSubmit.click((e) => {
+    e.preventDefault();
+    $('.journey-planner').addClass('converted');
+})
 
 
