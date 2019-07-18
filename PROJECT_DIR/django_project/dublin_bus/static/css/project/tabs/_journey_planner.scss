@@ -1,9 +1,8 @@
 .journey-planner {
-
+    overflow:hidden;
     height: 100%;
     width: 100%;
     
-
 
     // ^ FORM CONTAINER
 
@@ -12,6 +11,18 @@
         width: 100%;
         position: relative;
         text-align: center;
+        transition: all .3s linear;
+
+        &::after {
+            position: absolute;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: $light_grey;
+            width: 40%;
+            height: 1px;
+            content: "";
+        }
 
         // background: $db_yellow;  it will be yellow on transform
     }
@@ -29,17 +40,41 @@
     &__form {
         padding: 1rem 4rem;
         width: 100%;
-
+        margin-top: 4rem;
+        position: relative;
 
         &__input-container {
             position: relative;
+            
+            &:after {
+                content: "";
+                width: 100%;
+                height: 1px;
+                background: $db_blue;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
+
+            & ion-icon {
+                font-size: 2rem;
+                position: absolute;
+                top: 50%;
+                right:0;
+                color: $db_blue;
+                transform: translateY(-50%);
+                transition: all .5s linear;
+            }
         }
 
         &__label {
             position: absolute;
+            transform-origin: left;
             left: 0; 
-            top: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
             transition: all .3s linear;
+            z-index: 10;
 
             
 
@@ -48,19 +83,185 @@
                 color: $db_blue;
 
             }
+        }
 
-            
+        &__submit {
+            padding: 2rem;
+     
+            background: $db_yellow;
+            border: none;
+            border-radius: 1.5rem;
+            font-size: 1.8rem;
+            width: 10rem;
+            height: 10rem;
+            margin: 3rem auto;
+            position: relative;
         }
 
         &__input {
-            width: 100%;
+            width: 90%;
             font-size: 1.8rem;
             display: block;
             border: none;
-            border-bottom: 1px solid $db_blue;
+            color: $db_blue;
             padding: 1rem;
             padding-left: 0;
             margin-bottom: 2rem;
+            padding-bottom: .5rem;
+           
         }
     }
+}
+
+ion-datetime {
+    font-size: 1.8rem;
+    padding: 0;
+    padding-top:1rem;
+    padding-bottom: 0.5rem;
+    color: $db_blue;
+    text-align: left;
+ 
+    width: 90%;
+
+}
+
+.focussed {
+
+    & .journey-planner__form__label {
+        top:-1rem;
+        transform: scale(0.4);
+    }
+}
+
+// Styles for when the submit button is clicked
+
+.converted {
+
+   & .focussed {
+    & .journey-planner__form__label {
+        
+        transform: scale(0.7) translateX(1rem) translateY(-6px);
+        
+    }
+   }
+
+    & .journey-planner__title {
+        display: none;
+    }
+
+    & .journey-planner__form {
+        padding-left: 2rem;
+        margin-top: 2.5rem;
+        width: 100%;
+    }
+
+    & .journey-planner__form__label {
+       transform: translateX(3rem) translateY(-50%);
+        & h3 {
+            font-size: 1.2rem;
+        }
+    }
+
+    & .journey-planner__form-container {
+        transform: translateY(-3rem);
+        background: $db_yellow;
+        padding-top: 2rem;
+        height: 21rem;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    & .journey-planner__form__input-container {
+        border-radius: 1.5rem;
+        background: white;
+        margin-bottom: 1.5rem;
+        width: 80%;
+        & ion-icon {
+            left: .5rem;
+            z-index: 2000;
+        }
+
+        &::after {
+            display: none;
+        }
+
+        & input {
+            font-size: 1.2rem;
+            border-radius: 1.5rem;
+            padding: 1rem 0;
+            padding-left: 2.8rem;
+            
+        }
+    }
+
+    & .journey-planner__form__input {
+        margin-bottom: 1rem;
+    }
+
+    & ion-datetime {
+        border-radius: 1.5rem;
+        background: white;
+        padding: 1rem 0;
+        padding-left: 3rem;
+        font-size: 1.2rem;
+      
+    }
+
+    & .form-submit {
+        border-radius: 50%;
+        background: white;
+        
+        height: 5rem;
+        width: 5rem;
+        font-size: 1.2rem;
+      
+
+    }
+
+    .img-button {
+        display: block;
+        position: absolute;
+        right: 10%;
+        top: 1rem;
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .submitter {
+        position: absolute;
+        right: 10%;
+        bottom: 0;
+    }
+    
+}
+
+.img-button {
+    display: none;
+}
+
+
+
+.form-abs {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    & h3 {
+        margin: 0;
+        color: $db_blue;
+    }
+    
+}
+
+
+ion-tab-button {
+    --color: #3D5F7E;
+}
+
+
+.color-add {
+    color: #3D5F7E;
 }
