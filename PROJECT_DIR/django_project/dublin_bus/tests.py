@@ -86,6 +86,14 @@ class TestCreateMonthFeatureRef(TestCase):
         }
         self.assertEqual(functions.create_month_feature_ref(), month_ref)
 
+class TestCreateSegmentRef(TestCase):
+    """Test cases for the create_segment_ref function."""
+
+    def test_create_segment_ref(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref()
+        self.assertEqual(segment_ref["946_1131"], 69)
+
 class TestRoutePrediction15A(TestCase):
     """Test cases for the route_prediction_15A function."""
 

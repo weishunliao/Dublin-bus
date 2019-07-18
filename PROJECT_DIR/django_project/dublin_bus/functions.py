@@ -3,6 +3,7 @@ import pickle
 import datetime
 import requests
 from django.conf import settings
+import json
 
 def load_model():
     """Loads and returns a machine learning model for all routes."""
@@ -58,6 +59,14 @@ def create_month_feature_ref():
         
     return month_feature_ref
 
+def create_segment_ref():
+    """Builds a dictionary from segment_means.JSON that gives the mean value for each segment."""
+
+    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means.json')
+    with open(path) as file:
+        segment_mean_ref = json.load(file)
+    return segment_mean_ref
+
 def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, weekday, bank_holiday,  
     rain, temp, rhum, msl):
     """Returns a prediction of journey length in seconds for any bus route.
@@ -72,8 +81,7 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
     hour_ref = create_hour_feature_ref()
     day_of_week_ref = create_day_of_week_feature_ref()
     month_ref = create_month_feature_ref()
-    # create a segment ref
-
+    seg_ref = create_segment_ref()
     # get day of week and month from the relevant dictionaries
     day_of_week = day_of_week_ref[day_of_week]
     month = month_ref[month]
@@ -87,8 +95,8 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
         stop_first = int(stops[i])
         stop_next = int(stops[i+1])
         # specify the input for the prediction
-        input = [[actualtime_arr_stop_first, rain, temp, rhum, msl,weekday,bank_holiday] + first_stop_ref[stop_first] + \
-        second_stop_ref[stop_next] + month + day_of_week]
+        input = [[actualtime_arr_stop_first, rain, temp, rhum, msl, weekday, bank_holiday] + \
+        first_stop_ref[stop_first] + second_stop_ref[stop_next] + month + day_of_week]
         # get a prediction and append to the prediction list
         prediction = (linreg.predict(input))
         predictions.append(prediction)
