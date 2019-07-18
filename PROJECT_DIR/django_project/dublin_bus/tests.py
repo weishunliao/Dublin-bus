@@ -153,15 +153,15 @@ class TestConvertToSeconds(TestCase):
     """Test cases for the convert_to_seconds function."""
 
     def test_convert_to_seconds_before_midnight(self):
-        """Test that correct value is returned for a timestamp between 4:00 am and midnight."""
+        """Test that correct value is returned for a timestamp between 3:00 am and midnight."""
         self.assertEqual(functions.convert_to_seconds(9, 30), 34200)
 
     def test_convert_to_seconds_after_midnight(self):
-        """Test that correct value is returned for a timestamp after midnight (but before 4am)."""
+        """Test that correct value is returned for a timestamp after midnight (but before 3am)."""
         self.assertEqual(functions.convert_to_seconds(00, 20), 87600)
 
     def test_convert_to_seconds_after_one_am(self):
-        """Test that correct value is returned for a timestamp after 1am (but before 4am)."""
+        """Test that correct value is returned for a timestamp after 1am (but before 3am)."""
         self.assertEqual(functions.convert_to_seconds(1, 20), 91200)
 
 

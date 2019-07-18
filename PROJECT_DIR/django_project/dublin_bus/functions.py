@@ -172,9 +172,9 @@ def parse_weather_forecast(journey_timestamp, weather_data):
 def convert_to_seconds(hour, minute):
     """Converts the inputted hour and minute values to seconds.
     
-    If the hour is less than 4, then it should be treated as part of the last day."""
+    If the hour is less than 3, then it should be treated as part of the last day."""
 
-    if hour > 4:
+    if hour > 3:
         seconds = hour*60*60 + minute*60
     else:
         seconds = 86400 + hour*60*60 + minute*60
