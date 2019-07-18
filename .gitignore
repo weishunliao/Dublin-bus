@@ -21,7 +21,7 @@ PROJECT_DIR/.idea/
 PROJECT_DIR/django_project/.DS_Store
 PROJECT_DIR/django_project/.idea/
 
-PROJECT_DIR/static/
+# PROJECT_DIR/static/
 coverage/
 
 
@@ -31,7 +31,7 @@ rt*
 hly*
 
 PROJECT_DIR/static/admin/
-PROJECT_DIR/static/cache/
+# PROJECT_DIR/static/cache/
 PROJECT_DIR/static/css/
 PROJECT_DIR/static/images/
 PROJECT_DIR/static/js/
