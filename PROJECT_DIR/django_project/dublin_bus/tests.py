@@ -94,11 +94,11 @@ class TestCreateSegmentRef(TestCase):
         segment_ref = functions.create_segment_ref()
         self.assertEqual(segment_ref["946_1131"], 69)
 
-class TestRoutePrediction15A(TestCase):
-    """Test cases for the route_prediction_15A function."""
+class TestRoutePrediction(TestCase):
+    """Test cases for the route_prediction function."""
 
-    def test_route_prediction_15A_limekiln(self):
-        """Test for the ouput of the route_prediction_15A function going in the Limekiln direction."""
+    def test_route_prediction(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
         stops = [395,396,397,398,399,400,7581,1283,7579,1285,1016,1017,1018,1019,1020,1076,1077,1078,1079,1080,\
             1081,1082,1083,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1101,1102,1103,1104]
         rain = 0.1
@@ -106,29 +106,13 @@ class TestRoutePrediction15A(TestCase):
         rhum = 75
         msl = 1000
         actualtime_arr_stop_first = 32400 # 9:00
+        hour = 9
         day_of_week = 4 # monday
         month = 7 # july
         weekday = 1
         bank_holiday = 0
-        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
-             weekday, bank_holiday, rain, temp, rhum, msl), 2573)
-
-
-    def test_route_prediction_15A_ringsend(self):
-        """Test for the ouput of the route_prediction_15A function going in the Ringsend direction."""
-        stops = [1105,1107,1108,1109,1110,1111,1112,1113,1114,1115,2437,1117,1118,1119,1120,1164,1165,1166,1167,\
-            1168,1169,1170,1069,1070,1071,4528,1072,7577,1353,1354,7578,7582,340,350,351,352,353,354]
-        rain = 0.1
-        temp = 15
-        rhum = 75
-        msl = 1000
-        actualtime_arr_stop_first = 32400 # 9:00
-        day_of_week = 4 # monday
-        month = 7 # july
-        weekday = 1
-        bank_holiday = 0
-        self.assertEqual(functions.route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month,\
-             weekday, bank_holiday, rain, temp, rhum, msl), 2646)
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
+        weekday, bank_holiday, rain, temp, rhum, msl), 2485)
 
 
 class TesParseWeatherForecast(TestCase):

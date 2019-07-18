@@ -88,22 +88,29 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
     hour = hour_ref[hour]
     # load the ml model
     linreg = load_model()
-    # initiate an array to store all predictions
+    # initialise an array to store all predictions
     predictions = []
+    # initialise an array to store arrival times at various stops
+    arrival_time_at_stop = actualtime_arr_stop_first
+    arrival_times = []
+    arrival_times.append(arrival_time_at_stop)
     # loop through each set of stops in the list
     for i in range(len(stops)-1):
-        stop_first = int(stops[i])
-        stop_next = int(stops[i+1])
+        stop_first = stops[i]
+        stop_next = stops[i+1]
+        segment = str(stop_first) + "_" + str(stop_next)
+        segment_mean = seg_ref[segment]
         # specify the input for the prediction
-        input = [[actualtime_arr_stop_first, rain, temp, rhum, msl, weekday, bank_holiday] + \
-        first_stop_ref[stop_first] + second_stop_ref[stop_next] + month + day_of_week]
+        input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
+        day_of_week + hour]
         # get a prediction and append to the prediction list
         prediction = (linreg.predict(input))
-        predictions.append(prediction)
-        # set actualtime_arr_stop_first to the predicted value so it can be used for the next set of stops
-        actualtime_arr_stop_first = prediction
+        predictions.append(prediction[0])
+        # update arrival_time_at_stop and append it to the arrival_times list
+        arrival_time_at_stop = arrival_time_at_stop + prediction[0]
+        arrival_times.append(arrival_time_at_stop)
     # calculate the time for the full trip
-    full_trip = predictions[len(predictions)-1] - predictions[0]
+    full_trip = arrival_times[len(arrival_times)-1] - arrival_times[0]
     return int(full_trip)
 
 def openweather_forecast():
