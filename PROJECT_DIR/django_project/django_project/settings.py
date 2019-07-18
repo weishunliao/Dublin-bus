@@ -83,11 +83,11 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
 
-        'NAME': 'db_route_info',  # database name
-        'USER': 'team8',
-        'ENGINE': 'django.db.backends.mysql',
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'PORT': '3306',
+        # 'NAME': 'db_route_info',  # database name
+        # 'USER': 'team8',
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'PASSWORD': config('DATABASE_PASSWORD'),
+        # 'PORT': '3306',
 
         # # PRODUCTION
         # 'HOST': 'localhost',
