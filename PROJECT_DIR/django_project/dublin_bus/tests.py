@@ -114,6 +114,23 @@ class TestRoutePrediction(TestCase):
         self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
         weekday, bank_holiday, rain, temp, rhum, msl), 2485)
 
+    def test_route_prediction_missing_segment(self):
+        """Test for the ouput of the route_prediction function when a missing segment is encountered."""
+        stops = [395,396,397,398,99999,400,7581,1283,7579,1285,1016,1017,1018,1019,1020,1076,1077,1078,1079,1080,\
+            1081,1082,1083,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1101,1102,1103,1104]
+        rain = 0.1
+        temp = 15
+        rhum = 75
+        msl = 1000
+        actualtime_arr_stop_first = 32400 # 9:00
+        hour = 9
+        day_of_week = 4 # monday
+        month = 7 # july
+        weekday = 1
+        bank_holiday = 0
+        with self.assertRaises(Exception):
+            functions.route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
+            weekday, bank_holiday, rain, temp, rhum, msl)
 
 class TesParseWeatherForecast(TestCase):
     """Test cases for the parse_weather_forecast function."""

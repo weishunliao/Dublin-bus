@@ -99,7 +99,10 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
         stop_first = stops[i]
         stop_next = stops[i+1]
         segment = str(stop_first) + "_" + str(stop_next)
-        segment_mean = seg_ref[segment]
+        if segment in seg_ref:
+            segment_mean = seg_ref[segment]
+        else:
+            raise Exception("Unexpected segment encountered!")
         # specify the input for the prediction
         input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
         day_of_week + hour]
