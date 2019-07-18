@@ -16,14 +16,9 @@ class TestLoadModel(TestCase):
     def test_load_model_success(self):
         """Test to ensure that a model is loaded correctly."""
         try:
-            functions.load_model("15A")
+            functions.load_model()
         except Exception as e:
-            self.fail("load_model() raised an exception unexpectedly!\n Error is:" + e)
-
-    def test_load_model_invalid_route(self):
-        """Test to ensure that an error is raised if an invalid route is entered."""
-        with self.assertRaises(Exception):
-            functions.load_model("15K")
+            self.fail("load_model() raised an exception unexpectedly!\n Error is:" + str(e))
 
 
 class TestCreateStopFeatureRef(TestCase):

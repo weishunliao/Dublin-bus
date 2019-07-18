@@ -4,13 +4,9 @@ import datetime
 import requests
 from django.conf import settings
 
-def load_model(route):
-    """Loads and returns a machine learning model for the specified bus route."""
-    if route == '15A':
-        model_name = '15A_model.sav'
-    else:
-        raise Exception(route + " is not a valid bus route!")
-    path = os.path.join(settings.ML_MODEL_ROOT, model_name)
+def load_model():
+    """Loads and returns a machine learning model for all routes."""
+    path = os.path.join(settings.ML_MODEL_ROOT, 'all_routes_aug_linreg_model.sav')
     with open(path, 'rb') as file:
         model = pickle.load(file)
     return model
