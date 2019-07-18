@@ -2,7 +2,7 @@ $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
     let type = document.getElementById("suggestion_" + suggestion).dataset.type;
     console.log(type, suggestion);
     get_bus_real_time_info(suggestion);
-    setTimeout(detail, 500);
+    window.setTimeout(detail, 800);
 });
 
 
@@ -13,7 +13,7 @@ const get_bus_real_time_info = (stop_id) => {
         })
         .then(function (data) {
             document.getElementById("stops__content__card__stop-id").innerText = stop_id;
-            document.getElementById("stops__content__card__stop-name").innerText = data[stop_id][0][4];
+            document.getElementById("stops__content__card__stop-name").innerText = data['stop_name'];
             get_stop_server_route(stop_id);
             // create_chip(data[stop_id]);
             if (document.getElementById('slots') !== null) {
@@ -22,9 +22,20 @@ const get_bus_real_time_info = (stop_id) => {
             } else {
                 $('#stops__time-table-list').append('<div id="slots"></div>');
             }
-            for (let i = 0; i < data[stop_id].length; i++) {
-                let slot = data[stop_id][i];
-                create_card(slot[0], slot[2], slot[3], slot[1]);
+            // Real Time Information is currently unavailable for this bus stop
+
+            if (data[stop_id].length == 0) {
+                let elem = '<ion-row class="stops__time-table-list__content">' +
+                    '<ion-col size="10" offset="1"><div class="stops__time-table-list__content__error"><ion-label ' +
+                    'class="stops__time-table-list__content__label__des stops__time-table-list__content__label">' +
+                    'Real Time Information is currently unavailable for this bus stop</ion-label>' +
+                    '</div></ion-col></ion-row>';
+                $('#slots').append(elem);
+            } else {
+                for (let i = 0; i < data[stop_id].length; i++) {
+                    let slot = data[stop_id][i];
+                    create_card(slot[0], slot[2], slot[3], slot[1]);
+                }
             }
         }).catch(function (error) {
         return error;
@@ -72,10 +83,13 @@ const detail = () => {
     }
 };
 document.getElementById("stops__toolbar__back-btn").addEventListener('click', detail);
-document.getElementById("stops__content__card").addEventListener('click', function () {
-    get_bus_real_time_info(this.dataset.item);
-    setTimeout(detail, 500);
-});
+const cards = document.getElementsByClassName("stops__content__card");
+for (let card of cards) {
+    card.addEventListener('click', function () {
+        get_bus_real_time_info(this.dataset.item);
+        window.setTimeout(detail, 800);
+    });
+}
 
 
 const get_stop_server_route = (stop_id) => {
@@ -89,7 +103,6 @@ const get_stop_server_route = (stop_id) => {
                 server_routes += route + "  ";
             }
             let elem = document.getElementById("stops__content__card__service-bus-id");
-            console.log(data['server_route'], data['server_route'].length);
             if (data['server_route'].length > 10) {
                 elem.style.fontSize = '1.3rem';
             } else if (data['server_route'].length > 5) {

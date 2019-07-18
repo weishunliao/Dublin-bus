@@ -163,6 +163,7 @@ def real_time_info_for_bus_stop(request):
     current = datetime.now()
     current_min = current.hour * 60 + current.minute
     real_time_data = get_real_time_data(stop_id)
+    real_time_data['stop_name'] = stop_name
     for i in real_time_data[stop_id]:
         if i[2] == 'Due':
             i.append('Due')
@@ -174,7 +175,6 @@ def real_time_info_for_bus_stop(request):
                 i.append('Due')
             else:
                 i.append(remain)
-        i.append(stop_name)
     print(real_time_data)
     return JsonResponse(real_time_data)
 
@@ -239,6 +239,7 @@ def calculate_time_diff(trips, time):
             [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
         i += 1
     return stops_list
+
 
 def get_server_route(request):
     stop_id = request.GET['stop_id']
