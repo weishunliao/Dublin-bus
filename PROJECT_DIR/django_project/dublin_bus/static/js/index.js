@@ -1,14 +1,10 @@
 import "../css/main.scss";
 import "./google_maps";
 import { drawers, search } from './nodes';
-<<<<<<< HEAD
 import "./route_stops"
 import "./auto-complete"
 import "./stops"
-=======
 import "./journey_planner"
->>>>>>> 6926d375a7acf5e04f57dadbcc8dd0623e9becd8
-
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";
 import "./touches.js";
