@@ -102,10 +102,7 @@ def get_travel_time(request):
                 index = int(i[1] - 1)
         stop_list = all_stops[index:index + num + 1]
     
-    # if the route_id is 15a, get a prediction from the machine learning model
-    if route_id == '15a':
-        journey_time = functions.predict_journey_time(stop_list, departure_time_value)
-    else:
-        journey_time = 0
+    # call the machine learning model to get a prediction for journey length
+    journey_time = functions.predict_journey_time(stop_list, departure_time_value)
 
     return JsonResponse({"journey_time": journey_time})

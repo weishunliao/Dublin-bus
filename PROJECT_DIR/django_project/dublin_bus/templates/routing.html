@@ -100,39 +100,48 @@
                         if (agent !== 'Dublin Bus') {
                             continue;
                         }
-                        let departure_stop = response.routes[i].legs[0].steps[1].transit.departure_stop.name;
-                        let arrival_stop = response.routes[i].legs[0].steps[1].transit.arrival_stop.name;
-                        let head_sign = response.routes[i].legs[0].steps[1].transit.headsign;
+                        let full_travel_time = 0;
                         let route_id = response.routes[i].legs[0].steps[1].transit.line.short_name;
+                        let head_sign = response.routes[i].legs[0].steps[1].transit.headsign;
                         let departure_time = response.routes[i].legs[0].steps[1].transit.departure_time.text;
-                        let departure_time_value = response.routes[i].legs[0].steps[1].transit.departure_time.value.getTime() / 1000 + 3600;
-                        let num_stops = response.routes[1].legs[0].steps[1].transit.num_stops;
                         let button = '<button type="button" class="btn btn-secondary" onclick="change_route(' + i + ')">Show</button>';
-                        let walk_to_stop = resp.routes[0].legs[0].steps[0].duration.value;
-                        let walk_to_destination = resp.routes[0].legs[0].steps[2].duration.value;
-
-                        $.ajax({
-                            url: "get_travel_time",
-                            type: 'POST',
-                            data: {
-                                "route_id": route_id,
-                                "start_point": departure_stop,
-                                "end_point": arrival_stop,
-                                "num_stops": num_stops,
-                                "departure_time_value": departure_time_value,
-                            },
-                            success: function (resp) {
-                                console.log(resp);
-                                if (route_id == "15a") {
-                                    let full_journey = Math.round((walk_to_stop + resp.journey_time + walk_to_destination)/60);
-                                    $("#routes").append("<tr>" + "<td>" + route_id + "</td>" + "<td>" + head_sign + "</td>" +
-                                        "<td>" + departure_stop + "</td>" + "<td>" + departure_time + "</td>" + "<td>" + 
-                                            full_journey + " min(s)" + "</td>" + "<td>" + button + "</td>" + "</tr>");
-                                }
-                            },
-                        });
-
-
+                        let departure_stop = "";
+                        let step = 0;
+                        let length = response.routes[i].legs[0].steps.length;
+                        while (step < length) {
+                            let travel_mode = response.routes[i].legs[0].steps[step].travel_mode;
+                            if (travel_mode === 'WALKING') {
+                                full_travel_time += response.routes[i].legs[0].steps[step].duration.value;
+                                console.log(full_travel_time);
+                            } else {
+                                let num_stops = response.routes[i].legs[0].steps[step].transit.num_stops;
+                                departure_stop = response.routes[i].legs[0].steps[step].transit.departure_stop.name;
+                                let arrival_stop = response.routes[i].legs[0].steps[step].transit.arrival_stop.name;
+                                let departure_time_value = response.routes[i].legs[0].steps[step].transit.departure_time.value.getTime() / 1000 + 3600;
+                                $.ajax({
+                                    url: "get_travel_time",
+                                    type: 'POST',
+                                    async: false,
+                                    data: {
+                                        "route_id": route_id,
+                                        "start_point": departure_stop,
+                                        "end_point": arrival_stop,
+                                        "num_stops": num_stops,
+                                        "departure_time_value": departure_time_value,
+                                    },
+                                    success: function (resp) {
+                                        full_travel_time += resp.journey_time;
+                                    },
+                                });
+                            }
+                            step++;
+                        }
+                        if (true) {
+                            let full_journey = Math.round(full_travel_time / 60);
+                            $("#routes").append("<tr>" + "<td>" + route_id + "</td>" + "<td>" + head_sign + "</td>" +
+                                "<td>" + departure_stop + "</td>" + "<td>" + departure_time + "</td>" + "<td>" +
+                                full_journey + " min(s)" + "</td>" + "<td>" + button + "</td>" + "</tr>");
+                        }
                     }
                     directionsDisplay.setDirections(response);
                 } else {
