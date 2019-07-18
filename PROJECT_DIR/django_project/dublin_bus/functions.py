@@ -26,6 +26,25 @@ def create_stop_feature_ref(stop_list):
         
     return stop_feature_ref
 
+def create_hour_feature_ref():
+    """Builds a dictionary with hours (0 and 1 and 4-23) as key and 1D lists as values.
+
+    In each 1D list, one element will have the value 1, and all others will have the value 0."""
+    hour_feature_ref = {}
+    for i in range(2):
+        hour_array = [0] * 22
+        for j in range(2):
+            if i == j:
+                hour_array[j] = 1
+        hour_feature_ref[i] = hour_array
+    for i in range(4, 24):
+        hour_array = [0] * 22
+        for j in range(2, 22):
+            if i - 2 == j:
+                hour_array[j] = 1
+        hour_feature_ref[i] = hour_array
+    return hour_feature_ref
+
 def create_day_of_week_feature_ref():
     """Builds a dictionary with weekdays (mon=0, tues=1, etc.) as key and 1D lists as values.
 
@@ -54,23 +73,22 @@ def create_month_feature_ref():
         
     return month_feature_ref
 
-def route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday,  
+def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, weekday, bank_holiday,  
     rain, temp, rhum, msl):
-    """Returns a prediction of journey length in seconds for the 15A bus route.
+    """Returns a prediction of journey length in seconds for any bus route.
 
     Takes a list of stops as input, as well as the arrival time of a bus at the first stop in the list. 
-    Also takes as input day_of_week (0-6 for mon-sun), month(1-12 for jan-dec), weekday (1 for mon-fri, 
-    0 for sat & sun) and bank holiday (1 if the journey date is a bank holiday, 0 otherwise). Also takes 
-    the following weather info as input: rain (in mm), temp (in C), rhum - relative humidity (%) and 
+    Also takes as input hour (0-23), day_of_week (0-6 for mon-sun), month(1-12 for jan-dec), 
+    weekday (1 for mon-fri, 0 for sat & sun) and bank holiday (1 if the journey date is a bank holiday, 0 otherwise). 
+    Also takes the following weather info as input: rain (in mm), temp (in C), rhum - relative humidity (%) and 
     msl - mean sea level pressure (hPa)."""
 
-    first_stop_list = [340.0,350.0,351.0,352.0,353.0,395.0,396.0,397.0,398.0,399.0,400.0,407.0,1016.0,1017.0,1018.0,1019.0,1020.0,1069.0,1070.0,1071.0,1072.0,1076.0,1077.0,1078.0,1079.0,1080.0,1081.0,1082.0,1083.0,1085.0,1086.0,1087.0,1088.0,1089.0,1090.0,1091.0,1092.0,1093.0,1094.0,1095.0,1096.0,1101.0,1102.0,1103.0,1105.0,1107.0,1108.0,1109.0,1110.0,1111.0,1112.0,1113.0,1114.0,1115.0,1117.0,1118.0,1119.0,1120.0,1164.0,1165.0,1166.0,1167.0,1168.0,1169.0,1170.0,1283.0,1285.0,1353.0,1354.0,2437.0,2498.0,2499.0,4528.0,7216.0,7558.0,7577.0,7578.0,7579.0,7581.0,7582.0,7589.0]
-    second_stop_list = [340.0,350.0,351.0,352.0,353.0,354.0,396.0,397.0,398.0,399.0,400.0,407.0,1016.0,1017.0,1018.0,1019.0,1020.0,1069.0,1070.0,1071.0,1072.0,1076.0,1077.0,1078.0,1079.0,1080.0,1081.0,1082.0,1083.0,1085.0,1086.0,1087.0,1088.0,1089.0,1090.0,1091.0,1092.0,1093.0,1094.0,1095.0,1096.0,1101.0,1102.0,1103.0,1104.0,1107.0,1108.0,1109.0,1110.0,1111.0,1112.0,1113.0,1114.0,1115.0,1117.0,1118.0,1119.0,1120.0,1164.0,1165.0,1166.0,1167.0,1168.0,1169.0,1170.0,1283.0,1285.0,1353.0,1354.0,2437.0,2498.0,2499.0,4528.0,7216.0,7558.0,7577.0,7578.0,7579.0,7581.0,7582.0,7589.0]
-    # create dictionaries for day_of_week, month and bus stop features
+    # create dictionaries for hour, day_of_week, month and bus stop features
+    hour_ref = create_hour_ref()
     day_of_week_ref = create_day_of_week_feature_ref()
     month_ref = create_month_feature_ref()
-    first_stop_ref = create_stop_feature_ref(first_stop_list)
-    second_stop_ref = create_stop_feature_ref(second_stop_list)
+    # first_stop_ref = create_stop_feature_ref(first_stop_list)
+    # second_stop_ref = create_stop_feature_ref(second_stop_list)
     # get day of week and month from the relevant dictionaries
     day_of_week = day_of_week_ref[day_of_week]
     month = month_ref[month]
@@ -226,7 +244,7 @@ def predict_journey_time(stops, timestamp):
     weather_data = openweather_forecast()
     rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
     # make a prediction based on the input and return it
-    prediction = route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
         weekday, bank_holiday, rain, temp, rhum, msl)
     # return the prediction
     return prediction
