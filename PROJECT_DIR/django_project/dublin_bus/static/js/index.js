@@ -1,9 +1,13 @@
 import "../css/main.scss";
 import "./google_maps";
 import { drawers, search } from './nodes';
+<<<<<<< HEAD
 import "./route_stops"
 import "./auto-complete"
 import "./stops"
+=======
+import "./journey_planner"
+>>>>>>> 6926d375a7acf5e04f57dadbcc8dd0623e9becd8
 
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";
@@ -16,6 +20,13 @@ window.onresize = () => {
     console.log("resized")
 };
 
+
+// setTimeout(function () {
+//     let viewheight = $(window).height();
+//     let viewwidth = $(window).width();
+//     let viewport = document.querySelector("meta[name=viewport]");
+//     viewport.setAttribute("content", "height=" + viewheight + "px, width=" + viewwidth + "px, initial-scale=1.0");
+// }, 50);
 
 const { searchButton, searchContainer } = search
 

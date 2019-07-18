@@ -1,6 +1,12 @@
 #map {
     height: 100%;
     
+    
+
+    & .drawer-open {
+        touch-action: none;
+        pointer-events: none;
+    }
 }
 .map__container {
     height: 100%;
