@@ -43,6 +43,7 @@ class Swiper {
     this.scrollThreshold;
     this.itemHeight = element.offsetHeight;
     this.tabs = $('ion-tab-button')
+    this.map = $('#map')
     this.inTransformVal = element.offsetHeight * 1;
     this.outTransformVal = element.offsetHeight * 0.08;
     this.startTransform = this.inTransformVal;
@@ -158,11 +159,13 @@ class Swiper {
         this.startTransform = this.inTransformVal;
         console.log(this.tabs)
         this.tabs.addClass('color-add')
+        this.map.removeClass('drawer-open')
 
         break;
       case this.OUT_STATE:
         this.startTransform = this.outTransformVal;
         this.tabs.removeClass('color-add')
+        this.map.addClass('drawer-open')
         break;
     }
 
