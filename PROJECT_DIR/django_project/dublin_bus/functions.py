@@ -181,21 +181,22 @@ def is_bank_holiday(day, month):
 
 def parse_timestamp(timestamp):
     """Function that takes a datetime object as input and returns time in seconds, 
-    the day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
+    the hour, day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
 
     time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
     day_of_week = timestamp.weekday()
     day = timestamp.day
     month = timestamp.month
+    hour = timestamp.hour
     weekday = is_weekday(day_of_week)
     bank_holiday = is_bank_holiday(day, month)
 
-    return time_in_seconds, day_of_week, month, weekday, bank_holiday
+    return time_in_seconds, day_of_week, month, weekday, bank_holiday, hour
 
 
 def format_stop_list(stops):
     """Takes a list of stops as input, takes the last 4 characters and converts to int for each stop in 
-    the list."""
+    the list. If the stop name starts with "gen", uses a dict to get the stop id."""
     formatted_stops = []
     gen_stop_key = {'gen:57102:7743:0:1': 7690,
                     'gen:57102:7730:0:1': 7674,
@@ -220,7 +221,7 @@ def predict_journey_time(stops, timestamp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday = parse_timestamp(timestamp)
+    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday, hour = parse_timestamp(timestamp)
     # call the OpenWeather API and parse the response
     weather_data = openweather_forecast()
     rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)

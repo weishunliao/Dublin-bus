@@ -192,7 +192,7 @@ class TestParseTimestamp(TestCase):
     def test_parse_timestamp(self):
         """Test that the correct values are returned for a given timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
-        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 0, 7, 1, 0))
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 0, 7, 1, 0, 10))
 
 
 class TestFormatStopList(TestCase):
