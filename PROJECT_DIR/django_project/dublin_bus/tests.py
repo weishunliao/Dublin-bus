@@ -20,21 +20,6 @@ class TestLoadModel(TestCase):
         except Exception as e:
             self.fail("load_model() raised an exception unexpectedly!\n Error is:" + str(e))
 
-
-class TestCreateStopFeatureRef(TestCase):
-    """Test cases for the create_stop_feature_ref function."""
-
-    def test_create_stop_feature_ref(self):
-        """Test for the ouput of the create_stop_feature_ref function."""
-        stop_list = [11,234,1108]
-        stop_feature_ref = {
-            11: [1,0,0],
-            234: [0,1,0],
-            1108: [0,0,1]
-        }
-        self.assertEqual(functions.create_stop_feature_ref(stop_list), stop_feature_ref)
-
-
 class TestCreateHourFeatureRef(TestCase):
     """Test cases for the create_hour_feature_ref function."""
 

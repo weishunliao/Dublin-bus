@@ -11,21 +11,6 @@ def load_model():
         model = pickle.load(file)
     return model
 
-def create_stop_feature_ref(stop_list):
-    """Builds a dictionary with stop numbers as key and 1D lists as values.
-
-    In each 1D list, one element will have the value 1, and all others will have the value 0.
-    Stops in the input list must be in the order that they appear as features in the ml model."""
-    stop_feature_ref = {}
-    for i in stop_list:
-        stop_array = [0] * len(stop_list)
-        for j in range(len(stop_list)):
-            if i == stop_list[j]:
-                stop_array[j] = 1
-        stop_feature_ref[i] = stop_array
-        
-    return stop_feature_ref
-
 def create_hour_feature_ref():
     """Builds a dictionary with hours (0 and 1 and 4-23) as key and 1D lists as values.
 
@@ -84,16 +69,17 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
     msl - mean sea level pressure (hPa)."""
 
     # create dictionaries for hour, day_of_week, month and bus stop features
-    hour_ref = create_hour_ref()
+    hour_ref = create_hour_feature_ref()
     day_of_week_ref = create_day_of_week_feature_ref()
     month_ref = create_month_feature_ref()
-    # first_stop_ref = create_stop_feature_ref(first_stop_list)
-    # second_stop_ref = create_stop_feature_ref(second_stop_list)
+    # create a segment ref
+
     # get day of week and month from the relevant dictionaries
     day_of_week = day_of_week_ref[day_of_week]
     month = month_ref[month]
+    hour = hour_ref[hour]
     # load the ml model
-    linreg = load_model("15A")
+    linreg = load_model()
     # initiate an array to store all predictions
     predictions = []
     # loop through each set of stops in the list
