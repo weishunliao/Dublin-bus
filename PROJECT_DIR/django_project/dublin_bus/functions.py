@@ -2,7 +2,11 @@ import os
 import pickle
 import datetime
 import requests
+from bs4 import BeautifulSoup
 from django.conf import settings
+import json
+
+from django_project.settings import BASE_DIR
 
 
 def load_model(route):
@@ -252,3 +256,76 @@ def get_service_id(weekday, bank_holiday):
         return 3
     else:
         return 2
+
+
+def get_real_time_data(stop_id):
+    headers = {
+        'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
+    resp = requests.get(
+        "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
+        headers=headers)
+
+    data = []
+    real_time_info = {stop_id: data}
+    if resp.status_code == 200:
+        content = resp.text
+        soup = BeautifulSoup(content, features="lxml")
+        slots1 = soup.find_all('tr', class_='odd')
+        slots2 = soup.find_all('tr', class_='even')
+        arr = []
+        for s in slots1:
+            for i in s.findChildren("td"):
+                arr.append(i.text.strip())
+        for s in slots2:
+            for i in s.findChildren("td"):
+                arr.append(i.text.strip())
+        temp = []
+        for item in arr:
+            if item == '':
+                data.append(temp)
+                temp = []
+                continue
+            temp.append(item)
+    data.sort(key=lambda x: x[2])
+    return real_time_info
+
+
+def get_trip_id(direction, service_id, current_time, route_id):
+    path = os.path.join(BASE_DIR, '../static/cache/route_15a_timetable.json')
+    slots = []
+    with open(path, 'r') as json_file:
+        timetable = json.load(json_file)[direction][str(service_id)]
+        for i in range(len(timetable)):
+            if timetable[i][0] <= current_time <= timetable[i][1]:
+                slots.append(timetable[i][2])
+                slots.append(timetable[i + 1][2])
+                slots.append(timetable[i + 2][2])
+                slots.append(timetable[i + 3][2])
+                slots.append(timetable[i + 4][2])
+                break
+    return slots
+
+
+def get_trip_info(trip_ids, service_id, direction, route_id):
+    path = os.path.join(BASE_DIR, '../static/cache/route_15a.json')
+    infos = []
+    print(trip_ids)
+    with open(path, 'r') as json_file:
+        data = json.load(json_file)[direction][str(service_id)]
+        for trip_id in trip_ids:
+            infos.append(data[trip_id])
+    return infos
+
+
+def calculate_time_diff(trips, time):
+    i = 1
+    stops_list = []
+
+    while i <= len(trips[1]):
+        t = 0
+        while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
+            t += 1
+        stops_list.append(
+            [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
+        i += 1
+    return stops_list
