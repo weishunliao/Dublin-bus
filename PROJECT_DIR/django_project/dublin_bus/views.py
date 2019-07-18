@@ -75,7 +75,10 @@ def get_travel_time(request):
 
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM stops WHERE stops.stop_name = %s", [start_point])
-        start_point_id = cursor.fetchone()[2]
+        if cursor.rowcount == 0:
+            raise Exception("No bus stops found for " + start_point + "!")
+        else:
+            start_point_id = cursor.fetchone()[2]
         # cursor.execute("SELECT * FROM stops WHERE stops.stop_name = %s", [end_point])
         # end_point_id = cursor.fetchone()[2]
 
@@ -91,7 +94,6 @@ def get_travel_time(request):
               " stop_id= %s ORDER BY abs(TIME(%s) - stop_times.departure_time) LIMIT 1"
         cursor.execute(sql, [route_id, service_id, start_point_id, departure_time])
         trip_id = cursor.fetchone()
-    print(trip_id)
     with connection.cursor() as cursor:
         sql = "SELECT stop_id,stop_sequence FROM stop_times WHERE stop_times.trip_id = %s"
         cursor.execute(sql, [trip_id])
