@@ -1,65 +1,18 @@
-import {choices_list, route_list} from "./auto-complete";
-import {get_bus_real_time_info} from "./slot_card";
-
-const stops = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    local: choices_list,
-});
-const routes = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.whitespace,
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    local: route_list,
-});
-
-$('#search-container .typeahead').typeahead({
-        highlight: true,
-        minLength: 1,
-    },
-    {
-        name: 'stops',
-        source:
-        stops,
-        templates: {
-            header: '<span style="font-size: 2rem;">Stops</span>',
-            empty:
-                [
-                    '<div class="empty-message">No matching stop number found!</div>'
-                ],
-            suggestion:
-                function (data) {
-                    return '<h6 class="suggestion" data-type="stop" id="suggestion_' + data + '"><ion-icon name="bus"></ion-icon>' + data + '</h6>';
-                }
-        }
-    },
-    {
-        name: 'routes',
-        source: routes,
-        templates: {
-            header: '<span style="font-size: 2rem">Route</span>',
-            empty: [
-                '<div class="empty-message">No matching route id found!</div>'
-            ],
-            suggestion: function (data) {
-                return '<h6 class="suggestion" data-type="route" id="suggestion_' + data + '"><ion-icon name="swap"></ion-icon>' + data + '</h6>';
-            }
-        }
-    },);
-
 let route_id;
 
-$('.typeahead').bind('typeahead:select', function (ev, suggestion) {
-    let type = document.getElementById("suggestion_" + suggestion).dataset.type;
-    console.log(type);
-    if (type === 'route') {
-        route_id = suggestion;
-        document.getElementById("direction_switch").checked = false;
-        get_bus_stop_list(route_id, "in");
-        document.getElementById("drawer__search__title__label").innerText = suggestion;
-    } else {
-        get_bus_real_time_info(suggestion);
-    }
-});
+// $('.typeahead').bind('typeahead:select', function (ev, suggestion) {
+//     let type = document.getElementById("suggestion_" + suggestion).dataset.type;
+//     console.log(type, suggestion);
+//     if (type === 'route') {
+//         route_id = suggestion;
+//         document.getElementById("direction_switch").checked = false;
+//         get_bus_stop_list(route_id, "in");
+//         console.log(suggestion);
+//         document.getElementById("").innerText = suggestion;
+//     } else {
+//         get_bus_real_time_info(suggestion);
+//     }
+// });
 
 const get_bus_stop_list = (route_id, direction) => {
     fetch('bus_stop_list_by_route?route_id=' + route_id + "&direction=" + direction + "&t=", {method: 'get'})

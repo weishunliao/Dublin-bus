@@ -16,5 +16,6 @@ urlpatterns = [
     path('bus_stop_list_by_route', views.get_bus_stop_list),
     path('real_time_for_route', views.real_time_for_route),
     path('real_time_info_for_bus_stop', views.real_time_info_for_bus_stop),
+    path('server_route', views.get_server_route),
 ]
 

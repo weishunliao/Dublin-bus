@@ -22,10 +22,9 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get(self, request):
-        
-        return render(request, self.template_name, {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY })
 
-        return render(request, self.template_name, {'icon': "clear-day", "map_key": MAP_KEY})
+        return render(request, self.template_name,
+                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY})
 
     def post(self, request):
         if request.method == "POST":
@@ -240,3 +239,13 @@ def calculate_time_diff(trips, time):
             [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
         i += 1
     return stops_list
+
+def get_server_route(request):
+    stop_id = request.GET['stop_id']
+    path = os.path.join(BASE_DIR, '../static/cache/bus_serve_route.json')
+    server_route = set()
+    with open(path, 'r') as json_file:
+        data = json.load(json_file)[str(stop_id)]
+        for route in data:
+            server_route.add(route[0])
+    return JsonResponse({'server_route': list(server_route)})

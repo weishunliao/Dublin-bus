@@ -2,7 +2,8 @@
   //max-width: 750px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 20px;
+  padding-top: 15px;
+  padding-bottom: 20px;
 }
 
 .tt-menu,
@@ -16,9 +17,6 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-}
 
 .table-of-contents li {
   display: inline-block;
@@ -59,23 +57,24 @@ p + p {
 .tt-query,
 .tt-hint {
   width: 396px;
-  height: 30px;
+  height: 40px;
   padding: 8px 12px;
-  font-size: 24px;
+  font-size: 15px;
   line-height: 30px;
   border: 2px solid #ccc;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
   outline: none;
 }
 
 .typeahead {
   background-color: #fff;
+  width: 320px;
 }
 
 .typeahead:focus {
-  border: 2px solid #0097cf;
+  border: 1px solid grey;
 }
 
 .tt-query {
@@ -89,7 +88,7 @@ p + p {
 }
 
 .tt-menu {
-  width: 422px;
+  width: 320px;
   margin: 12px 0;
   padding: 8px 0;
   background-color: #fff;
@@ -112,12 +111,14 @@ p + p {
 .tt-suggestion:hover {
   cursor: pointer;
   color: #fff;
-  background-color: $ion_blue;
+  //background-color: $ion_blue;
+  background-color: red;
 }
 
 .tt-suggestion.tt-cursor {
   color: #fff;
   background-color: $ion_blue;
+  //background-color: red;
 }
 
 .tt-suggestion p {
@@ -138,13 +139,15 @@ p + p {
   max-height: 300px;
   overflow-y: auto;
 }
+
 .suggestion {
-  padding: 0 0 0 15px;
+  padding: 0 0 0 20px;
 }
 
 .tt-dataset-stops {
   padding-left: 15px;
 }
+
 .tt-dataset-routes {
   padding-left: 15px;
 }

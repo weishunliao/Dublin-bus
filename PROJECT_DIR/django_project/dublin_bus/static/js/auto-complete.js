@@ -1,4 +1,4 @@
-export const choices_list = [
+const choices_list = [
     "7612",
     "2",
     "3",
@@ -4228,7 +4228,7 @@ export const choices_list = [
     "7462",
     "7574"
   ];
-export const route_list = ['1', '102', '104', '11', '111', '114', '116', '118', '120', '122', '123', '13', '130',
+const route_list = ['1', '102', '104', '11', '111', '114', '116', '118', '120', '122', '123', '13', '130',
     '14', '140', '142', '145', '14c', '15', '150', '151', '155', '15a', '15b', '15d', '16', '161',
     '16c', '16d', '17', '17a', '18', '184', '185', '220', '236', '238', '239', '25', '25a', '25b',
     '25d', '25x', '26', '27', '270', '27a', '27b', '27x', '29a', '31', '31a', '31b', '31d', '32', '32x',
@@ -4238,3 +4238,50 @@ export const route_list = ['1', '102', '104', '11', '111', '114', '116', '118', 
     '65b', '66', '66a', '66b', '66e', '66x', '67', '67x', '68', '68a', '68x', '69', '69x', '7', '70',
     '70d', '747', '75', '757', '76', '76a', '77a', '77x', '79', '79a', '7a', '7b', '7d', '8', '83',
     '83a', '84', '84a', '84x', '86', '9'];
+
+
+const stops = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    local: choices_list,
+});
+const routes = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    local: route_list,
+});
+
+$('#search-container .typeahead').typeahead({
+        highlight: true,
+        minLength: 1,
+    },
+    {
+        name: 'stops',
+        source:
+        stops,
+        templates: {
+            header: '<span style="font-size: 2rem;">Stops</span>',
+            empty:
+                [
+                    '<div class="empty-message">No matching stop number found!</div>'
+                ],
+            suggestion:
+                function (data) {
+                    return '<h6 class="suggestion" data-type="stop" id="suggestion_' + data + '"><ion-icon name="md-bus"></ion-icon>' + data + '</h6>';
+                }
+        }
+    },
+    // {
+    //     name: 'routes',
+    //     source: routes,
+    //     templates: {
+    //         header: '<span style="font-size: 2rem">Route</span>',
+    //         empty: [
+    //             '<div class="empty-message">No matching route id found!</div>'
+    //         ],
+    //         suggestion: function (data) {
+    //             return '<h6 class="suggestion" data-type="route" id="suggestion_' + data + '"><ion-icon name="swap"></ion-icon>' + data + '</h6>';
+    //         }
+    //     }
+    // },
+    );

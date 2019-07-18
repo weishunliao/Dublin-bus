@@ -1,0 +1,204 @@
+.stops {
+  &__container {
+    width: 200%;
+    display: flex;
+    margin-left: 0px;
+  }
+
+  &__div1 {
+    width: 50%;
+  }
+
+  &__div2 {
+    width: 50%;
+  }
+
+  &__head {
+    background-color: $bus_yellow;
+    height: 180px;
+    padding-bottom: 10px;
+
+    &__content {
+      -webkit-box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.17);
+      -moz-box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.17);
+      box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.17);
+      width: 90%;
+      margin: 10px auto 0;
+      border-radius: 10px;
+    }
+
+    &__search {
+      padding-top: 30px;
+    }
+  }
+
+  &__toolbar {
+    //padding: 0 15px;
+    --border-width: 0 !important;
+
+    &__back-btn {
+      font-size: 1.5rem
+    }
+  }
+
+  &__chips ion-chip {
+    background-color: #4c8dff;
+    color: white;
+    font-size: 1.3rem;
+  }
+
+  &__chips ion-icon {
+    font-size: 1.5rem;
+  }
+
+  &__depart_label {
+    font-size: 2rem;
+    font-weight: bold;
+    color: $db_blue;
+  }
+
+  &__content {
+    &__wrapper {
+      overflow: scroll;
+      height: 350px;
+    }
+
+    &__card {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      -webkit-box-shadow: 0px 9px 10px 0px rgba(0, 0, 0, 0.17);
+      -moz-box-shadow: 0px 9px 10px 0px rgba(0, 0, 0, 0.17);
+      box-shadow: 0px 9px 10px 0px rgba(0, 0, 0, 0.17);
+      border-radius: 10px;
+
+      &__stop-name {
+        color: $db_blue;
+        font-family: Serif;
+        font-size: 1.4rem;
+        font-weight: bold;
+        --padding-bottom: 0;
+        height: 35px;
+      }
+
+      &__heart {
+        color: $db_blue;
+        font-size: 32px;
+      }
+
+      &__stop-id {
+        color: $bus_blue;
+        font-weight: bold;
+        font-size: 8vw;
+      }
+
+      &__service-bus {
+        color: $db_blue;
+        font-size: 32px;
+      }
+
+      &__service-bus-id {
+        color: $bus_orange;
+        font-size: 1.6rem;
+        font-weight: bold;
+      }
+      &__service-bus-realtime {
+        color: $db_blue;
+        font-size: 32px;
+      }
+
+      &__service-bus-id-realtime {
+        color: $bus_orange;
+        font-size: 2rem;
+        font-weight: bold;
+        max-height: 45px;
+      }
+
+    }
+
+    &__card-header {
+      padding-bottom: 0;
+      font-size: 3rem;
+      color: #333333;
+
+      &__icon {
+        margin-right: 10px;
+        font-size: 3rem;
+        color: #333333;
+      }
+
+      &__label {
+
+      }
+
+      &__time {
+        font-size: 3rem;
+        text-align: end;
+        color: #3880ff;
+      }
+
+    }
+
+    &__card-content {
+      padding-top: 5px;
+      padding-bottom: 0;
+      color: #333333;
+      font-size: 1.5rem;
+
+      &__time {
+        padding-top: 0;
+        padding-bottom: 0;
+        text-align: end;
+        font-size: 1.8rem;
+      }
+    }
+  }
+
+  &__time-table-list {
+    &__header {
+      &__label {
+        color: $db_blue !important;
+        font-weight: bold;
+        font-size: 2.1rem;
+        &__bus {
+
+        }
+
+        &__des {
+          text-align: center;
+        }
+
+        &__time {
+          text-align: end;
+        }
+      }
+
+    }
+
+    &__content {
+      &__label {
+        font-weight: bold;
+        &__bus {
+          color: $bus_orange !important;
+          font-size: 2rem !important;
+        }
+
+        &__des {
+          text-align: center;
+          color: $db_blue !important;
+          font-size: 1.6rem !important;
+        }
+
+        &__time {
+          text-align: end;
+          color: $bus_blue !important;
+          font-size: 3.5vw !important;
+        }
+      }
+
+    }
+  }
+}
+
+.card-native {
+  background-color: white;
+}

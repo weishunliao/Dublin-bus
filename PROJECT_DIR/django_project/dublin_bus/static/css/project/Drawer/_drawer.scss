@@ -54,7 +54,6 @@
     position: absolute;
     height: 80vh;
     touch-action: none;
-    width: 100%;
     background: white;
 
     left: 50%;
@@ -291,13 +290,16 @@
     }
 
     &__title {
+      padding-top: 45px;
       &__wrapper {
       }
 
       &__label {
-        font-size: 6rem;
+        font-size: 3rem;
         text-align: center;
         font-weight: bold;
+        color: $db_blue;
+        font-family: Helvetica;
       }
 
       &__direction {
@@ -310,8 +312,3 @@
   }
 }
 
-// input {
-//     box-shadow: none !important;
-//     border: 1px solid black !important;
-//     border-radius: 1rem !important;
-// }

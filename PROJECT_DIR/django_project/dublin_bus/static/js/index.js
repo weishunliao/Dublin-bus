@@ -3,7 +3,7 @@ import "./google_maps";
 import { drawers, search } from './nodes';
 import "./route_stops"
 import "./auto-complete"
-import "./slot_card"
+import "./stops"
 
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";

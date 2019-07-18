@@ -112,6 +112,7 @@ class Swiper {
     this.updateSwipeRestPosition();
 
     this.initialTouchPos = null;
+    this.lastTouchPos = null;
   }
 
   updateSwipeRestPosition() {
