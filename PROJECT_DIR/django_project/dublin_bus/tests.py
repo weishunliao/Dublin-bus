@@ -205,3 +205,11 @@ class TestFormatStopList(TestCase):
                 ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
         self.assertEqual(functions.format_stop_list(stop_list), [1170, 1069, 1070, 1071, 4528, 1072, 7577, \
             1353, 1354, 7578, 7582, 340])
+    
+    def test_format_stop_list_gen(self):
+        """Test that a list is formatted correctly when some stops have the "gen" format."""
+        stop_list = (('gen:57102:7731:0:1', 22), ('8220DB001069', 23), ('8220DB001070', 24), ('8220DB001071', 25), \
+            ('8220DB004528', 26), ('8220DB001072', 27), ('gen:57102:7948:0:1', 28), ('8220DB001353', 29), \
+                ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
+        self.assertEqual(functions.format_stop_list(stop_list), [7675, 1069, 1070, 1071, 4528, 1072, 7701, \
+            1353, 1354, 7578, 7582, 340])

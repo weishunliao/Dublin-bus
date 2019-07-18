@@ -197,8 +197,18 @@ def format_stop_list(stops):
     """Takes a list of stops as input, takes the last 4 characters and converts to int for each stop in 
     the list."""
     formatted_stops = []
+    gen_stop_key = {'gen:57102:7743:0:1': 7690,
+                    'gen:57102:7730:0:1': 7674,
+                    'gen:57102:7731:0:1': 7675,
+                    'gen:57102:7732:0:1': 7676,
+                    'gen:57102:7733:0:1': 7677,
+                    'gen:57102:7948:0:1': 7701,
+                    'gen:57102:7943:0:1': 7703}
     for stop in stops:
-        formatted = int(stop[0][-4:])
+        if stop[0].startswith("gen"):
+            formatted = gen_stop_key[stop[0]]
+        else:
+            formatted = int(stop[0][-4:])
         formatted_stops.append(formatted)
     return formatted_stops
 
