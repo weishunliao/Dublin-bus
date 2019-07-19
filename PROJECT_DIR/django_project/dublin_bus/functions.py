@@ -60,12 +60,22 @@ def create_month_feature_ref():
     return month_feature_ref
 
 def create_segment_ref():
-    """Builds a dictionary from segment_means.JSON that gives the mean value for each segment."""
+    """Builds a dictionary from segment_means.JSON that gives the mean value for each segment \
+    based on historical bus data."""
 
     path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means.json')
     with open(path) as file:
         segment_mean_ref = json.load(file)
     return segment_mean_ref
+
+def create_segment_ref_gtfs():
+    """Builds a dictionary from segment_means_gtfs.JSON that gives the mean value for each segment \
+    based on the GTFS data."""
+
+    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means_gtfs.json')
+    with open(path) as file:
+        segment_mean_ref_gtfs = json.load(file)
+    return segment_mean_ref_gtfs
 
 def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, weekday, bank_holiday,  
     rain, temp, rhum, msl):
@@ -82,6 +92,7 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
     day_of_week_ref = create_day_of_week_feature_ref()
     month_ref = create_month_feature_ref()
     seg_ref = create_segment_ref()
+    seg_ref_gtfs = create_segment_ref_gtfs()
     # get day of week and month from the relevant dictionaries
     day_of_week = day_of_week_ref[day_of_week]
     month = month_ref[month]
@@ -101,8 +112,11 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
         segment = str(stop_first) + "_" + str(stop_next)
         if segment in seg_ref:
             segment_mean = seg_ref[segment]
+        elif segment in seg_ref_gtfs:
+            segment_mean = seg_ref_gtfs[segment]
         else:
-            raise Exception("Unexpected segment encountered!")
+            segment_mean = 66
+            print("Unexpected segment encountered! Using default value:", segment_mean)
         # specify the input for the prediction
         input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
         day_of_week + hour]
