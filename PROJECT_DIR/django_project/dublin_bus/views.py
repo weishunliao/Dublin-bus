@@ -63,11 +63,17 @@ def test_routing(request):
 
 @csrf_exempt
 def get_travel_time(request):
-    route_id = request.POST['route_id']
-    start_point = request.POST['start_point']
-    end_point = request.POST['end_point']
-    departure_time_value = request.POST['departure_time_value']
-    num = int(request.POST['num_stops'])
+
+    body = json.loads(request.body)
+
+    print(body)
+    
+    route_id = body['route_id']
+    
+    start_point = body['start_point']
+    end_point = body['end_point']
+    departure_time_value = body['departure_time_value']
+    num = int(body['num_stops'])
     departure_time = datetime.fromtimestamp(int(departure_time_value))
     start_point_id = 0
     end_point_id = 0

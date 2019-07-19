@@ -63,5 +63,11 @@ ion-tabs {
 ion-fab-button {
     margin-top: 1rem;
     margin-right: 1rem;
-    
+}
+
+ion-card-content {
+    padding: 0 !important;
+}
+ion-card {
+    border-radius: 1.5rem !important;
 }

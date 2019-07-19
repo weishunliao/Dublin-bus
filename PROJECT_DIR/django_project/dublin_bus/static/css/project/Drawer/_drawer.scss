@@ -1,12 +1,14 @@
 
 
 .grabber {
-    height: 10rem;
+    height: 5rem;
     width: 100%;
     background: transparent;
     position: absolute;
     left: 0;
     z-index: 2000;
+    transform: translateY(-2rem);
+
   
 }
 

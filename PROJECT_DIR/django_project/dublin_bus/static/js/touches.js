@@ -45,8 +45,8 @@ class Swiper {
     this.itemHeight = element.offsetHeight;
     this.tabs = $('ion-tab-button')
     this.map = $('#map')
-    this.inTransformVal = element.offsetHeight * 1;
-    this.outTransformVal = element.offsetHeight * 0.08;
+    this.inTransformVal = element.offsetHeight;
+    this.outTransformVal = element.offsetHeight * 0.002;
     this.startTransform = this.inTransformVal;
 
     //   * where the bottom of the div is currently located
@@ -221,13 +221,13 @@ class Swiper {
   }
 
   addListeners() {
-    this.grabber.addEventListener("touchstart", this.handleGestureStart, false);
-    this.grabber.addEventListener("touchmove", this.handleGestureMove, false);
-    this.grabber.addEventListener("touchend", this.handleGestureEnd, false);
-    this.grabber.addEventListener("touchcancel", this.handleGestureEnd, false);
+    this.grabber.addEventListener("touchstart", this.handleGestureStart, true);
+    this.grabber.addEventListener("touchmove", this.handleGestureMove, true);
+    this.grabber.addEventListener("touchend", this.handleGestureEnd, true);
+    this.grabber.addEventListener("touchcancel", this.handleGestureEnd, true);
 
     // Add Mouse Listener
-    this.grabber.addEventListener("mousedown", this.handleGestureStart, false);
+    this.grabber.addEventListener("mousedown", this.handleGestureStart, true);
   }
   //   }
 }
