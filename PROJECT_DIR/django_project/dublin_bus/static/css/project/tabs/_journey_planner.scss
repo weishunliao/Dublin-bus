@@ -7,7 +7,7 @@
     // ^ FORM CONTAINER
 
     &__form-container {
-        height: 100%;
+        height: 50%;
         width: 100%;
         position: relative;
         text-align: center;
@@ -25,6 +25,23 @@
         }
 
         // background: $db_yellow;  it will be yellow on transform
+    }
+
+    &__routes-container {
+        background: green;
+        height: 60%;
+        width: 100%;
+    }
+
+    &__routes {
+
+        &__scroll-area {
+            height: 200%;
+            overflow: scroll;
+            background: white;
+            margin: 0 auto;
+            width: 100%;
+        }
     }
 
     // * styles for converting to smaller version
@@ -145,13 +162,15 @@ ion-datetime {
     }
    }
 
+   
+
     & .journey-planner__title {
         display: none;
     }
 
     & .journey-planner__form {
         padding-left: 2rem;
-        margin-top: 2.5rem;
+        margin-top: 0;  
         width: 100%;
     }
 
@@ -163,10 +182,10 @@ ion-datetime {
     }
 
     & .journey-planner__form-container {
-        transform: translateY(-3rem);
+  
         background: $db_yellow;
         padding-top: 2rem;
-        height: 21rem;
+        height: 19rem;
 
         &::after {
             display: none;
