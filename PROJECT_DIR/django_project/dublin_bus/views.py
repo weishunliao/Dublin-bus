@@ -109,7 +109,7 @@ def get_bus_stop_list(request):
 
 def real_time_info_for_bus_stop(request):
     stop_id = request.GET['stop_id']
-    path = os.path.join(BASE_DIR, '/static/cache/stops_new.json')
+    path = os.path.join(BASE_DIR, '../static/cache/stops_new.json')
     with open(path, 'r') as json_file:
         stop_name = json.load(json_file)[str(stop_id)][2]
     current = datetime.now()
@@ -134,7 +134,7 @@ def real_time_info_for_bus_stop(request):
 def real_time_for_route(request):
     stop_id = request.GET['stop_id']
     route_id = request.GET['route_id']
-    print(route_id)
+
     real_time_info = get_real_time_data(stop_id)
     current = datetime.now()
     t = 9999
