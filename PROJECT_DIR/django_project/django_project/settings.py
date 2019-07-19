@@ -92,9 +92,8 @@ DATABASES = {
         # PRODUCTION
         'HOST': 'localhost',
 
-        # UCD
+        # UCD - 137.43.49.50 is for development
         # 'HOST': '137.43.49.50',
-        # 137.43.49.50 is for development. 
     }
 
 
