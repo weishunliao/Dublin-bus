@@ -52,4 +52,4 @@ after_success:
 #    - master
 #    - dev
 notifications:
-  slack: testcislack:Z7KH0wadNSz1p6aTnYwMFw9W
+  slack: the8-teamworkspace:Oil2KQDXi7xwVlqEgciSNw0V

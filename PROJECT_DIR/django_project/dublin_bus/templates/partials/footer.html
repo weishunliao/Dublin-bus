@@ -4,20 +4,18 @@
 {% load render_bundle from webpack_loader %}
 {% load static %}
 
-  
 
-{% render_bundle  'main' 'js' 'DEFAULT' %}
+{% render_bundle 'main' 'js' 'DEFAULT' %}
 <script>
 
 
+    function changer(e) {
+        console.log(e.target.value)
+    }
 
-function changer(e){
-    console.log(e.target.value)
-}
-
-function ss(){
-    console.log("yes")
-}
+    function ss() {
+        console.log("yes")
+    }
 
 
 </script>

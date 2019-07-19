@@ -10,8 +10,11 @@ from dublin_bus import views
 
 urlpatterns = [
     path('', HomeView.as_view()),
-    path('test', views.test_view),
     path('map', views.test_routing),
     path('get_travel_time', views.get_travel_time),
+    path('bus_stop_list_by_route', views.get_bus_stop_list),
+    path('real_time_for_route', views.real_time_for_route),
+    path('real_time_info_for_bus_stop', views.real_time_info_for_bus_stop),
+    path('server_route', views.get_server_route),
 ]
 
