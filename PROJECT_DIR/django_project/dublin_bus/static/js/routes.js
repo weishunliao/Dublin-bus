@@ -1,18 +1,13 @@
 let route_id;
 
-// $('.typeahead').bind('typeahead:select', function (ev, suggestion) {
-//     let type = document.getElementById("suggestion_" + suggestion).dataset.type;
-//     console.log(type, suggestion);
-//     if (type === 'route') {
-//         route_id = suggestion;
-//         document.getElementById("direction_switch").checked = false;
-//         get_bus_stop_list(route_id, "in");
-//         console.log(suggestion);
-//         document.getElementById("").innerText = suggestion;
-//     } else {
-//         get_bus_real_time_info(suggestion);
-//     }
-// });
+$('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
+    // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
+    route_id = suggestion;
+    document.getElementById("direction_switch").checked = false;
+    get_bus_stop_list(route_id, "in");
+    // document.getElementById("").innerText = suggestion;
+    window.setTimeout(detail2, 800);
+});
 
 const get_bus_stop_list = (route_id, direction) => {
     fetch('bus_stop_list_by_route?route_id=' + route_id + "&direction=" + direction + "&t=", {method: 'get'})
@@ -26,7 +21,7 @@ const get_bus_stop_list = (route_id, direction) => {
             }
         })
         .then(function (data) {
-            return display_stops(data['stops_list']);
+            return display_stops(data['stops_list'],route_id);
         }).then(function (stops) {
         for (let i = 0; i < stops.length; i++) {
             update_real_time(i, stops[i][0], route_id);
@@ -37,7 +32,7 @@ const get_bus_stop_list = (route_id, direction) => {
 };
 
 const timeline__content = document.getElementById("timeline__content");
-const display_stops = (stops) => {
+const display_stops = (stops, route_id) => {
     for (let i of document.querySelectorAll("li")) {
         i.remove();
     }
@@ -52,7 +47,9 @@ const display_stops = (stops) => {
         li.id = "timeline-wrapper__content-li";
         timeline__content.appendChild(li);
     }
-    document.getElementById("drawer__search__title__direction").innerText = stops[0][3];
+    let split_index = stops[0][3].indexOf("-");
+    document.getElementById("routes__content__card__direction").innerText = "Towards" + stops[0][3].substring(split_index + 1);
+    document.getElementById("routes__content__card__route-id").innerText = route_id;
     return stops;
 };
 
@@ -75,11 +72,9 @@ const update_real_time = (num, stop_id, route_id) => {
         let elem = document.querySelectorAll("li")[num];
         if (data['time'] === 'Due') {
             display_bus_arrival_time(num);
-            elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon name="ios-bus"></ion-icon>';
+            elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon class="bus-icon" name="md-bus" size="large"></ion-icon>';
         } else {
-            elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ' + '<ion-icon name="ios-bus"></ion-icon>';
-            ;
-
+            elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ';
         }
     })
         .catch(function (error) {
@@ -94,3 +89,22 @@ const display_bus_arrival_time = (num) => {
     elem.classList.remove('timeline-wrapper__content__event');
     elem.classList.add('timeline-wrapper__content__event__fill');
 };
+
+
+const detail2 = () => {
+    const container = $("#routes-container");
+    if (container.css('margin-left') === '0px') {
+        container.animate({'margin-left': '-100%'}, 200, 'linear');
+    } else {
+        container.animate({'margin-left': '0'}, 200, 'linear');
+    }
+};
+document.getElementById("routes__toolbar__back-btn").addEventListener('click', detail2);
+const cards = document.getElementsByClassName("routes__content__card");
+for (let card of cards) {
+    card.addEventListener('click', function () {
+        route_id = this.dataset.id;
+        get_bus_stop_list(this.dataset.id, this.dataset.direction);
+        window.setTimeout(detail2, 800);
+    });
+}
