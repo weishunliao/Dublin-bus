@@ -1,35 +1,123 @@
 <ion-tab tab="routes">
-    <ion-grid class="search-container">
-        <ion-row>
-            <ion-col size="12">
-                <div id="search-container">
-                    <input class="typeahead" type="text" placeholder="Search for stop or route">
+    <div id="routes-container" class="routes__container">
+
+        <div id="routes_div1" class="routes__div1">
+            <div class="stops__head">
+                <div id="routes__head__content">
+                    <div class="drawer__search__title">
+                        <div class="drawer__search__title__label">
+                            <span id="drawer__search__title__label">Route Information</span><br>
+                        </div>
+                    </div>
+                    <ion-grid class="search-container">
+                        <ion-row>
+                            <ion-col size="12">
+                                <div id="search-container-routes">
+                                    <input class="typeahead" id="typeahead_route" type="text"
+                                           placeholder="Search for a bus route..">
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
                 </div>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-    <div class="drawer__search__title">
-        <div class="drawer__search__title__label">
-            <span id="drawer__search__title__stop"></span><br>
+            </div>
+            <ion-item lines="none" class="routes__favorite_label">
+                <ion-label>
+                    Your Favorite Bus Routes
+                </ion-label>
+            </ion-item>
+            <div class="routes__content__wrapper" id="routes__content__wrapper">
+                <ion-card class="routes__content__card" id="routes__content__card" data-direction="in" data-id="15a">
+                    <ion-grid no-padding>
+                        <ion-row>
+                            <ion-col size="9">
+                                <div class="routes__content__card__direction">
+                                    <span> Towards Ringsend Rd. (Barrow St.)</span>
+                                </div>
+                            </ion-col>
+                            <ion-col align-self-end size="3">
+                                <div class="routes__content__card__heart">
+                                    <ion-icon name="heart" class="routes__content__card__heart"
+                                              slot="end"></ion-icon>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="12" align-self-baseline>
+                                <ion-item lines="none" class="routes__content__card__route-id">
+                                    <span>15a</span>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-card>
+            </div>
         </div>
-    </div>
-    <div id="drawer_container_timeline" style="">
-        <div class="drawer__search__title__direction">
-            <span id="drawer__search__title__direction"></span>
-        </div>
-        <div id="timeline-wrapper" class="timeline-wrapper">
-            <span>Change direction</span>
-            <label class="timeline-wrapper_switch">
-                <input type="checkbox" id="direction_switch">
-                <span class="slider round"></span>
-            </label>
-            {#        <span>Outbound</span>#}
-            <div class="timeline-wrapper__content__box">
-                <ul class="timeline-wrapper__content" id="timeline__content">
-                    {#            <li class="timeline-wrapper__content__event">#}
-                    {#                <h3 class="timeline-wrapper__content__h3">Dinosaurs Roamed the Earth <i id="">-1123</i></h3>#}
-                    {#            </li>#}
-                </ul>
+        <div id="routes_div2" class="routes__div2">
+
+            <div id="stops__head__content" class="stops__head">
+                <div>
+                    <ion-toolbar class="stops__toolbar" color="busyellow">
+                        <ion-buttons slot="start">
+
+                            <ion-button class="stops__toolbar__back-btn" id="routes__toolbar__back-btn">
+                                <ion-icon name="arrow-back"></ion-icon>
+                                Back
+                            </ion-button>
+                        </ion-buttons>
+                        <ion-buttons slot="end">
+                            <ion-button>
+                                <ion-icon name="md-map"></ion-icon>
+                                Show on map
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </div>
+                <ion-item lines="none" class="routes__head__content">
+                    <ion-grid no-padding>
+                        <ion-row>
+                            <ion-col size="9">
+                                <div class="routes__content__card__direction" id="routes__content__card__direction">
+                                    <span></span>
+                                </div>
+                            </ion-col>
+                            <ion-col align-self-end size="3">
+                                <div class="routes__content__card__heart">
+                                    <ion-icon name="heart" class="stops__content__card__heart"
+                                              slot="end"></ion-icon>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="12" align-self-baseline>
+                                <ion-item lines="none">
+                                    <span id="routes__content__card__route-id"
+                                          class="routes__content__card__route-id"></span>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
+            </div>
+
+
+
+            <div id="drawer_container_timeline" style="">
+                <div id="timeline-wrapper" class="timeline-wrapper">
+                    <span>Change direction</span>
+                    <label class="timeline-wrapper_switch">
+                        <input type="checkbox" id="direction_switch">
+                        <span class="slider round"></span>
+                    </label>
+                    {#        <span>Outbound</span>#}
+                    <div class="timeline-wrapper__content__box">
+                        <ul class="timeline-wrapper__content" id="timeline__content">
+                            {#            <li class="timeline-wrapper__content__event">#}
+                            {#                <h3 class="timeline-wrapper__content__h3">Dinosaurs Roamed the Earth <i id="">-1123</i></h3>#}
+                            {#            </li>#}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -4251,7 +4251,7 @@ const routes = new Bloodhound({
     local: route_list,
 });
 
-$('#search-container .typeahead').typeahead({
+$('#search-container-stops .typeahead').typeahead({
         highlight: true,
         minLength: 1,
     },
@@ -4267,7 +4267,7 @@ $('#search-container .typeahead').typeahead({
                 ],
             suggestion:
                 function (data) {
-                    return '<h6 class="suggestion" data-type="stop" id="suggestion_' + data + '"><ion-icon name="md-bus"></ion-icon>' + data + '</h6>';
+                    return '<h6 class="suggestion" data-type="stop" id="suggestion_' + data + '"><ion-icon name="md-pin"></ion-icon>' + data + '</h6>';
                 }
         }
     },
@@ -4284,4 +4284,22 @@ $('#search-container .typeahead').typeahead({
     //         }
     //     }
     // },
+    );
+$('#search-container-routes .typeahead').typeahead({
+        highlight: true,
+        minLength: 1,
+    },
+    {
+        name: 'routes',
+        source: routes,
+        templates: {
+            header: '<span style="font-size: 2rem">Route</span>',
+            empty: [
+                '<div class="empty-message">No matching route id found!</div>'
+            ],
+            suggestion: function (data) {
+                return '<h6 class="suggestion" data-type="route" id="suggestion_' + data + '"><ion-icon name="md-bus"></ion-icon>' + data + '</h6>';
+            }
+        }
+    },
     );
