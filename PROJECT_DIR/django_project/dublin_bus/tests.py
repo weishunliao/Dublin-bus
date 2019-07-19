@@ -282,8 +282,6 @@ class TestFormatStopList(TestCase):
                 ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
         self.assertEqual(functions.format_stop_list(stop_list), [7675, 1069, 1070, 1071, 4528, 1072, 7701, \
             1353, 1354, 7578, 7582, 340])
-                                                                 1353, 1354, 7578, 7582, 340])
-
 
 class GetServiceId(TestCase):
 
