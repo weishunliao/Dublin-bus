@@ -220,13 +220,13 @@ class Swiper {
   }
 
   addListeners() {
-    this.element.addEventListener("touchstart", this.handleGestureStart, true);
-    this.element.addEventListener("touchmove", this.handleGestureMove, true);
-    this.element.addEventListener("touchend", this.handleGestureEnd, true);
-    this.element.addEventListener("touchcancel", this.handleGestureEnd, true);
+    this.element.addEventListener("touchstart", this.handleGestureStart, false);
+    this.element.addEventListener("touchmove", this.handleGestureMove, false);
+    this.element.addEventListener("touchend", this.handleGestureEnd, false);
+    this.element.addEventListener("touchcancel", this.handleGestureEnd, false);
 
     // Add Mouse Listener
-    this.element.addEventListener("mousedown", this.handleGestureStart, true);
+    this.element.addEventListener("mousedown", this.handleGestureStart, false);
   }
   //   }
 }
@@ -303,4 +303,10 @@ window.addEventListener("load", function() {
 
   const map = document.querySelector(".map__container");
   const searchInput = document.querySelector(".drawer__search__input");
+
+
+  $('.journey-planner__routes__scroll-area').click((e)=>{
+      e.stopPropagation();
+      
+  })
 });
