@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 import json
-
+from django_project.settings import BASE_DIR
 def load_model():
     """Loads and returns a machine learning model for all routes."""
     path = os.path.join(settings.ML_MODEL_ROOT, 'all_routes_aug_linreg_model.sav')
