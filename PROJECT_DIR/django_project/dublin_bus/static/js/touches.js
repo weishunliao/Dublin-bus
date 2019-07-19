@@ -29,7 +29,8 @@ if (window.navigator.msPointerEnabled) {
 window.PointerEventsSupport = false;
 
 class Swiper {
-  constructor(element) {
+  constructor(element, grabber) {
+    this.grabber = grabber;
     this.element = element;
     this.IN_STATE = 1;
     this.OUT_STATE = 2;
@@ -220,13 +221,13 @@ class Swiper {
   }
 
   addListeners() {
-    this.element.addEventListener("touchstart", this.handleGestureStart, false);
-    this.element.addEventListener("touchmove", this.handleGestureMove, false);
-    this.element.addEventListener("touchend", this.handleGestureEnd, false);
-    this.element.addEventListener("touchcancel", this.handleGestureEnd, false);
+    this.grabber.addEventListener("touchstart", this.handleGestureStart, false);
+    this.grabber.addEventListener("touchmove", this.handleGestureMove, false);
+    this.grabber.addEventListener("touchend", this.handleGestureEnd, false);
+    this.grabber.addEventListener("touchcancel", this.handleGestureEnd, false);
 
     // Add Mouse Listener
-    this.element.addEventListener("mousedown", this.handleGestureStart, false);
+    this.grabber.addEventListener("mousedown", this.handleGestureStart, false);
   }
   //   }
 }
@@ -256,7 +257,7 @@ window.addEventListener("load", function() {
   let tabs = document.querySelector(".tabs");
 
   const ionTabBar = document.querySelector("ion-tab-bar");
-
+  const grabber = document.querySelector('.grabber');
   const ionTabs = document.querySelector("ion-tabs");
 
   function handleOut(e) {
@@ -291,7 +292,7 @@ window.addEventListener("load", function() {
   }
 
   setTimeout(() => {
-    bottomSwiper = new Swiper(bottomDrawer);
+    bottomSwiper = new Swiper(bottomDrawer, grabber);
     tabs.addEventListener("ionTabsWillChange", handleOut);
   }, 200);
 

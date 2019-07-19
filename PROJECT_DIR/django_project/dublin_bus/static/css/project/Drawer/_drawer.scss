@@ -6,7 +6,8 @@
     background: transparent;
     position: absolute;
     left: 0;
-    transform: translateY(-5rem);
+    z-index: 2000;
+  
 }
 
 .drawer {
