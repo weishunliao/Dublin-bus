@@ -21,7 +21,7 @@ PROJECT_DIR/.idea/
 PROJECT_DIR/django_project/.DS_Store
 PROJECT_DIR/django_project/.idea/
 
-PROJECT_DIR/static/
+# PROJECT_DIR/static/
 coverage/
 
 
@@ -29,3 +29,11 @@ __pycache__
 
 rt*
 hly*
+
+PROJECT_DIR/static/admin/
+PROJECT_DIR/static/css/
+PROJECT_DIR/static/images/
+PROJECT_DIR/static/js/
+PROJECT_DIR/main.js
+PROJECT_DIR/styles.css
+PROJECT_DIR/static/cache/

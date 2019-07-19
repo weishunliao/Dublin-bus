@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
 
-        'NAME': 'db_raw_data',  # database name
+        'NAME': 'db_route_info',  # database name
         'USER': 'team8',
         'ENGINE': 'django.db.backends.mysql',
         'PASSWORD': config('DATABASE_PASSWORD'),
@@ -92,20 +92,8 @@ DATABASES = {
         # PRODUCTION
         'HOST': 'localhost',
 
-
-
-        # UCD
+        # UCD - 137.43.49.50 is for development
         # 'HOST': '137.43.49.50',
-        # 137.43.49.50 is for development.
-
-
-      
-        
-
-
-    
-       
-        
     }
 
 
@@ -146,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Dublin'
 
 USE_I18N = True
 

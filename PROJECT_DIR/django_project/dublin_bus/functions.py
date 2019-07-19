@@ -2,33 +2,36 @@ import os
 import pickle
 import datetime
 import requests
+from bs4 import BeautifulSoup
 from django.conf import settings
-
-def load_model(route):
-    """Loads and returns a machine learning model for the specified bus route."""
-    if route == '15A':
-        model_name = '15A_model.sav'
-    else:
-        raise Exception(route + " is not a valid bus route!")
-    path = os.path.join(settings.ML_MODEL_ROOT, model_name)
+import json
+from django_project.settings import BASE_DIR
+def load_model():
+    """Loads and returns a machine learning model for all routes."""
+    path = os.path.join(settings.ML_MODEL_ROOT, 'all_routes_aug_linreg_model.sav')
     with open(path, 'rb') as file:
         model = pickle.load(file)
     return model
 
-def create_stop_feature_ref(stop_list):
-    """Builds a dictionary with stop numbers as key and 1D lists as values.
+def create_hour_feature_ref():
+    """Builds a dictionary with hours (0 and 1 and 4-23) as key and 1D lists as values.
 
-    In each 1D list, one element will have the value 1, and all others will have the value 0.
-    Stops in the input list must be in the order that they appear as features in the ml model."""
-    stop_feature_ref = {}
-    for i in stop_list:
-        stop_array = [0] * len(stop_list)
-        for j in range(len(stop_list)):
-            if i == stop_list[j]:
-                stop_array[j] = 1
-        stop_feature_ref[i] = stop_array
-        
-    return stop_feature_ref
+    In each 1D list, one element will have the value 1, and all others will have the value 0."""
+    hour_feature_ref = {}
+    for i in range(2):
+        hour_array = [0] * 22
+        for j in range(2):
+            if i == j:
+                hour_array[j] = 1
+        hour_feature_ref[i] = hour_array
+    for i in range(4, 24):
+        hour_array = [0] * 22
+        for j in range(2, 22):
+            if i - 2 == j:
+                hour_array[j] = 1
+        hour_feature_ref[i] = hour_array
+    return hour_feature_ref
+
 
 def create_day_of_week_feature_ref():
     """Builds a dictionary with weekdays (mon=0, tues=1, etc.) as key and 1D lists as values.
@@ -41,71 +44,104 @@ def create_day_of_week_feature_ref():
             if i == j:
                 day_of_week_array[j] = 1
         day_of_week_feature_ref[i] = day_of_week_array
-        
+
     return day_of_week_feature_ref
+
 
 def create_month_feature_ref():
     """Builds a dictionary with months (jan=1, feb=2, etc.) as key and 1D lists as values.
 
     In each 1D list, one element will have the value 1, and all others will have the value 0."""
     month_feature_ref = {}
-    for i in range(1,13):
+    for i in range(1, 13):
         month_array = [0] * 12
         for j in range(12):
-            if j == i-1:
+            if j == i - 1:
                 month_array[j] = 1
         month_feature_ref[i] = month_array
-        
+
     return month_feature_ref
 
-def route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday,  
+def create_segment_ref():
+    """Builds a dictionary from segment_means.JSON that gives the mean value for each segment \
+    based on historical bus data."""
+
+    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means.json')
+    with open(path) as file:
+        segment_mean_ref = json.load(file)
+    return segment_mean_ref
+
+def create_segment_ref_gtfs():
+    """Builds a dictionary from segment_means_gtfs.JSON that gives the mean value for each segment \
+    based on the GTFS data."""
+
+    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means_gtfs.json')
+    with open(path) as file:
+        segment_mean_ref_gtfs = json.load(file)
+    return segment_mean_ref_gtfs
+
+def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, weekday, bank_holiday,  
     rain, temp, rhum, msl):
-    """Returns a prediction of journey length in seconds for the 15A bus route.
+    """Returns a prediction of journey length in seconds for any bus route.
 
     Takes a list of stops as input, as well as the arrival time of a bus at the first stop in the list. 
-    Also takes as input day_of_week (0-6 for mon-sun), month(1-12 for jan-dec), weekday (1 for mon-fri, 
-    0 for sat & sun) and bank holiday (1 if the journey date is a bank holiday, 0 otherwise). Also takes 
-    the following weather info as input: rain (in mm), temp (in C), rhum - relative humidity (%) and 
+    Also takes as input hour (0-23), day_of_week (0-6 for mon-sun), month(1-12 for jan-dec), 
+    weekday (1 for mon-fri, 0 for sat & sun) and bank holiday (1 if the journey date is a bank holiday, 0 otherwise). 
+    Also takes the following weather info as input: rain (in mm), temp (in C), rhum - relative humidity (%) and 
     msl - mean sea level pressure (hPa)."""
 
-    first_stop_list = [340.0,350.0,351.0,352.0,353.0,395.0,396.0,397.0,398.0,399.0,400.0,407.0,1016.0,1017.0,1018.0,1019.0,1020.0,1069.0,1070.0,1071.0,1072.0,1076.0,1077.0,1078.0,1079.0,1080.0,1081.0,1082.0,1083.0,1085.0,1086.0,1087.0,1088.0,1089.0,1090.0,1091.0,1092.0,1093.0,1094.0,1095.0,1096.0,1101.0,1102.0,1103.0,1105.0,1107.0,1108.0,1109.0,1110.0,1111.0,1112.0,1113.0,1114.0,1115.0,1117.0,1118.0,1119.0,1120.0,1164.0,1165.0,1166.0,1167.0,1168.0,1169.0,1170.0,1283.0,1285.0,1353.0,1354.0,2437.0,2498.0,2499.0,4528.0,7216.0,7558.0,7577.0,7578.0,7579.0,7581.0,7582.0,7589.0]
-    second_stop_list = [340.0,350.0,351.0,352.0,353.0,354.0,396.0,397.0,398.0,399.0,400.0,407.0,1016.0,1017.0,1018.0,1019.0,1020.0,1069.0,1070.0,1071.0,1072.0,1076.0,1077.0,1078.0,1079.0,1080.0,1081.0,1082.0,1083.0,1085.0,1086.0,1087.0,1088.0,1089.0,1090.0,1091.0,1092.0,1093.0,1094.0,1095.0,1096.0,1101.0,1102.0,1103.0,1104.0,1107.0,1108.0,1109.0,1110.0,1111.0,1112.0,1113.0,1114.0,1115.0,1117.0,1118.0,1119.0,1120.0,1164.0,1165.0,1166.0,1167.0,1168.0,1169.0,1170.0,1283.0,1285.0,1353.0,1354.0,2437.0,2498.0,2499.0,4528.0,7216.0,7558.0,7577.0,7578.0,7579.0,7581.0,7582.0,7589.0]
-    # create dictionaries for day_of_week, month and bus stop features
+    # create dictionaries for hour, day_of_week, month and bus stop features
+    hour_ref = create_hour_feature_ref()
     day_of_week_ref = create_day_of_week_feature_ref()
     month_ref = create_month_feature_ref()
-    first_stop_ref = create_stop_feature_ref(first_stop_list)
-    second_stop_ref = create_stop_feature_ref(second_stop_list)
+    seg_ref = create_segment_ref()
+    seg_ref_gtfs = create_segment_ref_gtfs()
     # get day of week and month from the relevant dictionaries
     day_of_week = day_of_week_ref[day_of_week]
     month = month_ref[month]
+    hour = hour_ref[hour]
     # load the ml model
-    linreg = load_model("15A")
-    # initiate an array to store all predictions
+    linreg = load_model()
+    # initialise an array to store all predictions
     predictions = []
+    # initialise an array to store arrival times at various stops
+    arrival_time_at_stop = actualtime_arr_stop_first
+    arrival_times = []
+    arrival_times.append(arrival_time_at_stop)
     # loop through each set of stops in the list
     for i in range(len(stops)-1):
-        stop_first = int(stops[i])
-        stop_next = int(stops[i+1])
+        stop_first = stops[i]
+        stop_next = stops[i+1]
+        segment = str(stop_first) + "_" + str(stop_next)
+        if segment in seg_ref:
+            segment_mean = seg_ref[segment]
+        elif segment in seg_ref_gtfs:
+            segment_mean = seg_ref_gtfs[segment]
+        else:
+            segment_mean = 66
+            print("Unexpected segment encountered! Using default value:", segment_mean)
         # specify the input for the prediction
-        input = [[actualtime_arr_stop_first, rain, temp, rhum, msl,weekday,bank_holiday] + first_stop_ref[stop_first] + \
-        second_stop_ref[stop_next] + month + day_of_week]
+        input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
+        day_of_week + hour]
         # get a prediction and append to the prediction list
         prediction = (linreg.predict(input))
-        predictions.append(prediction)
-        # set actualtime_arr_stop_first to the predicted value so it can be used for the next set of stops
-        actualtime_arr_stop_first = prediction
+        predictions.append(prediction[0])
+        # update arrival_time_at_stop and append it to the arrival_times list
+        arrival_time_at_stop = arrival_time_at_stop + prediction[0]
+        arrival_times.append(arrival_time_at_stop)
     # calculate the time for the full trip
-    full_trip = predictions[len(predictions)-1] - predictions[0]
+    full_trip = arrival_times[len(arrival_times)-1] - arrival_times[0]
     return int(full_trip)
+
 
 def openweather_forecast():
     """This function calls the Openweather API to get a weather forecast. 
     
     Data is returned as a JSON object."""
 
-    #call the API using the ID for Dublin City: 7778677 
+    # call the API using the ID for Dublin City: 7778677
     api_endpoint = "http://api.openweathermap.org/data/2.5/forecast?id=7778677&units=metric&APPID=" \
-        + settings.OPENWEATHER_KEY
+                   + settings.OPENWEATHER_KEY
 
     try:
         # retrieve weather forecast from the OpenWeather API and convert to JSON object
@@ -121,7 +157,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
 
     If there is no weather data for the timestamp entered, then an exception is raised."""
 
-     # intialise variable to check whether weather data for the timestamp has been found in the JSON file
+    # intialise variable to check whether weather data for the timestamp has been found in the JSON file
     found = False
     # loop through the weather data to find the closest time/date to the prediction time/date
     for item in weather_data["list"]:
@@ -130,7 +166,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
         timestamp = datetime.datetime.utcfromtimestamp(dt)
         # get the time difference between the input and the date in the file
         time_diff = timestamp - journey_timestamp
-        time_diff_hours = time_diff.total_seconds()/3600    # get time_diff in hours
+        time_diff_hours = time_diff.total_seconds() / 3600  # get time_diff in hours
         # if the time difference is less than 3, then use this list item for the weather forecast
         if (0 <= time_diff_hours <= 3):
             found = True
@@ -139,7 +175,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             rhum = item.get("main").get("humidity")
             msl = item.get("main").get("pressure")
             if "rain" in item and "3h" in item["rain"]:
-                    rain = item.get("rain").get("3h")
+                rain = item.get("rain").get("3h")
             else:
                 rain = 0
             # once weather is found, break out of the loop
@@ -154,19 +190,19 @@ def parse_weather_forecast(journey_timestamp, weather_data):
 def convert_to_seconds(hour, minute):
     """Converts the inputted hour and minute values to seconds.
     
-    If the hour is less than 4, then it should be treated as part of the last day."""
+    If the hour is less than 3, then it should be treated as part of the last day."""
 
-    if hour > 4:
+    if hour > 3:
         seconds = hour*60*60 + minute*60
     else:
-        seconds = 86400 + hour*60*60 + minute*60
+        seconds = 86400 + hour * 60 * 60 + minute * 60
     return seconds
 
 
 def is_weekday(day_of_week):
     """Returns 1 if the day of week is mon-fri (0-4), returns 0 otherwise."""
-    
-    if day_of_week in [0,1,2,3,4]:
+
+    if day_of_week in [0, 1, 2, 3, 4]:
         return 1
     return 0
 
@@ -177,7 +213,7 @@ def is_bank_holiday(day, month):
     List of bank holidays will need to be updated periodically. Currently has remaining bank
     holidays in 2019 only."""
 
-    bank_holidays = [(5,8), (28,10), (25,12), (26,12)]
+    bank_holidays = [(5, 8), (28, 10), (25, 12), (26, 12)]
     if (day, month) in bank_holidays:
         return 1
     return 0
@@ -185,26 +221,38 @@ def is_bank_holiday(day, month):
 
 def parse_timestamp(timestamp):
     """Function that takes a datetime object as input and returns time in seconds, 
-    the day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
+    the hour, day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
 
     time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
     day_of_week = timestamp.weekday()
     day = timestamp.day
     month = timestamp.month
+    hour = timestamp.hour
     weekday = is_weekday(day_of_week)
     bank_holiday = is_bank_holiday(day, month)
 
-    return time_in_seconds, day_of_week, month, weekday, bank_holiday
+    return time_in_seconds, day_of_week, month, weekday, bank_holiday, hour
 
 
 def format_stop_list(stops):
     """Takes a list of stops as input, takes the last 4 characters and converts to int for each stop in 
-    the list."""
+    the list. If the stop name starts with "gen", uses a dict to get the stop id."""
     formatted_stops = []
+    gen_stop_key = {'gen:57102:7743:0:1': 7690,
+                    'gen:57102:7730:0:1': 7674,
+                    'gen:57102:7731:0:1': 7675,
+                    'gen:57102:7732:0:1': 7676,
+                    'gen:57102:7733:0:1': 7677,
+                    'gen:57102:7948:0:1': 7701,
+                    'gen:57102:7943:0:1': 7703}
     for stop in stops:
-        formatted = int(stop[0][-4:])
+        if stop[0].startswith("gen"):
+            formatted = gen_stop_key[stop[0]]
+        else:
+            formatted = int(stop[0][-4:])
         formatted_stops.append(formatted)
     return formatted_stops
+
 
 def predict_journey_time(stops, timestamp):
     """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
@@ -214,12 +262,98 @@ def predict_journey_time(stops, timestamp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday = parse_timestamp(timestamp)
+    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday, hour = parse_timestamp(timestamp)
     # call the OpenWeather API and parse the response
     weather_data = openweather_forecast()
     rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
     # make a prediction based on the input and return it
-    prediction = route_prediction_15A(stops, actualtime_arr_stop_first, day_of_week, month, \
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
         weekday, bank_holiday, rain, temp, rhum, msl)
     # return the prediction
     return prediction
+
+
+def get_service_id(weekday, bank_holiday):
+    if weekday == 1 and bank_holiday == 0:
+        return 1
+    elif weekday == 5 and bank_holiday == 0:
+        return 3
+    else:
+        return 2
+
+
+def get_real_time_data(stop_id):
+    headers = {
+        'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
+    resp = requests.get(
+        "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
+        headers=headers)
+
+    data = []
+    real_time_info = {stop_id: data}
+    if resp.status_code == 200:
+        content = resp.text
+        soup = BeautifulSoup(content, features="lxml")
+        slots1 = soup.find_all('tr', class_='odd')
+        slots2 = soup.find_all('tr', class_='even')
+        arr = []
+        for s in slots1:
+            for i in s.findChildren("td"):
+                arr.append(i.text.strip())
+        for s in slots2:
+            for i in s.findChildren("td"):
+                arr.append(i.text.strip())
+        temp = []
+        for item in arr:
+            if item == '':
+                data.append(temp)
+                temp = []
+                continue
+            temp.append(item)
+    data.sort(key=lambda x: x[2])
+    while len(data) != 0 and data[-1][2] == 'Due':
+        due = data.pop(-1)
+        data.insert(0, due)
+
+    return real_time_info
+
+
+def get_trip_id(direction, service_id, current_time, route_id):
+    path = os.path.join(BASE_DIR, '../static/cache/route_15a_timetable.json')
+    slots = []
+    with open(path, 'r') as json_file:
+        timetable = json.load(json_file)[direction][str(service_id)]
+        for i in range(len(timetable)):
+            if timetable[i][0] <= current_time <= timetable[i][1]:
+                slots.append(timetable[i][2])
+                slots.append(timetable[i + 1][2])
+                slots.append(timetable[i + 2][2])
+                slots.append(timetable[i + 3][2])
+                slots.append(timetable[i + 4][2])
+                break
+    return slots
+
+
+def get_trip_info(trip_ids, service_id, direction, route_id):
+    path = os.path.join(BASE_DIR, '../static/cache/route_15a.json')
+    infos = []
+    print(trip_ids)
+    with open(path, 'r') as json_file:
+        data = json.load(json_file)[direction][str(service_id)]
+        for trip_id in trip_ids:
+            infos.append(data[trip_id])
+    return infos
+
+
+def calculate_time_diff(trips, time):
+    i = 1
+    stops_list = []
+
+    while i <= len(trips[1]):
+        t = 0
+        while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
+            t += 1
+        stops_list.append(
+            [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
+        i += 1
+    return stops_list
