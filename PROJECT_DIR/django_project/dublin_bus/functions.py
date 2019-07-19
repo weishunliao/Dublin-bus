@@ -287,6 +287,10 @@ def get_real_time_data(stop_id):
                 continue
             temp.append(item)
     data.sort(key=lambda x: x[2])
+    while len(data) != 0 and data[-1][2] == 'Due':
+        due = data.pop(-1)
+        data.insert(0, due)
+
     return real_time_info
 
 

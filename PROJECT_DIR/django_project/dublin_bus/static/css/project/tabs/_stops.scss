@@ -64,12 +64,17 @@
       height: 300px;
     }
 
+    &__wrapper::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* make scrollbar transparent */
+    }
+
     &__card {
       margin-top: 5px;
       margin-bottom: 5px;
-      -webkit-box-shadow: 0px 9px 10px 0px rgba(0, 0, 0, 0.17);
-      -moz-box-shadow: 0px 9px 10px 0px rgba(0, 0, 0, 0.17);
-      box-shadow: 0px 9px 10px 0px rgba(0, 0, 0, 0.17);
+      -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.17);
+      -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.17);
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.17);
       border-radius: 10px;
 
       &__stop-name {
@@ -102,6 +107,7 @@
         font-size: 1.6rem;
         font-weight: bold;
       }
+
       &__service-bus-realtime {
         color: $db_blue;
         font-size: 32px;
@@ -192,7 +198,7 @@
         &__time {
           text-align: end;
           color: $bus_blue !important;
-          font-size: 3.5vw !important;
+          //font-size: 3.5vw !important;
         }
       }
       &__error {
