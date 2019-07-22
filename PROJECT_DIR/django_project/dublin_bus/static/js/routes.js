@@ -5,6 +5,7 @@ let stop_list = [];
 
 $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
+    document.getElementById('typeahead_route').blur();
     route_id = suggestion;
     document.getElementById("direction_switch").checked = false;
     get_bus_stop_list(route_id, "in");
@@ -140,3 +141,7 @@ const route_show_on_map = () => {
 };
 
 document.getElementById("routes__show-on-map-btn").addEventListener('click', route_show_on_map);
+
+document.getElementById('typeahead_route').addEventListener('click', function () {
+    $(window).scrollTop(110);
+});

@@ -3,6 +3,8 @@ import {map, markers} from "./google_maps";
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
     // console.log(type, suggestion);
+
+    document.getElementById('typeahead_stop').blur();
     get_bus_real_time_info(suggestion);
     window.setTimeout(detail, 800);
 });
@@ -132,3 +134,9 @@ const stops_show_on_map = () => {
 };
 
 show_on_map_btn.addEventListener('click', stops_show_on_map);
+
+document.getElementById('typeahead_stop').addEventListener('click', function () {
+    $(window).scrollTop(110);
+});
+
+
