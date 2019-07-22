@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 import json
 from django_project.settings import BASE_DIR
+from django.db import connection
+
 def load_model():
     """Loads and returns a machine learning model for all routes."""
     path = os.path.join(settings.ML_MODEL_ROOT, 'all_routes_aug_linreg_model.sav')
@@ -357,3 +359,70 @@ def calculate_time_diff(trips, time):
             [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
         i += 1
     return stops_list
+
+
+def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time):
+
+    first_stop_found = False
+    last_stop_found = False
+    start_point = '%' + start_point.strip() + '%'
+    end_point = '%' + end_point.strip() + '%'
+    headsign = '%' + headsign.strip() + '%'
+    stop_list = []
+
+    print("route:", route_id, "headsign:", headsign, "first stop:", start_point, "last stop:", end_point, "no. stops:", num_stops, "dept time:", departure_time)
+
+    with connection.cursor() as cursor:
+        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
+                where r.route_short_name = %s \
+                and s.stop_name like %s \
+                and st.stop_headsign like %s;"
+        cursor.execute(sql, [route_id, start_point, headsign])
+        if cursor.rowcount == 0:
+            print("No bus stops found for start point: " + start_point)
+            # get start_point_id based on end point
+            start_point_id = 0
+        elif cursor.rowcount == 1:
+            start_point_id = cursor.fetchone()
+            first_stop_found = True
+            print("stop_id:", start_point_id)
+        else:
+            # get start_point_id based on end point
+            print("Multiple bus stops return for start point: " + start_point)
+            start_point_id = 0
+
+    service_id = 'y101c'
+    if departure_time.weekday() == 5:
+        service_id = 'y101e'
+    elif departure_time.weekday() == 6:
+        service_id = 'y101d'
+
+    with connection.cursor() as cursor:
+        sql = "select a.stop_id from \
+                (select * from stop_times) a \
+                JOIN \
+                (select t.trip_id \
+                from trips t, routes r, stop_times st, stops s	\
+                where t.route_id = r.route_id \
+                and t.trip_id = st.trip_id \
+                and s.stop_id = st.stop_id \
+                and t.service_id = %s \
+                and r.route_short_name = %s \
+                and s.stop_id = %s \
+                and st.stop_headsign like %s \
+                and (st.arrival_time - TIME(%s)) > 0 \
+                order by (st.arrival_time - TIME(%s)) \
+                limit 1) as b \
+                ON a.trip_id = b.trip_id \
+                order by a.stop_sequence;"
+        cursor.execute(sql, [service_id, route_id, start_point_id, headsign, departure_time, departure_time])
+        all_stops = cursor.fetchall()
+        print("all stops:", all_stops)
+        index = 0
+        for i in all_stops:
+            if i[0] == start_point_id:
+                index = int(i[1] - 1)
+        stop_list = all_stops[index:index + num_stops + 1]
+        print("stops:", stop_list)
+
+    return stop_list
