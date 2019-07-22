@@ -1,11 +1,11 @@
-This file outlines the steps required to set up the database for storing GTFS Dublin Bus data. 
+This file outlines the steps required to set up the database for storing historical Dublin Bus data. 
 It also outlines steps for loading data into the tables.
 
-1. Copy contents of the gtfs_data folder to the CS server (e.g. using WinSCP).
-2. Log in to the server and navigate to the gtfs_data directory.
+1. Copy contents of the historical_data folder to the CS server (e.g. using WinSCP).
+2. Log in to the server and navigate to the historical_data directory.
 3. Run the following command, replacing USER & PASSWORD with the login details for mysql:
-    > mysql -u USER -pPASSWORD < db_route_info_setup.sql
-(Note: there should NOT be a space between -p and PASSWORD, it's not a typo!)
+    > mysql -u USER -pPASSWORD < db_raw_data_setup.SQL
+   (Note: there should NOT be a space between -p and PASSWORD, it's not a typo!)
 4. Navigate to the raw_data folder.
 5. Download the full Dublin Bus data set into the folder (follow the instructions on Brightspace). 
    The files should be named 'rt_leavetimes_DB_2018.txt', 'rt_trips_DB_2018.txt' & 

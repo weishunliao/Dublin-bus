@@ -25,7 +25,7 @@ CREATE TABLE `db_route_info`.`calendar_dates`
 CREATE TABLE `db_route_info`.`routes`
 (
   `route_id` varchar(30) PRIMARY KEY,
-  `agency_id` smallint,
+  `agency_id` varchar(6),
   `route_short_name` varchar(10),
   `route_long_name` varchar(255),
   `route_type` tinyint
@@ -33,11 +33,12 @@ CREATE TABLE `db_route_info`.`routes`
 
 CREATE TABLE `db_route_info`.`shapes`
 (
-  `shape_id` varchar(30) PRIMARY KEY,
+  `shape_id` varchar(30),
   `shape_pt_lat` double,
   `shape_pt_lon` double,
   `shape_pt_sequence` smallint,
-  `shape_dist_traveled` double
+  `shape_dist_traveled` double,
+  CONSTRAINT pk_calendar_dates PRIMARY KEY(`shape_id`, `shape_pt_sequence`)
 );
 
 CREATE TABLE `db_route_info`.`stop_times`
@@ -51,7 +52,7 @@ CREATE TABLE `db_route_info`.`stop_times`
   `pickup_type` tinyint,
   `drop_off_type` tinyint,
   `shape_dist_traveled` double,
-  CONSTRAINT pk_calendar_dates PRIMARY KEY(`trip_id`, `stop_id`)
+  CONSTRAINT pk_calendar_dates PRIMARY KEY(`trip_id`, `arrival_time`, `stop_id`)
 );
 
 CREATE TABLE `db_route_info`.`stops`
