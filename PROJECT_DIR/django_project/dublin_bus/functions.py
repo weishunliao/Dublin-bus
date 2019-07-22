@@ -324,17 +324,22 @@ def get_trip_id(direction, service_id, current_time, route_id):
     with open(path, 'r') as json_file:
         timetable = json.load(json_file)[direction][str(service_id)]
         for i in range(len(timetable)):
-            if timetable[i][0] <= current_time <= timetable[i][1]:
-                slots.append(timetable[i][2])
-                slots.append(timetable[i + 1][2])
-                slots.append(timetable[i + 2][2])
-                slots.append(timetable[i + 3][2])
-                slots.append(timetable[i + 4][2])
-                break
-    return slots
+            while timetable[i][0] <= current_time <= timetable[i][1]:
+                try:
+                    slots.append(timetable[i][2])
+                    slots.append(timetable[i + 1][2])
+                    slots.append(timetable[i + 2][2])
+                    slots.append(timetable[i + 3][2])
+                    slots.append(timetable[i + 4][2])
+                except ValueError as e:
+                    print(e)
+                finally:
+                    return slots
 
 
 def get_trip_info(trip_ids, service_id, direction, route_id):
+    if not trip_ids:
+        return []
     path = os.path.join(BASE_DIR, '../static/cache/route_15a.json')
     infos = []
     print(trip_ids)
@@ -346,6 +351,8 @@ def get_trip_info(trip_ids, service_id, direction, route_id):
 
 
 def calculate_time_diff(trips, time):
+    if len(trips) == 0:
+        return []
     i = 1
     stops_list = []
 

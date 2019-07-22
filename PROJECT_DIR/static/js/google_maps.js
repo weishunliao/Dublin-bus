@@ -1,180 +1,204 @@
-import { search, fromInput, toInput, selectedTab } from "./nodes";
-import { searchToggle } from "./index";
+import {search, fromInput, toInput, selectedTab} from "./nodes";
+import {searchToggle} from "./index";
+import {get_bus_real_time_info, detail} from "./stops";
 
-const { searchInput } = search;
+const {searchInput} = search;
 let resp;
 let directionsDisplay;
-
+export let markers = {};
+export let map;
 
 
 export default function initMap() {
-  setTimeout(() => {
-    let map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 53.3471, lng: -6.26059 },
-      zoom: 13,
-      disableDefaultUI: true
-    });
- 
-  // add markers to the map for all bus stops
-  $.getJSON('/static/cache/stops.json', function(data) {         
-    AddMarkers(data, map);
-  });  
+    setTimeout(() => {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {lat: 53.3471, lng: -6.26059},
+            zoom: 13,
+            disableDefaultUI: true
+        });
 
-  let directionsService = new google.maps.DirectionsService();
-  directionsDisplay = new google.maps.DirectionsRenderer({
-    map: map
-  });
+        // add markers to the map for all bus stops
+        $.getJSON('/static/cache/stops.json', function (data) {
+            AddMarkers(data, map);
+        });
 
-  let defaultBounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(53.281561, -6.364376),
-    new google.maps.LatLng(53.400044, -6.215727)
-  );
+        let directionsService = new google.maps.DirectionsService();
+        directionsDisplay = new google.maps.DirectionsRenderer({
+            map: map
+        });
 
-  let options = {
-    bounds: defaultBounds,
-    types: ["establishment"]
-  };
+        let defaultBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(53.281561, -6.364376),
+            new google.maps.LatLng(53.400044, -6.215727)
+        );
 
-
-  const searchAutocomplete = new google.maps.places.Autocomplete(
-    searchInput,
-    options
-  );
-
-  const fromAutocomplete = new google.maps.places.Autocomplete(
-    fromInput,
-    options,
-
-  );
-  const toAutocomplete = new google.maps.places.Autocomplete(
-    toInput,
-    options,
-    
-  );
+        let options = {
+            bounds: defaultBounds,
+            types: ["establishment"]
+        };
 
 
-    $('ion-tab-button').addClass('color-add')
-  searchAutocomplete.addListener("place_changed", function() {
-    var place = searchAutocomplete.getPlace();
-    if (!place.geometry) {
-      // User entered the name of a Place that was not suggested and
-      // pressed the Enter key, or the Place Details request failed.
-      window.alert("No details available for input: '" + place.name + "'");
-      return;
-    }
+        const searchAutocomplete = new google.maps.places.Autocomplete(
+            searchInput,
+            options
+        );
 
-    // If the place has a geometry, then present it on a map.
-    if (place.geometry.viewport) {
-      map.fitBounds(place.geometry.viewport);
-    } else {
-      map.setCenter(place.geometry.location);
-      map.setZoom(17); // Why 17? Because it looks good.
-    }
+        const fromAutocomplete = new google.maps.places.Autocomplete(
+            fromInput,
+            options,
+        );
+        const toAutocomplete = new google.maps.places.Autocomplete(
+            toInput,
+            options,
+        );
 
-    searchToggle();
-    searchInput.value = "";
-    // marker.setPosition(place.geometry.location);
-    // marker.setVisible(true);
 
-    // var address = '';
-    // if (place.address_components) {
-    //   address = [
-    //     (place.address_components[0] && place.address_components[0].short_name || ''),
-    //     (place.address_components[1] && place.address_components[1].short_name || ''),
-    //     (place.address_components[2] && place.address_components[2].short_name || '')
-    //   ].join(' ');
-    // }
+        $('ion-tab-button').addClass('color-add')
+        searchAutocomplete.addListener("place_changed", function () {
+            var place = searchAutocomplete.getPlace();
+            if (!place.geometry) {
+                // User entered the name of a Place that was not suggested and
+                // pressed the Enter key, or the Place Details request failed.
+                window.alert("No details available for input: '" + place.name + "'");
+                return;
+            }
 
-    // infowindowContent.children['place-icon'].src = place.icon;
-    // infowindowContent.children['place-name'].textContent = place.name;
-    // infowindowContent.children['place-address'].textContent = address;
-    // infowindow.open(map, marker);
-  });
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17); // Why 17? Because it looks good.
+            }
 
-  let mainPosition;
+            searchToggle();
+            searchInput.value = "";
+            // marker.setPosition(place.geometry.location);
+            // marker.setVisible(true);
 
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
+            // var address = '';
+            // if (place.address_components) {
+            //   address = [
+            //     (place.address_components[0] && place.address_components[0].short_name || ''),
+            //     (place.address_components[1] && place.address_components[1].short_name || ''),
+            //     (place.address_components[2] && place.address_components[2].short_name || '')
+            //   ].join(' ');
+            // }
 
-          mainPosition = pos;
+            // infowindowContent.children['place-icon'].src = place.icon;
+            // infowindowContent.children['place-name'].textContent = place.name;
+            // infowindowContent.children['place-address'].textContent = address;
+            // infowindow.open(map, marker);
+        });
 
-          var marker = new google.maps.Marker({
-            position: pos,
-            map: map,
-            title: "Hello World!",
-            icon: "./static/images/location32.png"
-          });
-        },
-        function() {
-          handleLocationError(true, map.getCenter());
+        let mainPosition;
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        mainPosition = pos;
+
+                        var marker = new google.maps.Marker({
+                            position: pos,
+                            map: map,
+                            title: "Hello World!",
+                            icon: "./static/images/location32.png"
+                        });
+                    },
+                    function () {
+                        handleLocationError(true, map.getCenter());
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, map.getCenter());
+            }
+
+            function handleLocationError(browserHasGeolocation, pos) {
+                alert(
+                    browserHasGeolocation
+                        ? "Error: The Geolocation service failed."
+                        : "Error: Your browser doesn't support geolocation."
+                );
+            }
         }
-      );
-    } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(false, map.getCenter());
-    }
 
-    function handleLocationError(browserHasGeolocation, pos) {
-      alert(
-        browserHasGeolocation
-          ? "Error: The Geolocation service failed."
-          : "Error: Your browser doesn't support geolocation."
-      );
-    }
-  }
+        getLocation();
 
-  getLocation();
+        const centerOfDublin = new google.maps.LatLng(53.350287, -6.260574);
+        map.setCenter(centerOfDublin);
+        map.setZoom(15);
 
-  const centerOfDublin = new google.maps.LatLng(53.350287, -6.260574);
-  map.setCenter(centerOfDublin);
-  map.setZoom(15);
+        $(".location-button").click(() => {
+            getLocation();
+            map.setCenter(mainPosition);
+            map.setZoom(17);
+        });
+    }, 200);
 
-  $(".location-button").click(() => {
-    getLocation();
-    map.setCenter(mainPosition);
-    map.setZoom(17);
-  });
-}, 200);
 
- 
 }
 
 function change_route(route_index) {
-  directionsDisplay.setRouteIndex(route_index);
+    directionsDisplay.setRouteIndex(route_index);
 }
 
 window.initMap = initMap;
 
 // function for adding markers to a map based on input
 function AddMarkers(data, map) {
-  // get the latitude, longitude and name of each bus stop
-  for (let key in data) {
-      let latitude = data[key][1];
-      let longitude = data[key][2];
-      let stopName = data[key][0];
-      let latLng = new google.maps.LatLng(latitude, longitude);
-      // create an object for the bus stop icon
-      let busStopIcon = {
-        url: '/static/images/marker.png', // url for the image
-        scaledSize: new google.maps.Size(60, 60), // size of the image
-        origin: new google.maps.Point(0, 0), // origin
-        anchor: new google.maps.Point(30, 60) // anchor
-      };
-      // generate a marker object for bus stop
-      let busMarker = new google.maps.Marker({
-        position: latLng,  
-        map: map,
-        icon: busStopIcon,  
-        title: stopName
-      });
+    // get the latitude, longitude and name of each bus stop
+    for (let key in data) {
+        let stopID = key;
+        let latitude = data[key][0];
+        let longitude = data[key][1];
+        let stopName = data[key][2];
+        let latLng = new google.maps.LatLng(latitude, longitude);
+        // create an object for the bus stop icon
+        let busStopIcon = {
+            url: '/static/images/marker.png', // url for the image
+            scaledSize: new google.maps.Size(60, 60), // size of the image
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(30, 60) // anchor
+        };
+        // generate a marker object for bus stop
+        let busMarker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            icon: busStopIcon,
+            title: stopName,
+            id: stopID
+        });
+        busMarker.addListener('click', function (e) {
+            document.querySelector('ion-tabs').getSelected().then(function (current_tab) {
+
+                if (current_tab === 'stops') {
+                    document.querySelector('ion-tabs').select('none').then(() => {
+                        document.querySelector('ion-tabs').select('stops');
+                        console.log("from stop", stopID);
+                        get_bus_real_time_info(stopID);
+                        if (document.getElementById('stops-container').style.marginLeft === '0px') {
+                            window.setTimeout(detail, 500);
+                        }
+                    });
+                } else {
+                    document.querySelector('ion-tabs').select('stops');
+                    console.log(stopID);
+                    get_bus_real_time_info(stopID);
+                    window.setTimeout(detail, 500);
+                }
+            });
+        });
+        markers[stopID] = busMarker;
     }
 }
+
 //   function() {
 //     handleLocationError(true, infoWindow, map.getCenter());
 //   }

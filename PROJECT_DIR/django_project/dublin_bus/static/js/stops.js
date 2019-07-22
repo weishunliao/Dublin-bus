@@ -1,12 +1,15 @@
+import {map, markers} from "./google_maps";
+
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
-    let type = document.getElementById("suggestion_" + suggestion).dataset.type;
-    console.log(type, suggestion);
+    // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
+    // console.log(type, suggestion);
     get_bus_real_time_info(suggestion);
     window.setTimeout(detail, 800);
 });
 
 
-const get_bus_real_time_info = (stop_id) => {
+export const get_bus_real_time_info = (stop_id) => {
+    document.getElementById('stops__show-on-map-btn').dataset.id = stop_id;
     fetch('real_time_info_for_bus_stop?stop_id=' + stop_id, {method: 'get'})
         .then(function (response) {
             return response.json();
@@ -78,7 +81,7 @@ const create_chip = (data) => {
 };
 
 
-const detail = () => {
+export const detail = () => {
     const container = $("#stops-container");
     if (container.css('margin-left') === '0px') {
         container.animate({'margin-left': '-100%'}, 200, 'linear');
@@ -119,3 +122,13 @@ const get_stop_server_route = (stop_id) => {
         return error;
     })
 };
+
+const show_on_map_btn = document.getElementById("stops__show-on-map-btn");
+const stops_show_on_map = () => {
+    let stop = markers["" + show_on_map_btn.dataset.id].getPosition();
+    map.setCenter({lat: stop.lat(), lng: stop.lng()});
+    map.setZoom(18);
+    // adjust_height();
+};
+
+show_on_map_btn.addEventListener('click', stops_show_on_map);

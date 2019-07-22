@@ -1,4 +1,7 @@
+import {markers, map} from "./google_maps";
+
 let route_id;
+let stop_list = [];
 
 $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
@@ -21,9 +24,10 @@ const get_bus_stop_list = (route_id, direction) => {
             }
         })
         .then(function (data) {
-            return display_stops(data['stops_list'],route_id);
+            return display_stops(data['stops_list'], route_id);
         }).then(function (stops) {
         for (let i = 0; i < stops.length; i++) {
+            stop_list.push(parseInt(stops[i][0]));
             update_real_time(i, stops[i][0], route_id);
         }
     }).catch(function (error) {
@@ -108,3 +112,31 @@ for (let card of cards) {
         window.setTimeout(detail2, 800);
     });
 }
+const clear_markers = () => {
+    for (let [key, value] of Object.entries(markers)) {
+        value.setMap(null);
+    }
+    for (let stop_ID of stop_list) {
+        markers["" + stop_ID].setMap(map);
+    }
+};
+
+const adjust_height = () => {
+    // let h = Math.max(
+    //     document.documentElement.clientHeight,
+    //     window.innerHeight || 0
+    // );
+    // console.log(h);
+    // $('.drawer__container').css('height', h * 0.40);
+};
+
+const route_show_on_map = () => {
+    clear_markers();
+    let mid_stop = stop_list[stop_list.length / 2];
+    map.setZoom(12);
+    let mid_marker = markers["" + mid_stop].getPosition();
+    map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
+    // adjust_height();
+};
+
+document.getElementById("routes__show-on-map-btn").addEventListener('click', route_show_on_map);
