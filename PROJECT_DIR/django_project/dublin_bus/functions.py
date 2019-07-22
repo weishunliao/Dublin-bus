@@ -367,29 +367,14 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
     end_point = '%' + end_point.strip() + '%'
     headsign = '%' + headsign.strip() + '%'
     stop_list = []
-
     print("route:", route_id, "headsign:", headsign, "first stop:", start_point, "last stop:", end_point, "no. stops:", num_stops, "dept time:", departure_time)
 
-    with connection.cursor() as cursor:
-        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
-                where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
-        cursor.execute(sql, [route_id, start_point, headsign])
-        if cursor.rowcount == 0:
-            print("No bus stops found for start point: " + start_point)
-            start_point_id = get_first_stop_id(route_id, headsign, end_point, num_stops, departure_time)
-            if start_point_id == -1:
-                return []
-        elif cursor.rowcount == 1:
-            start_point_id = cursor.fetchone()[0]
-            print("stop_id:", start_point_id)
-        else:
-            print("Multiple bus stops return for start point: " + start_point)
-            start_point_id = get_first_stop_id(route_id, headsign, end_point, num_stops, departure_time)
-            if start_point_id == -1:
-                return []
-
+    # get the bus stop id of the start point
+    start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time)
+    # if -1 was returned, the bus stop id could not be found so return an empty array
+    if start_point_id == -1:
+        return []
+    # get the relevant service id based on the departure time
     service_id = get_current_service_id(departure_time)
 
     with connection.cursor() as cursor:
@@ -419,10 +404,30 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
                 index = i
         stop_list = all_stops[index:index + num_stops + 1]
         print("stops:", stop_list)
-
     return stop_list
 
-def get_first_stop_id(route_id, headsign, end_point, num_stops, departure_time):
+def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time):
+    """Returns the bus stop id of the start point based on the input."""
+
+    with connection.cursor() as cursor:
+        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
+                where r.route_short_name = %s \
+                and s.stop_name like %s \
+                and st.stop_headsign like %s;"
+        cursor.execute(sql, [route_id, start_point, headsign])
+        if cursor.rowcount == 0:
+            print("No bus stops found for start point: " + start_point)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time)
+        elif cursor.rowcount == 1:
+            start_point_id = cursor.fetchone()[0]
+            print("stop_id:", start_point_id)
+        else:
+            print("Multiple bus stops return for start point: " + start_point)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time)
+    return start_point_id
+
+def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time):
+    """Returns the bus stop id of the start point based on the end point."""
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
@@ -439,7 +444,6 @@ def get_first_stop_id(route_id, headsign, end_point, num_stops, departure_time):
 
 def get_current_service_id(departure_time):
     """Returns a service id based on the datetime object entered."""
-
     if is_bank_holiday(departure_time.day, departure_time.month) == 1 or departure_time.weekday() == 6:
         service_id = 'y101d'
     elif departure_time.weekday() == 5:
