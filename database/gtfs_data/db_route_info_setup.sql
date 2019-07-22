@@ -38,7 +38,7 @@ CREATE TABLE `db_route_info`.`shapes`
   `shape_pt_lon` double,
   `shape_pt_sequence` smallint,
   `shape_dist_traveled` double,
-  CONSTRAINT pk_calendar_dates PRIMARY KEY(`shape_id`, `shape_pt_sequence`)
+  CONSTRAINT pk_shapes PRIMARY KEY(`shape_id`, `shape_pt_sequence`)
 );
 
 CREATE TABLE `db_route_info`.`stop_times`
@@ -52,15 +52,16 @@ CREATE TABLE `db_route_info`.`stop_times`
   `pickup_type` tinyint,
   `drop_off_type` tinyint,
   `shape_dist_traveled` double,
-  CONSTRAINT pk_calendar_dates PRIMARY KEY(`trip_id`, `arrival_time`, `stop_id`)
+  CONSTRAINT pk_stop_times PRIMARY KEY(`trip_id`, `arrival_time`, `stop_id`)
 );
 
 CREATE TABLE `db_route_info`.`stops`
 (
-  `stop_id` varchar(30) PRIMARY KEY,
+  `stop_id` varchar(30),
   `stop_name` varchar(255),
   `stop_lat` double,
-  `stop_long` double
+  `stop_long` double,
+  CONSTRAINT pk_stops PRIMARY KEY(`stop_id`, `stop_name`)
 );
 
 CREATE TABLE `db_route_info`.`trips`
