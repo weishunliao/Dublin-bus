@@ -617,3 +617,27 @@ class TestGetServerRoute(TestCase):
         client = Client()
         resp = client.get('/server_route?stop_id=1123').json()['server_route']
         self.assertEqual(set(resp), set(['15', '65b', '49', '65']))
+
+
+class TestGetCurrentServiceId(TestCase):
+       """Test cases for the get_current_service_id function."""
+
+       def test_get_current_service_id_bank_holiday(self):
+              """Test to ensure that the correct value is returned for a bank holiday."""
+              timestamp = datetime.strptime('Aug 5 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101d')
+
+       def test_get_current_service_id_sun(self):
+              """Test to ensure that the correct value is returned for a Sunday."""
+              timestamp = datetime.strptime('Aug 4 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101d')
+
+       def test_get_current_service_id_sat(self):
+              """Test to ensure that the correct value is returned for a Saturday."""
+              timestamp = datetime.strptime('Aug 3 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101e')
+
+       def test_get_current_service_id_weekday(self):
+              """Test to ensure that the correct value is returned for a Weekday."""
+              timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101c')
