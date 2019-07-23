@@ -428,9 +428,11 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
             if multiple_start == 1:
                 return -1
             else:
-                stop_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time, num_stops)
-                print("stop id", stop_id)
-                return stop_id
+                end_point_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time, num_stops, 0)
+                all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
+                start_point_id = get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops)
+                print("start point id:", start_point_id)
+                return start_point_id
             
 
 def get_current_service_id(departure_time):
@@ -471,7 +473,7 @@ def get_stop_list_start_point(all_stops, start_point_id, num_stops):
     """Get a list of stops based on the stop that the user gets on at."""
     index = 0
     for i in range(len(all_stops)):
-        if all_stops[i][0] == start_point_id:
+        if all_stops[i] == start_point_id:
             index = i
     stop_list = all_stops[index:index + num_stops + 1]
     return stop_list
@@ -485,7 +487,7 @@ def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
     start_point_id = all_stops[index - num_stops]
     return start_point_id
 
-def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops):
+def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops, start):
     """Returns a random stop id from those returned. Returns -1 if a valid stop id can't be found."""
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
@@ -496,10 +498,12 @@ def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_
         stop_ids = cursor.fetchall()
         print("stop_ids:", stop_ids)
         for stop in stop_ids:
-            print("one stop:", stop[0])
+            print("one stop:", stop)
             all_stops = get_all_stops(service_id, route_id, stop[0], headsign, departure_time)
-            if all_stops.index(stop) + num_stops <= len(all_stops):
-                return stop[0]
-            else:
-                continue
+            print("all stops:", all_stops)
+            if stop in all_stops:
+                if start == 1 and (all_stops.index(stop) + num_stops <= len(all_stops)):
+                    return stop[0]
+                elif start == 0 and (all_stops.index(stop) - num_stops >= 0):
+                    return stop[0]
         return -1
