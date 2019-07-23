@@ -369,16 +369,17 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
     headsign = '%' + headsign.strip() + '%'
     stop_list = []
     print("route:", route_id, "headsign:", headsign, "first stop:", start_point, "last stop:", end_point, "no. stops:", num_stops, "dept time:", departure_time)
+    # get the relevant service id based on the departure time
+    service_id = get_current_service_id(departure_time)
     # get the bus stop id of the start point
-    start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time)
+    start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time, service_id)
     print("stop_id:", start_point_id)
     # if -1 was returned, the bus stop id could not be found so return an empty array
     if start_point_id == -1:
         return []
-    # get the relevant service id based on the departure time
-    service_id = get_current_service_id(departure_time)
     # get all stops that the bus will travel along on its full route
     all_stops = get_all_stops(service_id, route_id, start_point_id, headsign, departure_time)
+    print("all stops:", all_stops)
     # get the list of stops that the bus will travel along between the user's origin and destination
     index = 0
     for i in range(len(all_stops)):
@@ -388,7 +389,7 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
     print("stops:", stop_list)
     return stop_list
 
-def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time):
+def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time, service_id):
     """Returns the bus stop id of the start point based on the input."""
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
@@ -398,15 +399,16 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
         cursor.execute(sql, [route_id, start_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for start point: " + start_point)
-            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id)
         elif cursor.rowcount == 1:
             start_point_id = cursor.fetchone()[0]
+            print("Bus stop found for start point: " + start_point)
         else:
-            print("Multiple bus stops return for start point: " + start_point)
-            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time)
+            print("Multiple bus stops found for start point: " + start_point)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id)
     return start_point_id
 
-def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time):
+def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id):
     """Returns the bus stop id of the start point based on the end point."""
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
@@ -418,8 +420,18 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
             print("No bus stops found for end point: " + end_point)
             return -1
         elif cursor.rowcount == 1:
-            return -1
+            print("Bus stop found for end point: " + end_point)
+            end_point_id = cursor.fetchone()[0]
+            all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
+            index = 0
+            for i in range(len(all_stops)):
+                if all_stops[i][0] == end_point_id:
+                    index = i
+            start_point_id = all_stops[index - num_stops]
+            print("Found start_point_id using end_point_id!")
+            return start_point_id
         else:
+            print("Multiple bus stops found for end point: " + end_point)
             return -1
 
 def get_current_service_id(departure_time):
@@ -432,7 +444,7 @@ def get_current_service_id(departure_time):
         service_id = 'y101c'
     return service_id
 
-def get_all_stops(service_id, route_id, start_point_id, headsign, departure_time):
+def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
     """Returns a list of all stops on the route based on the input."""
     with connection.cursor() as cursor:
         sql = "select a.stop_id from \
@@ -452,7 +464,6 @@ def get_all_stops(service_id, route_id, start_point_id, headsign, departure_time
                 limit 1) as b \
                 ON a.trip_id = b.trip_id \
                 order by a.stop_sequence;"
-        cursor.execute(sql, [service_id, route_id, start_point_id, headsign, departure_time, departure_time])
+        cursor.execute(sql, [service_id, route_id, stop_id, headsign, departure_time, departure_time])
         all_stops = cursor.fetchall()
-        print("all stops:", all_stops)
         return all_stops
