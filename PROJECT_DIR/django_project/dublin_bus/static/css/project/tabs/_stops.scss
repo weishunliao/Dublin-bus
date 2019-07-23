@@ -61,7 +61,7 @@
   &__content {
     &__wrapper {
       overflow: scroll;
-      height: 300px;
+      height: 200px;
     }
 
     &__wrapper::-webkit-scrollbar {
@@ -162,6 +162,11 @@
         font-size: 1.8rem;
       }
     }
+  }
+
+  &__time-table {
+    overflow: scroll;
+    height: 300px;
   }
 
   &__time-table-list {

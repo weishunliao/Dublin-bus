@@ -133,8 +133,8 @@
                                 Back
                             </ion-button>
                         </ion-buttons>
-                        <ion-buttons slot="end">
-                            <ion-button id="stops__show-on-map-btn" data-id="">
+                        <ion-buttons slot="end" id="stops__show-on-map-btn" data-id="">
+                            <ion-button id="stops__show-on-map-btn__name">
                                 <ion-icon name="md-map"></ion-icon>
                                 Show on map
                             </ion-button>
@@ -187,7 +187,7 @@
                 {#                </ion-grid>#}
                 {#            </ion-item>#}
             </div>
-                <ion-content overflow-scroll="true" id="time-table">
+                <div id="stops__time-table" class="stops__time-table">
                     <ion-list class="stops__time-table-list" id="stops__time-table-list">
                         <ion-grid>
                             <ion-row class="stops__time-table-list__header">
@@ -222,7 +222,7 @@
                             </div>
                         </ion-grid>
                     </ion-list>
-                </ion-content>
+                </div>
         </div>
     </div>
 </ion-tab>

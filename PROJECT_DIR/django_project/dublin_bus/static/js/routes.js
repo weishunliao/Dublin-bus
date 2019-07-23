@@ -1,5 +1,4 @@
 import {markers, map} from "./google_maps";
-import {change_marker_icon} from "./stops";
 
 let route_id;
 let stop_list = [];
@@ -28,6 +27,7 @@ const get_bus_stop_list = (route_id, direction) => {
         .then(function (data) {
             return display_stops(data['stops_list'], route_id);
         }).then(function (stops) {
+        stop_list = [];
         for (let i = 0; i < stops.length; i++) {
             stop_list.push(parseInt(stops[i][0]));
             update_real_time(i, stops[i][0], route_id);
@@ -131,30 +131,39 @@ const draw_markers = () => {
 };
 
 
-
-export const adjust_height = () => {
-    $('.drawer__container').animate({'height': 290}, 200, 'linear');
-};
-
 const route_show_on_map = () => {
-    clear_markers();
-    let mid_stop = stop_list[stop_list.length / 2];
-    map.setZoom(12);
-    let mid_marker = markers["" + mid_stop].getPosition();
-    map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
-    adjust_height();
-    document.getElementById("drawer__container__grab").addEventListener('click', () => {
+    const draw_height = $(".drawer__container").css('height');
+    if (draw_height === "290px") {
+        document.getElementById("routes__show-on-map-btn__name").innerText = "";
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        document.getElementById("routes__toolbar__back-btn").style.display = '';
         let h = Math.max(
             document.documentElement.clientHeight,
             window.innerHeight || 0
         );
         $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
-        draw_markers();
-    });
+    } else {
+        clear_markers();
+        let mid_stop = stop_list[Math.floor(stop_list.length / 2)];
+        map.setZoom(12);
+        let mid_marker = markers["" + mid_stop].getPosition();
+        map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
+        document.getElementById("routes__show-on-map-btn__name").innerText = "";
+        document.getElementById("routes__toolbar__back-btn").style.display = 'none';
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
+        $('.drawer__container').animate({'height': 290}, 200, 'linear');
+    }
 };
 
 document.getElementById("routes__show-on-map-btn").addEventListener('click', route_show_on_map);
 
 document.getElementById('typeahead_route').addEventListener('click', function () {
     $(window).scrollTop(110);
+});
+
+$(".timeline-wrapper__content__box").on("touchmove", function (e) {
+    e.stopPropagation();
+});
+$(".routes__content__wrapper").on("touchmove", function (e) {
+    e.stopPropagation();
 });

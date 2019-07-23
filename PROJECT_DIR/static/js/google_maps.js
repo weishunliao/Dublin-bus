@@ -1,6 +1,6 @@
 import {search, fromInput, toInput, selectedTab} from "./nodes";
 import {searchToggle} from "./index";
-import {get_bus_real_time_info, detail} from "./stops";
+import {get_bus_real_time_info, detail, drawer_default_height} from "./stops";
 
 const {searchInput} = search;
 let resp;
@@ -189,6 +189,7 @@ function AddMarkers(data, map) {
                 if (stops_container_position === '0px') {
                     window.setTimeout(detail, 500);
                 }
+                drawer_default_height();
             });
         });
         markers[stopID] = busMarker;
