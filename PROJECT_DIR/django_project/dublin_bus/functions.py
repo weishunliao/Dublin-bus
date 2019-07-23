@@ -428,10 +428,9 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
             if multiple_start == 1:
                 return -1
             else:
-                pass
-                # check if stops are sequential
-                # if so pick a random one and get start id
-                # otherwise return -1
+                stop_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time, num_stops)
+                print("stop id", stop_id)
+                return stop_id
             
 
 def get_current_service_id(departure_time):
@@ -485,3 +484,22 @@ def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
             index = i
     start_point_id = all_stops[index - num_stops]
     return start_point_id
+
+def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops):
+    """Returns a random stop id from those returned. Returns -1 if a valid stop id can't be found."""
+    with connection.cursor() as cursor:
+        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
+                where r.route_short_name = %s \
+                and s.stop_name like %s \
+                and st.stop_headsign like %s;"
+        cursor.execute(sql, [route_id, stop_name, headsign])
+        stop_ids = cursor.fetchall()
+        print("stop_ids:", stop_ids)
+        for stop in stop_ids:
+            print("one stop:", stop[0])
+            all_stops = get_all_stops(service_id, route_id, stop[0], headsign, departure_time)
+            if all_stops.index(stop) + num_stops <= len(all_stops):
+                return stop[0]
+            else:
+                continue
+        return -1
