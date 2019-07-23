@@ -260,6 +260,9 @@ def predict_journey_time(stops, timestamp):
     """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
         time in minutes."""
 
+    # if stops is an empty list, return -1
+    if len(stops) == 0:
+        return -1
     # convert stops to the correct format
     stops = format_stop_list(stops)
     # convert and parse the timestamp
