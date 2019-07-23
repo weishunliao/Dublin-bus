@@ -493,7 +493,7 @@ def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
     for i in range(len(all_stops)):
         if all_stops[i][0] == end_point_id:
             index = i
-    start_point_id = all_stops[index - num_stops][0]
+    start_point_id = all_stops[index - num_stops + 1][0]
     return start_point_id
 
 def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops, start):
