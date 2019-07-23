@@ -661,6 +661,13 @@ class TestGetStopListStartPoint(TestCase):
               output = (('8250DB000768',), ('8220DB000769',), ('8220DB000770',), ('8220DB000771',))
               self.assertEqual(functions.get_stop_list_start_point(all_stops, start_point_id, num_stops), output)
 
+       def test_get_stop_list_start_point_invalid(self):
+              """Test that the function returns an empty list when there are issues with indices."""
+              all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',))
+              start_point_id = '8350DB004177'
+              num_stops = 5
+              self.assertEqual(functions.get_stop_list_start_point(all_stops, start_point_id, num_stops), [])
+
 class TestGetStartPointIdFromEndPointId(TestCase):
        """Test cases for the get_start_point_id__from_end_point_id function."""
 
@@ -671,3 +678,10 @@ class TestGetStartPointIdFromEndPointId(TestCase):
               num_stops = 4
               output = '8350DB004177'
               self.assertEqual(functions.get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops), output)
+
+       def test_get_start_point_id__from_end_point_id_invalid(self):
+              """Test that the function returns -1 when there are issues with indices."""
+              all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',))
+              end_point_id = '8350DB004177'
+              num_stops = 3
+              self.assertEqual(functions.get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops), -1)
