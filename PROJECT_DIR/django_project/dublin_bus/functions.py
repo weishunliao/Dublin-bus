@@ -402,6 +402,9 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
         else:
             print("Multiple bus stops found for start point: " + start_point)
             start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 1)
+            if start_point_id == -1:
+                print("Choosing a stop from start point options.")
+                start_point_id = get_stop_from_multiple(service_id, route_id, start_point, headsign, departure_time, num_stops, 1)
     return start_point_id
 
 def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, multiple_start):
@@ -428,7 +431,10 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
             if multiple_start == 1:
                 return -1
             else:
+                print("Choosing a stop from end point options.")
                 end_point_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time, num_stops, 0)
+                if end_point_id == -1:
+                    return -1
                 all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
                 start_point_id = get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops)
                 print("start point id:", start_point_id)
@@ -473,9 +479,9 @@ def get_stop_list_start_point(all_stops, start_point_id, num_stops):
     """Get a list of stops based on the stop that the user gets on at."""
     index = 0
     for i in range(len(all_stops)):
-        if all_stops[i] == start_point_id:
+        if all_stops[i][0] == start_point_id:
             index = i
-    stop_list = all_stops[index:index + num_stops + 1]
+    stop_list = all_stops[index:index + num_stops]
     return stop_list
 
 def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
@@ -484,7 +490,7 @@ def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
     for i in range(len(all_stops)):
         if all_stops[i][0] == end_point_id:
             index = i
-    start_point_id = all_stops[index - num_stops]
+    start_point_id = all_stops[index - num_stops][0]
     return start_point_id
 
 def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops, start):
@@ -504,6 +510,6 @@ def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_
             if stop in all_stops:
                 if start == 1 and (all_stops.index(stop) + num_stops <= len(all_stops)):
                     return stop[0]
-                elif start == 0 and (all_stops.index(stop) - num_stops >= 0):
+                elif start == 0 and (all_stops.index(stop) - num_stops + 1 >= 0):
                     return stop[0]
         return -1

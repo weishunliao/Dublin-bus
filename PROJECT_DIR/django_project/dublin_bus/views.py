@@ -53,6 +53,7 @@ def get_travel_time(request):
     stop_list = functions.get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time)
     # call the machine learning model to get a prediction for journey time
     journey_time = functions.predict_journey_time(stop_list, departure_time_value)
+    print("prediction:", journey_time)
     return JsonResponse({"journey_time": journey_time})
 
 
