@@ -177,20 +177,16 @@ function AddMarkers(data, map) {
         });
         busMarker.addListener('click', function (e) {
             document.querySelector('ion-tabs').getSelected().then(function (current_tab) {
-
                 if (current_tab === 'stops') {
                     document.querySelector('ion-tabs').select('none').then(() => {
                         document.querySelector('ion-tabs').select('stops');
-                        console.log("from stop", stopID);
-                        get_bus_real_time_info(stopID);
-                        if (document.getElementById('stops-container').style.marginLeft === '0px') {
-                            window.setTimeout(detail, 500);
-                        }
                     });
                 } else {
                     document.querySelector('ion-tabs').select('stops');
-                    console.log(stopID);
-                    get_bus_real_time_info(stopID);
+                }
+                get_bus_real_time_info(stopID);
+                const stops_container_position = $("#stops-container").css('margin-left');
+                if (stops_container_position === '0px') {
                     window.setTimeout(detail, 500);
                 }
             });
