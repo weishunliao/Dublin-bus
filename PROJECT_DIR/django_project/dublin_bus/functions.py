@@ -371,6 +371,7 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
 
     # get the bus stop id of the start point
     start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time)
+    print("stop_id:", start_point_id)
     # if -1 was returned, the bus stop id could not be found so return an empty array
     if start_point_id == -1:
         return []
@@ -420,7 +421,6 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
             start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time)
         elif cursor.rowcount == 1:
             start_point_id = cursor.fetchone()[0]
-            print("stop_id:", start_point_id)
         else:
             print("Multiple bus stops return for start point: " + start_point)
             start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time)
