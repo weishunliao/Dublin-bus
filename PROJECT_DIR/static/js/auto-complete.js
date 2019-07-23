@@ -4257,8 +4257,8 @@ $('#search-container-stops .typeahead').typeahead({
     },
     {
         name: 'stops',
-        source:
-        stops,
+        limit: 5,
+        source: stops,
         templates: {
             header: '<span style="font-size: 2rem;">Stops</span>',
             empty:
@@ -4291,6 +4291,7 @@ $('#search-container-routes .typeahead').typeahead({
     },
     {
         name: 'routes',
+        limit: 5,
         source: routes,
         templates: {
             header: '<span style="font-size: 2rem">Route</span>',

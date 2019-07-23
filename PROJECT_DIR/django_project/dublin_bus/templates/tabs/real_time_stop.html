@@ -12,7 +12,7 @@
                         <ion-row>
                             <ion-col size="12">
                                 <div id="search-container-stops">
-                                    <input class="typeahead" id="typeahead_stop" type="text"
+                                    <input class="typeahead" id="typeahead_stop" type="tel"
                                            placeholder="Search for a bus stop..">
                                 </div>
                             </ion-col>
@@ -133,8 +133,8 @@
                                 Back
                             </ion-button>
                         </ion-buttons>
-                        <ion-buttons slot="end">
-                            <ion-button>
+                        <ion-buttons slot="end" id="stops__show-on-map-btn" data-id="">
+                            <ion-button id="stops__show-on-map-btn__name">
                                 <ion-icon name="md-map"></ion-icon>
                                 Show on map
                             </ion-button>
@@ -158,10 +158,10 @@
                         </ion-row>
                         <ion-row>
                             <ion-col size="4" align-self-baseline>
-                                <ion-item lines="none">
+                                <div class="stops__content__card__stop-id__container">
                                     <span id="stops__content__card__stop-id"
                                           class="stops__content__card__stop-id"></span>
-                                </ion-item>
+                                </div>
                             </ion-col>
                             <ion-col size="3">
                                 <ion-item lines="none" style="--padding-end:0">
@@ -187,7 +187,7 @@
                 {#                </ion-grid>#}
                 {#            </ion-item>#}
             </div>
-                <ion-content overflow-scroll="true" id="time-table">
+                <div id="stops__time-table" class="stops__time-table">
                     <ion-list class="stops__time-table-list" id="stops__time-table-list">
                         <ion-grid>
                             <ion-row class="stops__time-table-list__header">
@@ -222,7 +222,7 @@
                             </div>
                         </ion-grid>
                     </ion-list>
-                </ion-content>
+                </div>
         </div>
     </div>
 </ion-tab>
