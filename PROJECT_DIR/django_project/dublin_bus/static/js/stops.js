@@ -1,4 +1,5 @@
 import {map, markers} from "./google_maps";
+import {adjust_height} from "./routes";
 
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
@@ -126,11 +127,39 @@ const get_stop_server_route = (stop_id) => {
 };
 
 const show_on_map_btn = document.getElementById("stops__show-on-map-btn");
+
+export const change_marker_icon = (stop_marker) => {
+    let bus_stop_icon = {
+        url: '/static/images/marker_highlight.png',
+        scaledSize: new google.maps.Size(60, 60),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(30, 60)
+    };
+
+    if (stop_marker.getIcon().url === '/static/images/marker.png') {
+        bus_stop_icon.url = '/static/images/marker_highlight.png';
+    } else {
+        bus_stop_icon.url = '/static/images/marker.png';
+    }
+    stop_marker.setIcon(bus_stop_icon);
+};
+
+
 const stops_show_on_map = () => {
-    let stop = markers["" + show_on_map_btn.dataset.id].getPosition();
-    map.setCenter({lat: stop.lat(), lng: stop.lng()});
+    let stop_marker = markers["" + show_on_map_btn.dataset.id];
+    let stop_position = stop_marker.getPosition();
+    map.setCenter({lat: stop_position.lat(), lng: stop_position.lng()});
     map.setZoom(18);
-    // adjust_height();
+    change_marker_icon(stop_marker);
+    adjust_height();
+    document.getElementById("drawer__container__grab").addEventListener('click', () => {
+        let h = Math.max(
+            document.documentElement.clientHeight,
+            window.innerHeight || 0
+        );
+        $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
+        change_marker_icon(stop_marker);
+    });
 };
 
 show_on_map_btn.addEventListener('click', stops_show_on_map);
@@ -138,5 +167,4 @@ show_on_map_btn.addEventListener('click', stops_show_on_map);
 document.getElementById('typeahead_stop').addEventListener('click', function () {
     $(window).scrollTop(110);
 });
-
 

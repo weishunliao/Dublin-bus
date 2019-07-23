@@ -1,4 +1,5 @@
 import {markers, map} from "./google_maps";
+import {change_marker_icon} from "./stops";
 
 let route_id;
 let stop_list = [];
@@ -122,13 +123,17 @@ const clear_markers = () => {
     }
 };
 
-const adjust_height = () => {
-    // let h = Math.max(
-    //     document.documentElement.clientHeight,
-    //     window.innerHeight || 0
-    // );
-    // console.log(h);
-    // $('.drawer__container').css('height', h * 0.40);
+const draw_markers = () => {
+    for (let [key, value] of Object.entries(markers)) {
+        value.setMap(map);
+    }
+    map.setZoom(15);
+};
+
+
+
+export const adjust_height = () => {
+    $('.drawer__container').animate({'height': 290}, 200, 'linear');
 };
 
 const route_show_on_map = () => {
@@ -137,7 +142,15 @@ const route_show_on_map = () => {
     map.setZoom(12);
     let mid_marker = markers["" + mid_stop].getPosition();
     map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
-    // adjust_height();
+    adjust_height();
+    document.getElementById("drawer__container__grab").addEventListener('click', () => {
+        let h = Math.max(
+            document.documentElement.clientHeight,
+            window.innerHeight || 0
+        );
+        $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
+        draw_markers();
+    });
 };
 
 document.getElementById("routes__show-on-map-btn").addEventListener('click', route_show_on_map);
