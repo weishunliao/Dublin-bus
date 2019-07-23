@@ -381,11 +381,7 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
     all_stops = get_all_stops(service_id, route_id, start_point_id, headsign, departure_time)
     print("all stops:", all_stops)
     # get the list of stops that the bus will travel along between the user's origin and destination
-    index = 0
-    for i in range(len(all_stops)):
-        if all_stops[i][0] == start_point_id:
-            index = i
-    stop_list = all_stops[index:index + num_stops + 1]
+    stop_list = get_stop_list_start_point(all_stops, start_point_id, num_stops)
     print("stops:", stop_list)
     return stop_list
 
@@ -399,17 +395,18 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
         cursor.execute(sql, [route_id, start_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for start point: " + start_point)
-            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 0)
         elif cursor.rowcount == 1:
             start_point_id = cursor.fetchone()[0]
             print("Bus stop found for start point: " + start_point)
         else:
             print("Multiple bus stops found for start point: " + start_point)
-            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 1)
     return start_point_id
 
-def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id):
-    """Returns the bus stop id of the start point based on the end point."""
+def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, multiple_start):
+    """Returns the bus stop id of the start point based on the end point. multiple_start will be 1 if multiple \
+        start points were found, it will be 0 if no start points were found."""
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
@@ -423,16 +420,19 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
             print("Bus stop found for end point: " + end_point)
             end_point_id = cursor.fetchone()[0]
             all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
-            index = 0
-            for i in range(len(all_stops)):
-                if all_stops[i][0] == end_point_id:
-                    index = i
-            start_point_id = all_stops[index - num_stops]
+            start_point_id = get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops)
             print("Found start_point_id using end_point_id!")
             return start_point_id
         else:
             print("Multiple bus stops found for end point: " + end_point)
-            return -1
+            if multiple_start == 1:
+                return -1
+            else:
+                pass
+                # check if stops are sequential
+                # if so pick a random one and get start id
+                # otherwise return -1
+            
 
 def get_current_service_id(departure_time):
     """Returns a service id based on the datetime object entered."""
@@ -467,3 +467,21 @@ def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
         cursor.execute(sql, [service_id, route_id, stop_id, headsign, departure_time, departure_time])
         all_stops = cursor.fetchall()
         return all_stops
+
+def get_stop_list_start_point(all_stops, start_point_id, num_stops):
+    """Get a list of stops based on the stop that the user gets on at."""
+    index = 0
+    for i in range(len(all_stops)):
+        if all_stops[i][0] == start_point_id:
+            index = i
+    stop_list = all_stops[index:index + num_stops + 1]
+    return stop_list
+
+def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
+    """Get a start point id based on the end point id."""
+    index = 0
+    for i in range(len(all_stops)):
+        if all_stops[i][0] == end_point_id:
+            index = i
+    start_point_id = all_stops[index - num_stops]
+    return start_point_id
