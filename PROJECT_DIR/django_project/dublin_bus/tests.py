@@ -94,7 +94,7 @@ class TestCreateSegmentRefGtfs(TestCase):
     def test_create_segment_ref_gtfs(self):
         """Test for the ouput of the create_segment_ref_gtfs function."""
         segment_ref = functions.create_segment_ref_gtfs()
-        self.assertEqual(segment_ref["1154_946"], 81)
+        self.assertEqual(segment_ref["1154_946"], 80)
 
 class TestRoutePrediction(TestCase):
     """Test cases for the route_prediction function."""
