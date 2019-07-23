@@ -362,13 +362,13 @@ def calculate_time_diff(trips, time):
 
 
 def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time):
-
+    """Returns the list of stops that the bus will travel along between the user's origin and destination."""
+    # format some of the input values as required for database queries
     start_point = '%' + start_point.strip() + '%'
     end_point = '%' + end_point.strip() + '%'
     headsign = '%' + headsign.strip() + '%'
     stop_list = []
     print("route:", route_id, "headsign:", headsign, "first stop:", start_point, "last stop:", end_point, "no. stops:", num_stops, "dept time:", departure_time)
-
     # get the bus stop id of the start point
     start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time)
     print("stop_id:", start_point_id)
@@ -377,39 +377,19 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
         return []
     # get the relevant service id based on the departure time
     service_id = get_current_service_id(departure_time)
-
-    with connection.cursor() as cursor:
-        sql = "select a.stop_id from \
-                (select * from stop_times) a \
-                JOIN \
-                (select t.trip_id \
-                from trips t, routes r, stop_times st, stops s	\
-                where t.route_id = r.route_id \
-                and t.trip_id = st.trip_id \
-                and s.stop_id = st.stop_id \
-                and t.service_id = %s \
-                and r.route_short_name = %s \
-                and s.stop_id = %s \
-                and st.stop_headsign like %s \
-                and (st.arrival_time - TIME(%s)) > 0 \
-                order by (st.arrival_time - TIME(%s)) \
-                limit 1) as b \
-                ON a.trip_id = b.trip_id \
-                order by a.stop_sequence;"
-        cursor.execute(sql, [service_id, route_id, start_point_id, headsign, departure_time, departure_time])
-        all_stops = cursor.fetchall()
-        print("all stops:", all_stops)
-        index = 0
-        for i in range(len(all_stops)):
-            if all_stops[i][0] == start_point_id:
-                index = i
-        stop_list = all_stops[index:index + num_stops + 1]
-        print("stops:", stop_list)
+    # get all stops that the bus will travel along on its full route
+    all_stops = get_all_stops(service_id, route_id, start_point_id, headsign, departure_time)
+    # get the list of stops that the bus will travel along between the user's origin and destination
+    index = 0
+    for i in range(len(all_stops)):
+        if all_stops[i][0] == start_point_id:
+            index = i
+    stop_list = all_stops[index:index + num_stops + 1]
+    print("stops:", stop_list)
     return stop_list
 
 def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time):
     """Returns the bus stop id of the start point based on the input."""
-
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
@@ -451,3 +431,28 @@ def get_current_service_id(departure_time):
     else:
         service_id = 'y101c'
     return service_id
+
+def get_all_stops(service_id, route_id, start_point_id, headsign, departure_time):
+    """Returns a list of all stops on the route based on the input."""
+    with connection.cursor() as cursor:
+        sql = "select a.stop_id from \
+                (select * from stop_times) a \
+                JOIN \
+                (select t.trip_id \
+                from trips t, routes r, stop_times st, stops s	\
+                where t.route_id = r.route_id \
+                and t.trip_id = st.trip_id \
+                and s.stop_id = st.stop_id \
+                and t.service_id = %s \
+                and r.route_short_name = %s \
+                and s.stop_id = %s \
+                and st.stop_headsign like %s \
+                and (st.arrival_time - TIME(%s)) > 0 \
+                order by (st.arrival_time - TIME(%s)) \
+                limit 1) as b \
+                ON a.trip_id = b.trip_id \
+                order by a.stop_sequence;"
+        cursor.execute(sql, [service_id, route_id, start_point_id, headsign, departure_time, departure_time])
+        all_stops = cursor.fetchall()
+        print("all stops:", all_stops)
+        return all_stops
