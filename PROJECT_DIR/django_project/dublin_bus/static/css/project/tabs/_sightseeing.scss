@@ -1,0 +1,41 @@
+.sightseeing {
+
+
+  &__category {
+
+    &__head {
+
+      height: 15vh;
+      &__col {
+        text-align: center;
+        color: $db_blue;
+        font-size: 7vw;
+        font-weight: bold;
+      }
+    }
+    &__content {
+      &__row {
+        height: 20vh;
+      }
+      &__col {
+        text-align: center;
+      }
+      &__icon {
+        font-size: 40px;
+        color: white;
+        background-color: $db_blue;
+        border-radius: 50%;
+        padding: 20px;
+        margin-bottom: 5px;
+      }
+
+      &__label {
+        color: $db_blue;
+        font-size: 3.5vw;
+        font-weight: bold;
+      }
+    }
+
+  }
+
+}
