@@ -3,9 +3,10 @@ import { searchToggle } from "./index";
 
 const {searchInput} = search;
 let resp;
-let directionsDisplay;
+
 export let markers = {};
 export let map;
+export let directionsDisplay;
 
 export default function initMap() {
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
@@ -135,12 +136,17 @@ export default function initMap() {
           travelMode: "TRANSIT",
           provideRouteAlternatives: true
         },
-        function(response, status) {
+        async function(response, status) {
           resp = response;
           console.log(response)
           if (status === "OK") {
-            console.log(response.routes);
+            console.log("RESPONSE IS ", response);
             for (let i = 0; i < response.routes.length; i++) {
+              let directions = new google.maps.DirectionsRenderer({
+                map: map,
+                directions: response,
+                routeIndex: i
+            });
               let length = response.routes[i].legs[0].steps.length;
               let error_count = 0; // used to track if any steps in the route are not run by Dublin Bus
               for (let j = 0; j < length; j++) {
@@ -178,9 +184,6 @@ export default function initMap() {
                   full_travel_time += walkTime;
                   routeDescription.push(["walking", walkTime]);
                 } else {
-                  // DUMMY CODE =====
-                  routeDescription.push(["bus", 200]);
-                  // DUMMY CODE ======
                   let num_stops =
                     response.routes[i].legs[0].steps[step].transit.num_stops;
                   departure_stop =
@@ -203,56 +206,46 @@ export default function initMap() {
                   departure_time =
                     response.routes[i].legs[0].steps[step].transit
                       .departure_time.text;
-                  //   fetch("get_travel_time",
-                  //   {
-                  //     method: "POST",
-                  //     headers: {
-                  //         "Content-Type": "application/json",
-                  //         "Accept": "application/json"
-                  //     },
-                  //     body: JSON.stringify({
-                  //         route_id: route_id,
-                  //         start_point: departure_stop,
-                  //         end_point: arrival_stop,
-                  //         num_stops: num_stops,
-                  //         departure_time_value: departure_time_value
-                  //       }),
-                  //   })
-                  //   .then(response => {
-                  //     full_travel_time += response.journey_time;
-                  //     routeDescription.push(["bus", response.journey_time]);
-                  //   })
+
+
+                    await fetch("get_travel_time",
+                    {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                          "Accept": "application/json"
+                      },
+                      body: JSON.stringify({
+                          route_id: route_id,
+                          start_point: departure_stop,
+                          end_point: arrival_stop,
+                          num_stops: num_stops,
+                          departure_time_value: departure_time_value,
+                          head_sign: head_sign
+                        }),
+                    })
+                    .then(response => {
+                      full_travel_time += response.journey_time;
+                      routeDescription.push(["bus", response.journey_time]);
+                    })
                 }
                 step++;
               }
               if (true) {
+                  console.log("route desc", routeDescription)
                 // let full_journey = Math.round(full_travel_time / 60);
 
-                console.log(routeDescription);
+                
                 // const cardString = cardBuilder(routeDescription, departure_time=0, i)
 
-                const newRoute = new Route({routeDescription, departure_time, id: i})
+                const newRoute = new Route({route: [response.routes[i]], directions, routeDescription, departure_time, id: i})
                 Route.appendToDom(newRoute);
                 // console.log(newRoute)
-         
-                
-
-                // const buttons = document.querySelectorAll('.routeCard')
-
-                // buttons.forEach(button => {
-                //     button.addEventListener('click', (e) => {
-                //         console.log(e.currentTarget.id)
-                //     })
-                // })
-
-                // const routesHere = document.querySelector('#routesHere')
-                // routesHere.addEventListener('click', (e) => {
-                //     console.log(e.target)
-                // })
               
               }
             }
-            directionsDisplay.setDirections(response);
+            // directionsDisplay.setDirections(response);
+            console.log("directionsDisplay", directionsDisplay)
           } else {
             window.alert("Directions request failed due to " + status);
           }
