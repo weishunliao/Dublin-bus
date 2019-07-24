@@ -296,9 +296,9 @@ window.initMap = initMap;
 function AddMarkers(data, map) {
   // get the latitude, longitude and name of each bus stop
   for (let key in data) {
-    let latitude = data[key][1];
+    let latitude = data[key][0];
     let longitude = data[key][2];
-    let stopName = data[key][0];
+    let stopName = data[key][2];
     let latLng = new google.maps.LatLng(latitude, longitude);
     // create an object for the bus stop icon
     let busStopIcon = {
@@ -502,11 +502,11 @@ function AddMarkers(data, map) {
 //     );
 //   });
 
-{
+
   /* <h1>${route_id}</h1>
                         // ${route_id}
                         <p>${head_sign}</p>
                         <p>${departure_stop}</p>
                         <p>${departure_time}</p>
                         <p>${full_journey}</p> */
-}
+

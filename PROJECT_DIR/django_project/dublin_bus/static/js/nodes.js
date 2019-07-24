@@ -14,11 +14,10 @@ export const drawers = {
     bottom: bottomDrawer
 }
 
-
+import { bottomSwiper } from './touches'
 
 export class Route {
     
-
     constructor(routeData) {
       this.routeData = routeData;
       this.nodeHTML = this.cardBuilder(routeData.routeDescription, routeData.departureTime, routeData.id)
@@ -35,6 +34,8 @@ export class Route {
 
             route.showContainer.innerHTML = route.nodeHTML;
             route.showContainer.style.display = 'block';
+            bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
+            bottomSwiper.tabs.removeClass("color-add");
        })
     }
 

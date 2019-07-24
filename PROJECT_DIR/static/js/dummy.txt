@@ -1,0 +1,67 @@
+<div class="journey-planner__routes__card">
+            <ion-card button="true">
+              <ion-card-content>
+                <div class="journey-planner__card__container">
+                  <div class="journey-planner__card__left">
+                    <div class="journey-planner__card__left__depTitle">
+                      <h2
+                        class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                      >
+                        Departing in:
+                      </h2>
+                    </div>
+                    <div class="journey-planner__card__left__minsTitle">
+                     
+                      <span class="journey-planner__card__minuteSpan">5</span>
+                      <h1 class="journey-planner__card__timeTitle">mins</h1>
+                    </div>
+                  </div>
+                  <div class="journey-planner__card__right">
+                    <div class="journey-planner__card__right__travelTime">
+                      <h2
+                        class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                      >
+                        Travel time:
+                        <span
+                          class="journey-planner__card__timeNumber"
+                          id="jp-travel-time"
+                          >33</span
+                        >
+                        minutes
+                      </h2>
+                    </div>
+                    <div
+                      class="journey-planner__card__right__descriptionContainer" id="route-descriptions"
+                    >
+                      <div class="journey-planner__card__right__iconContainer">
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>
+                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div>
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon>
+                      </div>
+                      <div class="journey-planner__card__right__iconContainer">
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>
+                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div>
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon>
+                      </div>
+                      <div class="journey-planner__card__right__iconContainer">
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>
+                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div>
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon>
+                      </div>
+                      <div class="journey-planner__card__right__iconContainer">
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>
+                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div>
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon>
+                      </div>
+                      <div class="journey-planner__card__right__iconContainer">
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>
+                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div>
+                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
