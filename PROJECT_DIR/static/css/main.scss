@@ -7,6 +7,11 @@
 @import 'project/Map/map';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
+@import 'project/Timeline/timeline';
+@import 'project/Timeline/switch';
+@import 'project/AutoComplete/auto-complete';
+@import 'project/tabs/stops';
+
 
 
 
@@ -19,6 +24,7 @@
     letter-spacing: 0rem;
     --ion-color-primary: #3D5F7E;
     --ion-font-family: Actor, sans-serif;
+    --ion-color-busyellow: #ffd700;
 }
 
 input:focus,

@@ -1,0 +1,61 @@
+.stops {
+  &__chips ion-chip{
+    background-color: #4c8dff;
+    color: white;
+    font-size: 1.3rem;
+  }
+    &__chips ion-icon{
+    font-size: 1.5rem;
+  }
+  &__depart_label {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  &__content {
+
+    &__wrapper {
+      overflow: scroll;
+      height: 350px;
+    }
+    &__card {
+      margin-top: 0;
+    }
+
+    &__card-header {
+      padding-bottom: 0;
+      font-size: 3rem;
+      color: #333333;
+
+      &__icon {
+        margin-right: 10px;
+        font-size: 3rem;
+        color: #333333;
+      }
+
+      &__label {
+
+      }
+
+      &__time {
+        font-size: 3rem;
+        text-align: end;
+        color: #3880ff;
+      }
+
+    }
+
+    &__card-content {
+      padding-top: 5px;
+      padding-bottom: 0;
+      color: #333333;
+      font-size: 1.5rem;
+
+      &__time {
+        padding-top: 0;
+        padding-bottom: 0;
+        text-align: end;
+        font-size: 1.8rem;
+      }
+    }
+  }
+}

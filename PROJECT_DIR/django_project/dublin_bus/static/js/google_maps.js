@@ -1,9 +1,11 @@
 import { search, fromInput, toInput, selectedTab, Route } from "./nodes";
 import { searchToggle } from "./index";
 
-const { searchInput } = search;
+const {searchInput} = search;
 let resp;
 let directionsDisplay;
+export let markers = {};
+export let map;
 
 export default function initMap() {
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
@@ -285,7 +287,7 @@ export default function initMap() {
 
 
 function change_route(route_index) {
-  directionsDisplay.setRouteIndex(route_index);
+    directionsDisplay.setRouteIndex(route_index);
 }
 
 window.initMap = initMap;
@@ -314,6 +316,7 @@ function AddMarkers(data, map) {
     });
   }
 }
+
 //   function() {
 //     handleLocationError(true, infoWindow, map.getCenter());
 //   }

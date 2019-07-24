@@ -2,8 +2,11 @@ import os
 import pickle
 import datetime
 import requests
+from bs4 import BeautifulSoup
 from django.conf import settings
 import json
+from django_project.settings import BASE_DIR
+from django.db import connection
 
 def load_model():
     """Loads and returns a machine learning model for all routes."""
@@ -31,6 +34,7 @@ def create_hour_feature_ref():
         hour_feature_ref[i] = hour_array
     return hour_feature_ref
 
+
 def create_day_of_week_feature_ref():
     """Builds a dictionary with weekdays (mon=0, tues=1, etc.) as key and 1D lists as values.
 
@@ -42,21 +46,22 @@ def create_day_of_week_feature_ref():
             if i == j:
                 day_of_week_array[j] = 1
         day_of_week_feature_ref[i] = day_of_week_array
-        
+
     return day_of_week_feature_ref
+
 
 def create_month_feature_ref():
     """Builds a dictionary with months (jan=1, feb=2, etc.) as key and 1D lists as values.
 
     In each 1D list, one element will have the value 1, and all others will have the value 0."""
     month_feature_ref = {}
-    for i in range(1,13):
+    for i in range(1, 13):
         month_array = [0] * 12
         for j in range(12):
-            if j == i-1:
+            if j == i - 1:
                 month_array[j] = 1
         month_feature_ref[i] = month_array
-        
+
     return month_feature_ref
 
 def create_segment_ref():
@@ -130,14 +135,15 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
     full_trip = arrival_times[len(arrival_times)-1] - arrival_times[0]
     return int(full_trip)
 
+
 def openweather_forecast():
     """This function calls the Openweather API to get a weather forecast. 
     
     Data is returned as a JSON object."""
 
-    #call the API using the ID for Dublin City: 7778677 
+    # call the API using the ID for Dublin City: 7778677
     api_endpoint = "http://api.openweathermap.org/data/2.5/forecast?id=7778677&units=metric&APPID=" \
-        + settings.OPENWEATHER_KEY
+                   + settings.OPENWEATHER_KEY
 
     try:
         # retrieve weather forecast from the OpenWeather API and convert to JSON object
@@ -153,7 +159,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
 
     If there is no weather data for the timestamp entered, then an exception is raised."""
 
-     # intialise variable to check whether weather data for the timestamp has been found in the JSON file
+    # intialise variable to check whether weather data for the timestamp has been found in the JSON file
     found = False
     # loop through the weather data to find the closest time/date to the prediction time/date
     for item in weather_data["list"]:
@@ -162,7 +168,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
         timestamp = datetime.datetime.utcfromtimestamp(dt)
         # get the time difference between the input and the date in the file
         time_diff = timestamp - journey_timestamp
-        time_diff_hours = time_diff.total_seconds()/3600    # get time_diff in hours
+        time_diff_hours = time_diff.total_seconds() / 3600  # get time_diff in hours
         # if the time difference is less than 3, then use this list item for the weather forecast
         if (0 <= time_diff_hours <= 3):
             found = True
@@ -171,7 +177,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             rhum = item.get("main").get("humidity")
             msl = item.get("main").get("pressure")
             if "rain" in item and "3h" in item["rain"]:
-                    rain = item.get("rain").get("3h")
+                rain = item.get("rain").get("3h")
             else:
                 rain = 0
             # once weather is found, break out of the loop
@@ -191,14 +197,14 @@ def convert_to_seconds(hour, minute):
     if hour > 3:
         seconds = hour*60*60 + minute*60
     else:
-        seconds = 86400 + hour*60*60 + minute*60
+        seconds = 86400 + hour * 60 * 60 + minute * 60
     return seconds
 
 
 def is_weekday(day_of_week):
     """Returns 1 if the day of week is mon-fri (0-4), returns 0 otherwise."""
-    
-    if day_of_week in [0,1,2,3,4]:
+
+    if day_of_week in [0, 1, 2, 3, 4]:
         return 1
     return 0
 
@@ -209,7 +215,7 @@ def is_bank_holiday(day, month):
     List of bank holidays will need to be updated periodically. Currently has remaining bank
     holidays in 2019 only."""
 
-    bank_holidays = [(5,8), (28,10), (25,12), (26,12)]
+    bank_holidays = [(5, 8), (28, 10), (25, 12), (26, 12)]
     if (day, month) in bank_holidays:
         return 1
     return 0
@@ -249,10 +255,14 @@ def format_stop_list(stops):
         formatted_stops.append(formatted)
     return formatted_stops
 
+
 def predict_journey_time(stops, timestamp):
     """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
         time in minutes."""
 
+    # if stops is an empty list, return -1
+    if len(stops) <= 1:
+        return -1
     # convert stops to the correct format
     stops = format_stop_list(stops)
     # convert and parse the timestamp
@@ -266,3 +276,248 @@ def predict_journey_time(stops, timestamp):
         weekday, bank_holiday, rain, temp, rhum, msl)
     # return the prediction
     return prediction
+
+
+def get_service_id(weekday, bank_holiday):
+    if weekday == 1 and bank_holiday == 0:
+        return 1
+    elif weekday == 5 and bank_holiday == 0:
+        return 3
+    else:
+        return 2
+
+
+def get_real_time_data(stop_id):
+    headers = {
+        'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
+    resp = requests.get(
+        "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
+        headers=headers)
+
+    data = []
+    real_time_info = {stop_id: data}
+    if resp.status_code == 200:
+        content = resp.text
+        soup = BeautifulSoup(content, features="lxml")
+        slots1 = soup.find_all('tr', class_='odd')
+        slots2 = soup.find_all('tr', class_='even')
+        arr = []
+        for s in slots1:
+            for i in s.findChildren("td"):
+                arr.append(i.text.strip())
+        for s in slots2:
+            for i in s.findChildren("td"):
+                arr.append(i.text.strip())
+        temp = []
+        for item in arr:
+            if item == '':
+                data.append(temp)
+                temp = []
+                continue
+            temp.append(item)
+    data.sort(key=lambda x: x[2])
+    while len(data) != 0 and data[-1][2] == 'Due':
+        due = data.pop(-1)
+        data.insert(0, due)
+
+    return real_time_info
+
+
+def get_trip_id(direction, service_id, current_time, route_id):
+    path = os.path.join(BASE_DIR, '../static/cache/route_15a_timetable.json')
+    slots = []
+    with open(path, 'r') as json_file:
+        timetable = json.load(json_file)[direction][str(service_id)]
+        for i in range(len(timetable)):
+            while timetable[i][0] <= current_time <= timetable[i][1]:
+                try:
+                    slots.append(timetable[i][2])
+                    slots.append(timetable[i + 1][2])
+                    slots.append(timetable[i + 2][2])
+                    slots.append(timetable[i + 3][2])
+                    slots.append(timetable[i + 4][2])
+                except ValueError as e:
+                    print(e)
+                finally:
+                    return slots
+
+
+def get_trip_info(trip_ids, service_id, direction, route_id):
+    if not trip_ids:
+        return []
+    path = os.path.join(BASE_DIR, '../static/cache/route_15a.json')
+    infos = []
+    print(trip_ids)
+    with open(path, 'r') as json_file:
+        data = json.load(json_file)[direction][str(service_id)]
+        for trip_id in trip_ids:
+            infos.append(data[trip_id])
+    return infos
+
+
+def calculate_time_diff(trips, time):
+    if len(trips) == 0:
+        return []
+    i = 1
+    stops_list = []
+
+    while i <= len(trips[1]):
+        t = 0
+        while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
+            t += 1
+        stops_list.append(
+            [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
+        i += 1
+    return stops_list
+
+
+def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time):
+    """Returns the list of stops that the bus will travel along between the user's origin and destination."""
+    # format some of the input values as required for database queries
+    start_point = '%' + start_point.strip() + '%'
+    end_point = '%' + end_point.strip() + '%'
+    headsign = '%' + headsign.strip() + '%'
+    stop_list = []
+    # get the relevant service id based on the departure time
+    service_id = get_current_service_id(departure_time)
+    # get the bus stop id of the start point
+    start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time, service_id)
+    # if -1 was returned, the bus stop id could not be found so return an empty array
+    if start_point_id == -1:
+        return []
+    # get all stops that the bus will travel along on its full route
+    all_stops = get_all_stops(service_id, route_id, start_point_id, headsign, departure_time)
+    # get the list of stops that the bus will travel along between the user's origin and destination
+    stop_list = get_stop_list_start_point(all_stops, start_point_id, num_stops)
+    return stop_list
+
+def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time, service_id):
+    """Returns the bus stop id of the start point based on the input."""
+    with connection.cursor() as cursor:
+        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
+                where r.route_short_name = %s \
+                and s.stop_name like %s \
+                and st.stop_headsign like %s;"
+        cursor.execute(sql, [route_id, start_point, headsign])
+        if cursor.rowcount == 0:
+            print("No bus stops found for start point: " + start_point)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 0)
+        elif cursor.rowcount == 1:
+            start_point_id = cursor.fetchone()[0]
+            print("Bus stop found for start point: " + start_point)
+        else:
+            print("Multiple bus stops found for start point: " + start_point)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 1)
+            if start_point_id == -1:
+                print("Choosing a stop from start point options.")
+                start_point_id = get_stop_from_multiple(service_id, route_id, start_point, headsign, departure_time, num_stops, 1)
+    return start_point_id
+
+def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, multiple_start):
+    """Returns the bus stop id of the start point based on the end point. multiple_start will be 1 if multiple \
+        start points were found, it will be 0 if no start points were found."""
+    with connection.cursor() as cursor:
+        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
+                where r.route_short_name = %s \
+                and s.stop_name like %s \
+                and st.stop_headsign like %s;"
+        cursor.execute(sql, [route_id, end_point, headsign])
+        if cursor.rowcount == 0:
+            print("No bus stops found for end point: " + end_point)
+            return -1
+        elif cursor.rowcount == 1:
+            print("Bus stop found for end point: " + end_point)
+            end_point_id = cursor.fetchone()[0]
+            all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
+            start_point_id = get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops)
+            return start_point_id
+        else:
+            print("Multiple bus stops found for end point: " + end_point)
+            if multiple_start == 1:
+                return -1
+            else:
+                print("Choosing a stop from end point options.")
+                end_point_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time, num_stops, 0)
+                if end_point_id == -1:
+                    return -1
+                all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
+                start_point_id = get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops)
+                return start_point_id
+            
+
+def get_current_service_id(departure_time):
+    """Returns a service id based on the datetime object entered."""
+    if is_bank_holiday(departure_time.day, departure_time.month) == 1 or departure_time.weekday() == 6:
+        service_id = 'y101d'
+    elif departure_time.weekday() == 5:
+        service_id = 'y101e'
+    else:
+        service_id = 'y101c'
+    return service_id
+
+def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
+    """Returns a list of all stops on the route based on the input."""
+    with connection.cursor() as cursor:
+        sql = "select a.stop_id from \
+                (select * from stop_times) a \
+                JOIN \
+                (select t.trip_id \
+                from trips t, routes r, stop_times st, stops s	\
+                where t.route_id = r.route_id \
+                and t.trip_id = st.trip_id \
+                and s.stop_id = st.stop_id \
+                and t.service_id = %s \
+                and r.route_short_name = %s \
+                and s.stop_id = %s \
+                and st.stop_headsign like %s \
+                and (st.arrival_time - TIME(%s)) > 0 \
+                order by (st.arrival_time - TIME(%s)) \
+                limit 1) as b \
+                ON a.trip_id = b.trip_id \
+                order by a.stop_sequence;"
+        cursor.execute(sql, [service_id, route_id, stop_id, headsign, departure_time, departure_time])
+        all_stops = cursor.fetchall()
+        return all_stops
+
+def get_stop_list_start_point(all_stops, start_point_id, num_stops):
+    """Get a list of stops based on the stop that the user gets on at."""
+    index = 0
+    for i in range(len(all_stops)):
+        if all_stops[i][0] == start_point_id:
+            index = i
+    if index > 0 and (index + num_stops) < len(all_stops):
+        stop_list = all_stops[index:index + num_stops]
+    else: 
+        stop_list = []
+    return stop_list
+
+def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
+    """Get a start point id based on the end point id."""
+    index = 0
+    for i in range(len(all_stops)):
+        if all_stops[i][0] == end_point_id:
+            index = i
+    first_index = index - num_stops + 1
+    if first_index < len(all_stops) and first_index > 0:
+        start_point_id = all_stops[first_index][0]
+    else:
+        start_point_id = -1
+    return start_point_id
+
+def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops, start):
+    """Returns a random stop id from those returned. Returns -1 if a valid stop id can't be found."""
+    with connection.cursor() as cursor:
+        sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
+                where r.route_short_name = %s \
+                and s.stop_name like %s \
+                and st.stop_headsign like %s;"
+        cursor.execute(sql, [route_id, stop_name, headsign])
+        stop_ids = cursor.fetchall()
+        for stop in stop_ids:
+            all_stops = get_all_stops(service_id, route_id, stop[0], headsign, departure_time)
+            if stop in all_stops:
+                if start == 1 and (all_stops.index(stop) + num_stops <= len(all_stops)):
+                    return stop[0]
+                elif start == 0 and (all_stops.index(stop) - num_stops + 1 >= 0):
+                    return stop[0]
+        return -1

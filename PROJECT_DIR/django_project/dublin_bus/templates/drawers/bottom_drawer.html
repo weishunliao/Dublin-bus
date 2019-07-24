@@ -1,20 +1,12 @@
 <div class="drawer__container drawer__container--bottom">
-  <div class="grabber"></div>
-  <div class="drawer__container__grab"></div>
+    <div class="grabber"></div>
+    <div class="drawer__container__grab" id="drawer__container__grab"></div>
 
-  {% include "../tabs/journey_planner.html" %}
+    {% include "../tabs/journey_planner.html" %}
 
-  
-  <ion-tab tab="routes">
-    <ion-content fullscreen class="ion-padding drawer-content">
-      <h1>Routes</h1>
-    </ion-content>
-  </ion-tab>
-  <ion-tab tab="stops">
-    <ion-content fullscreen class="ion-padding drawer-content">
-      <h1>Stops</h1>
-    </ion-content>
-  </ion-tab>
+    {% include "../tabs/real_time_stop.html" %}
+
+    {% include "../tabs/real_time_route.html" %}
   <ion-tab tab="sightseeing">
         <ion-content fullscreen class="ion-padding drawer-content">
           <h1>Sightseeing</h1>
