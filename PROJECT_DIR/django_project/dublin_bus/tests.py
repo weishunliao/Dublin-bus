@@ -648,6 +648,11 @@ class TestPredictJourneyTime(TestCase):
        def test_predict_journey_time_invalid_list(self):
               """Test that the function returns -1 when an empty list is entered."""
               timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.predict_journey_time((('8350DB007574',)), timestamp), -1)
+
+       def test_predict_journey_time_invalid_list2(self):
+              """Test that the function returns -1 when a list with length 1 is entered."""
+              timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
               self.assertEqual(functions.predict_journey_time([], timestamp), -1)
 
 class TestGetStopListStartPoint(TestCase):

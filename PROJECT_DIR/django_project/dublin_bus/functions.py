@@ -261,7 +261,7 @@ def predict_journey_time(stops, timestamp):
         time in minutes."""
 
     # if stops is an empty list, return -1
-    if len(stops) == 0:
+    if len(stops) <= 1:
         return -1
     # convert stops to the correct format
     stops = format_stop_list(stops)
