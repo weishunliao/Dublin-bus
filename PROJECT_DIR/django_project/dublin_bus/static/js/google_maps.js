@@ -1,7 +1,8 @@
 import { search, fromInput, toInput, selectedTab, Route } from "./nodes";
 import { searchToggle } from "./index";
+import MarkerClusterer from '@google/markerclusterer'
 
-const {searchInput} = search;
+const { searchInput } = search;
 let resp;
 
 export let markers = {};
@@ -138,7 +139,7 @@ export default function initMap() {
         },
         async function(response, status) {
           resp = response;
-          console.log(response)
+          console.log(response);
           if (status === "OK") {
             console.log("RESPONSE IS ", response);
             for (let i = 0; i < response.routes.length; i++) {
@@ -146,7 +147,7 @@ export default function initMap() {
                 map: map,
                 directions: response,
                 routeIndex: i
-            });
+              });
               let length = response.routes[i].legs[0].steps.length;
               let error_count = 0; // used to track if any steps in the route are not run by Dublin Bus
               for (let j = 0; j < length; j++) {
@@ -207,45 +208,46 @@ export default function initMap() {
                     response.routes[i].legs[0].steps[step].transit
                       .departure_time.text;
 
-
-                    await fetch("get_travel_time",
-                    {
-                      method: "POST",
-                      headers: {
-                          "Content-Type": "application/json",
-                          "Accept": "application/json"
-                      },
-                      body: JSON.stringify({
-                          route_id: route_id,
-                          start_point: departure_stop,
-                          end_point: arrival_stop,
-                          num_stops: num_stops,
-                          departure_time_value: departure_time_value,
-                          head_sign: head_sign
-                        }),
+                  await fetch("get_travel_time", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Accept: "application/json"
+                    },
+                    body: JSON.stringify({
+                      route_id: route_id,
+                      start_point: departure_stop,
+                      end_point: arrival_stop,
+                      num_stops: num_stops,
+                      departure_time_value: departure_time_value,
+                      head_sign: head_sign
                     })
-                    .then(response => {
-                      full_travel_time += response.journey_time;
-                      routeDescription.push(["bus", response.journey_time]);
-                    })
+                  }).then(response => {
+                    full_travel_time += response.journey_time;
+                    routeDescription.push(["bus", response.journey_time]);
+                  });
                 }
                 step++;
               }
               if (true) {
-                  console.log("route desc", routeDescription)
+                console.log("route desc", routeDescription);
                 // let full_journey = Math.round(full_travel_time / 60);
 
-                
                 // const cardString = cardBuilder(routeDescription, departure_time=0, i)
 
-                const newRoute = new Route({route: [response.routes[i]], directions, routeDescription, departure_time, id: i})
+                const newRoute = new Route({
+                  route: [response.routes[i]],
+                  directions,
+                  routeDescription,
+                  departure_time,
+                  id: i
+                });
                 Route.appendToDom(newRoute);
                 // console.log(newRoute)
-              
               }
             }
             // directionsDisplay.setDirections(response);
-            console.log("directionsDisplay", directionsDisplay)
+            console.log("directionsDisplay", directionsDisplay);
           } else {
             window.alert("Directions request failed due to " + status);
           }
@@ -269,65 +271,92 @@ export default function initMap() {
   }, 200);
 }
 
-
-
-
-
 //   Dummy text to add extras
 
 //   finString = finString + '<div class="journey-planner__card__right__iconContainer"> <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon> <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div><ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon></div>'
 
-
-
 function change_route(route_index) {
-    directionsDisplay.setRouteIndex(route_index);
+  directionsDisplay.setRouteIndex(route_index);
 }
 
 window.initMap = initMap;
 
 // function for adding markers to a map based on input
 function AddMarkers(data, map) {
-    // get the latitude, longitude and name of each bus stop
-    for (let key in data) {
-        let stopID = key;
-        let latitude = data[key][0];
-        let longitude = data[key][1];
-        let stopName = data[key][2];
-        let latLng = new google.maps.LatLng(latitude, longitude);
-        // create an object for the bus stop icon
-        let busStopIcon = {
-            url: '/static/images/marker.png', // url for the image
-            scaledSize: new google.maps.Size(60, 60), // size of the image
-            origin: new google.maps.Point(0, 0), // origin
-            anchor: new google.maps.Point(30, 60) // anchor
-        };
-        // generate a marker object for bus stop
-        let busMarker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            icon: busStopIcon,
-            title: stopName,
-            id: stopID
+  // get the latitude, longitude and name of each bus stop
+  let allMarkers = []
+  for (let key in data) {
+    let stopID = key;
+    let latitude = data[key][0];
+    let longitude = data[key][1];
+    let stopName = data[key][2];
+    let latLng = new google.maps.LatLng(latitude, longitude);
+    // create an object for the bus stop icon
+    let busStopIcon = {
+      url: "/static/images/marker.png", // url for the image
+      scaledSize: new google.maps.Size(60, 60), // size of the image
+      origin: new google.maps.Point(0, 0), // origin
+      anchor: new google.maps.Point(30, 60) // anchor
+    };
+    // generate a marker object for bus stop
+    let busMarker = new google.maps.Marker({
+      position: latLng,
+      map: map,
+      icon: busStopIcon,
+      title: stopName,
+      id: stopID
+    });
+
+
+    busMarker.addListener("click", function(e) {
+      document
+        .querySelector("ion-tabs")
+        .getSelected()
+        .then(function(current_tab) {
+          if (current_tab === "stops") {
+            document
+              .querySelector("ion-tabs")
+              .select("none")
+              .then(() => {
+                document.querySelector("ion-tabs").select("stops");
+              });
+          } else {
+            document.querySelector("ion-tabs").select("stops");
+          }
+          get_bus_real_time_info(stopID);
+          const stops_container_position = $("#stops-container").css(
+            "margin-left"
+          );
+          if (stops_container_position === "0px") {
+            window.setTimeout(detail, 500);
+          }
+          drawer_default_height();
         });
-        busMarker.addListener('click', function (e) {
-            document.querySelector('ion-tabs').getSelected().then(function (current_tab) {
-                if (current_tab === 'stops') {
-                    document.querySelector('ion-tabs').select('none').then(() => {
-                        document.querySelector('ion-tabs').select('stops');
-                    });
-                } else {
-                    document.querySelector('ion-tabs').select('stops');
-                }
-                get_bus_real_time_info(stopID);
-                const stops_container_position = $("#stops-container").css('margin-left');
-                if (stops_container_position === '0px') {
-                    window.setTimeout(detail, 500);
-                }
-                drawer_default_height();
-            });
-        });
-        markers[stopID] = busMarker;
+    });
+
+    markers[stopID] = busMarker;
+
+
+    allMarkers.push(busMarker)
+    
+  }
+
+  let clusterStyles = [
+    {
+        textColor: 'rgba(0,0,0,0)',
+      url: '/static/marker.png',
+      height: 50,
+      width: 50
     }
+  ];
+
+  let mcOptions = {
+    gridSize: 50,
+    styles: clusterStyles,
+    maxZoom: 16
+};
+
+  let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
 
 //   function() {
@@ -515,11 +544,9 @@ function AddMarkers(data, map) {
 //     );
 //   });
 
-
-  /* <h1>${route_id}</h1>
+/* <h1>${route_id}</h1>
                         // ${route_id}
                         <p>${head_sign}</p>
                         <p>${departure_stop}</p>
                         <p>${departure_time}</p>
                         <p>${full_journey}</p> */
-
