@@ -51,9 +51,10 @@
 
   &__card {
     &__container {
+        cursor: pointer;
       height: 14rem;
       width: 100%;
-
+        background: white;
       &::after{
        
         content: "";

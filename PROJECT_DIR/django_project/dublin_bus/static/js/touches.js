@@ -45,7 +45,7 @@ class Swiper {
     this.itemHeight = element.offsetHeight;
     this.tabs = $("ion-tab-button");
     this.map = $("#map");
-    this.inTransformVal = element.offsetHeight -100;
+    this.inTransformVal = element.offsetHeight;
     this.outTransformVal = element.offsetHeight * 0.002;
     this.startTransform = this.inTransformVal;
 

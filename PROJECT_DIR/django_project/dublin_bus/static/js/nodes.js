@@ -15,11 +15,15 @@ export const drawers = {
 }
 
 
+
 export class Route {
+    
+
     constructor(routeData) {
       this.routeData = routeData;
       this.nodeHTML = this.cardBuilder(routeData.routeDescription, routeData.departureTime, routeData.id)
       this.domNode = null;
+      this.showContainer = document.querySelector('#show-container')
     }
 
     // method for building html
@@ -28,7 +32,9 @@ export class Route {
 
     static addClick(route){
        route.domNode.addEventListener('click', () => {
-            console.log(route.routeData)
+
+            route.showContainer.innerHTML = route.nodeHTML;
+            route.showContainer.style.display = 'block';
        })
     }
 
