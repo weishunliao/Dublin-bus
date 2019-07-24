@@ -37,3 +37,5 @@ webpack-stats.json
 # PROJECT_DIR/main.js
 # PROJECT_DIR/styles.css
 # PROJECT_DIR/static/cache/
+
+.ipynb_checkpoints
