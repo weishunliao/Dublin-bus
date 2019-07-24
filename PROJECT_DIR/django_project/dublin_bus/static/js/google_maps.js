@@ -294,27 +294,47 @@ window.initMap = initMap;
 
 // function for adding markers to a map based on input
 function AddMarkers(data, map) {
-  // get the latitude, longitude and name of each bus stop
-  for (let key in data) {
-    let latitude = data[key][0];
-    let longitude = data[key][1];
-    let stopName = data[key][2];
-    let latLng = new google.maps.LatLng(latitude, longitude);
-    // create an object for the bus stop icon
-    let busStopIcon = {
-      url: "/static/images/marker.png", // url for the image
-      scaledSize: new google.maps.Size(60, 60), // size of the image
-      origin: new google.maps.Point(0, 0), // origin
-      anchor: new google.maps.Point(30, 60) // anchor
-    };
-    // generate a marker object for bus stop
-    let busMarker = new google.maps.Marker({
-      position: latLng,
-      map: map,
-      icon: busStopIcon,
-      title: stopName
-    });
-  }
+    // get the latitude, longitude and name of each bus stop
+    for (let key in data) {
+        let stopID = key;
+        let latitude = data[key][0];
+        let longitude = data[key][1];
+        let stopName = data[key][2];
+        let latLng = new google.maps.LatLng(latitude, longitude);
+        // create an object for the bus stop icon
+        let busStopIcon = {
+            url: '/static/images/marker.png', // url for the image
+            scaledSize: new google.maps.Size(60, 60), // size of the image
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(30, 60) // anchor
+        };
+        // generate a marker object for bus stop
+        let busMarker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            icon: busStopIcon,
+            title: stopName,
+            id: stopID
+        });
+        busMarker.addListener('click', function (e) {
+            document.querySelector('ion-tabs').getSelected().then(function (current_tab) {
+                if (current_tab === 'stops') {
+                    document.querySelector('ion-tabs').select('none').then(() => {
+                        document.querySelector('ion-tabs').select('stops');
+                    });
+                } else {
+                    document.querySelector('ion-tabs').select('stops');
+                }
+                get_bus_real_time_info(stopID);
+                const stops_container_position = $("#stops-container").css('margin-left');
+                if (stops_container_position === '0px') {
+                    window.setTimeout(detail, 500);
+                }
+                drawer_default_height();
+            });
+        });
+        markers[stopID] = busMarker;
+    }
 }
 
 //   function() {
