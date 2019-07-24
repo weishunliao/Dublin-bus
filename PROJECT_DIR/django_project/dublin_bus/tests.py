@@ -94,7 +94,7 @@ class TestCreateSegmentRefGtfs(TestCase):
     def test_create_segment_ref_gtfs(self):
         """Test for the ouput of the create_segment_ref_gtfs function."""
         segment_ref = functions.create_segment_ref_gtfs()
-        self.assertEqual(segment_ref["1154_946"], 81)
+        self.assertEqual(segment_ref["1154_946"], 80)
 
 class TestRoutePrediction(TestCase):
     """Test cases for the route_prediction function."""
@@ -617,3 +617,76 @@ class TestGetServerRoute(TestCase):
         client = Client()
         resp = client.get('/server_route?stop_id=1123').json()['server_route']
         self.assertEqual(set(resp), set(['15', '65b', '49', '65']))
+
+
+class TestGetCurrentServiceId(TestCase):
+       """Test cases for the get_current_service_id function."""
+
+       def test_get_current_service_id_bank_holiday(self):
+              """Test to ensure that the correct value is returned for a bank holiday."""
+              timestamp = datetime.strptime('Aug 5 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101d')
+
+       def test_get_current_service_id_sun(self):
+              """Test to ensure that the correct value is returned for a Sunday."""
+              timestamp = datetime.strptime('Aug 4 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101d')
+
+       def test_get_current_service_id_sat(self):
+              """Test to ensure that the correct value is returned for a Saturday."""
+              timestamp = datetime.strptime('Aug 3 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101e')
+
+       def test_get_current_service_id_weekday(self):
+              """Test to ensure that the correct value is returned for a Weekday."""
+              timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.get_current_service_id(timestamp), 'y101c')
+
+class TestPredictJourneyTime(TestCase):
+       """Test cases for the predict_journey_time function."""
+
+       def test_predict_journey_time_invalid_list(self):
+              """Test that the function returns -1 when an empty list is entered."""
+              timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.predict_journey_time((('8350DB007574',)), timestamp), -1)
+
+       def test_predict_journey_time_invalid_list2(self):
+              """Test that the function returns -1 when a list with length 1 is entered."""
+              timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+              self.assertEqual(functions.predict_journey_time([], timestamp), -1)
+
+class TestGetStopListStartPoint(TestCase):
+       """Test cases for the get_stop_list_start_point function."""
+
+       def test_get_stop_list_start_point(self):
+              """Test that the function returns a valid stop list."""
+              all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',), ('8350DB002994',), ('8350DB004180',), ('8350DB004181',), ('8350DB004182',), ('8350DB004151',), ('8350DB002997',), ('8350DB004153',), ('8350DB004154',), ('8350DB004416',), ('8350DB004201',), ('8250DB004202',), ('8250DB004203',), ('8250DB005090',), ('8250DB004204',), ('8250DB004205',), ('8250DB004206',), ('8250DB003140',), ('8250DB003141',), ('8250DB003142',), ('8250DB003143',), ('8250DB003144',), ('8250DB003145',), ('8250DB003146',), ('8250DB003147',), ('8250DB003148',), ('8250DB005127',), ('8250DB005128',), ('8250DB002996',), ('8250DB003258',), ('8250DB002060',), ('8250DB002061',), ('8250DB002062',), ('8250DB002063',), ('8250DB002064',), ('8250DB002065',), ('8250DB004727',), ('8250DB004728',), ('8250DB000461',), ('8250DB002068',), ('8250DB002069',), ('8250DB002070',), ('8250DB002084',), ('8250DB000768',), ('8220DB000769',), ('8220DB000770',), ('8220DB000771',), ('8220DB000772',), ('8220DB000773',), ('8220DB000774',), ('8220DB000775',), ('8220DB000776',), ('8220DB000777',), ('8220DB000906',), ('8220DB000907',), ('8220DB000908',), ('8220DB000909',), ('8220DB000786',), ('8220DB000792',), ('8220DB007586',), ('8220DB007587',), ('8220DB007588',), ('8220DB000325',), ('8220DB001443',), ('8220DB001444',), ('8220DB001445',), ('8220DB004407',), ('8220DB004320',))
+              start_point_id = '8250DB000768'
+              num_stops = 4
+              output = (('8250DB000768',), ('8220DB000769',), ('8220DB000770',), ('8220DB000771',))
+              self.assertEqual(functions.get_stop_list_start_point(all_stops, start_point_id, num_stops), output)
+
+       def test_get_stop_list_start_point_invalid(self):
+              """Test that the function returns an empty list when there are issues with indices."""
+              all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',))
+              start_point_id = '8350DB004177'
+              num_stops = 5
+              self.assertEqual(functions.get_stop_list_start_point(all_stops, start_point_id, num_stops), [])
+
+class TestGetStartPointIdFromEndPointId(TestCase):
+       """Test cases for the get_start_point_id__from_end_point_id function."""
+
+       def test_get_start_point_id__from_end_point_id(self):
+              """Test that the function returns the correct start point for a given end point."""
+              all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',), ('8350DB002994',), ('8350DB004180',), ('8350DB004181',), ('8350DB004182',), ('8350DB004151',), ('8350DB002997',), ('8350DB004153',), ('8350DB004154',), ('8350DB004416',), ('8350DB004201',), ('8250DB004202',), ('8250DB004203',), ('8250DB005090',), ('8250DB004204',), ('8250DB004205',), ('8250DB004206',), ('8250DB003140',), ('8250DB003141',), ('8250DB003142',), ('8250DB003143',), ('8250DB003144',), ('8250DB003145',), ('8250DB003146',), ('8250DB003147',), ('8250DB003148',), ('8250DB005127',), ('8250DB005128',), ('8250DB002996',), ('8250DB003258',), ('8250DB002060',), ('8250DB002061',), ('8250DB002062',), ('8250DB002063',), ('8250DB002064',), ('8250DB002065',), ('8250DB004727',), ('8250DB004728',), ('8250DB000461',), ('8250DB002068',), ('8250DB002069',), ('8250DB002070',), ('8250DB002084',), ('8250DB000768',), ('8220DB000769',), ('8220DB000770',), ('8220DB000771',), ('8220DB000772',), ('8220DB000773',), ('8220DB000774',), ('8220DB000775',), ('8220DB000776',), ('8220DB000777',), ('8220DB000906',), ('8220DB000907',), ('8220DB000908',), ('8220DB000909',), ('8220DB000786',), ('8220DB000792',), ('8220DB007586',), ('8220DB007587',), ('8220DB007588',), ('8220DB000325',), ('8220DB001443',), ('8220DB001444',), ('8220DB001445',), ('8220DB004407',), ('8220DB004320',))
+              end_point_id = '8350DB002993'
+              num_stops = 4
+              output = '8350DB004177'
+              self.assertEqual(functions.get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops), output)
+
+       def test_get_start_point_id__from_end_point_id_invalid(self):
+              """Test that the function returns -1 when there are issues with indices."""
+              all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',))
+              end_point_id = '8350DB004177'
+              num_stops = 3
+              self.assertEqual(functions.get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops), -1)
