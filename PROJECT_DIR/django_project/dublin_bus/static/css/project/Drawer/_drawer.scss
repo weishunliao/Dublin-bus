@@ -1,13 +1,16 @@
 
 
 .grabber {
-    height: 5rem;
+    height: 12rem;
     width: 100%;
     background: transparent;
     position: absolute;
     left: 0;
     z-index: 2000;
     transform: translateY(-2rem);
+    border: 1px solid black;
+    // ^ removed for testing
+    display:none;
 
   
 }
@@ -52,6 +55,7 @@
   }
 
   &__container {
+    display: none;
     width: 100%;
     position: absolute;
     height: 60rem;
@@ -81,7 +85,7 @@
 
     &--bottom {
       bottom: 0;
-      transform: translateY(100%) translateX(-50%);
+      transform: translateY(calc(100% - 75px)) translateX(-50%);
     }
   }
 

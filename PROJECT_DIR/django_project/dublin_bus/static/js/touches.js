@@ -37,15 +37,15 @@ class Swiper {
     this.differenceInY = 0;
     this.rafPending = false;
     //   * where the touch happens
-    this.initialTouchPos = null;
+    this.initialTouchPos = 0;
     // * where the last touch happened
-    this.lastTouchPos = null;
+    this.lastTouchPos = 0;
     this.open = true;
     this.scrollThreshold;
     this.itemHeight = element.offsetHeight;
-    this.tabs = $('ion-tab-button')
-    this.map = $('#map')
-    this.inTransformVal = element.offsetHeight;
+    this.tabs = $("ion-tab-button");
+    this.map = $("#map");
+    this.inTransformVal = element.offsetHeight -100;
     this.outTransformVal = element.offsetHeight * 0.002;
     this.startTransform = this.inTransformVal;
 
@@ -72,9 +72,9 @@ class Swiper {
   }
 
   handleGestureStart(evt) {
-    // evt.preventDefault()
     if (evt.touches && evt.touches.length > 1) {
       return;
+      //   we call this so we only deal with one touch on the screen
     }
 
     document.addEventListener("mousemove", this.handleGestureMove, true);
@@ -114,8 +114,8 @@ class Swiper {
 
     this.updateSwipeRestPosition();
 
-    this.initialTouchPos = null;
-    this.lastTouchPos = null;
+    this.initialTouchPos = 0;
+    this.lastTouchPos = 0;
   }
 
   updateSwipeRestPosition() {
@@ -134,7 +134,6 @@ class Swiper {
       } else {
         if (this.currentState === this.OUT_STATE && differenceInY < 0) {
           newState = this.IN_STATE;
-      
         } else if (this.currentState === this.OUT_STATE && differenceInY > 0) {
           newState = this.OUT_STATE;
         }
@@ -148,25 +147,22 @@ class Swiper {
   }
 
   changeState(newState, selectedTab) {
-
-    console.log("change state called");
     if (selectedTab !== null) {
     } else {
-      console.log("it's null");
     }
     let transformStyle;
     switch (newState) {
       case this.IN_STATE:
         this.startTransform = this.inTransformVal;
-        console.log(this.tabs)
-        this.tabs.addClass('color-add')
-        this.map.removeClass('drawer-open')
+        console.log(this.tabs);
+        this.tabs.addClass("color-add");
+        this.map.removeClass("drawer-open");
 
         break;
       case this.OUT_STATE:
         this.startTransform = this.outTransformVal;
-        this.tabs.removeClass('color-add')
-        this.map.addClass('drawer-open')
+        this.tabs.removeClass("color-add");
+        this.map.addClass("drawer-open");
         break;
     }
 
@@ -221,30 +217,36 @@ class Swiper {
   }
 
   addListeners() {
-    this.grabber.addEventListener("touchstart", this.handleGestureStart, true);
-    this.grabber.addEventListener("touchmove", this.handleGestureMove, true);
-    this.grabber.addEventListener("touchend", this.handleGestureEnd, true);
-    this.grabber.addEventListener("touchcancel", this.handleGestureEnd, true);
+    this.element.addEventListener("touchstart", this.handleGestureStart, false);
+    this.element.addEventListener("touchmove", this.handleGestureMove, false);
+    this.element.addEventListener("touchend", this.handleGestureEnd, false);
+    this.element.addEventListener("touchcancel", this.handleGestureEnd, false);
 
     // Add Mouse Listener
-    this.grabber.addEventListener("mousedown", this.handleGestureStart, true);
+    this.element.addEventListener("mousedown", this.handleGestureStart, false);
   }
   //   }
 }
 
+// Main window load
+
+var h = Math.max(
+  document.documentElement.clientHeight,
+  window.innerHeight || 0
+);
+$(".drawer__container").css("height", h * 0.95);
+
 window.addEventListener("load", function() {
   let bottomSwiper;
-  var h = Math.max(
-    document.documentElement.clientHeight,
-    window.innerHeight || 0
-  );
 
-  $('.drawer__container').css('height', h * 0.95);
+  //   assigns the height of the drawer depending on how large the screen is.
 
   const main = document.querySelector(".main");
 
   window.onresize = function() {
     main.setAttribute("style", `height:${h}px`);
+    $(".drawer__container").css("height", h * 0.95);
+    console.log("resized!");
   };
 
   Swiper.underline = document.querySelector(".jp__header__underline");
@@ -257,7 +259,7 @@ window.addEventListener("load", function() {
   let tabs = document.querySelector(".tabs");
 
   const ionTabBar = document.querySelector("ion-tab-bar");
-  const grabber = document.querySelector('.grabber');
+  const grabber = document.querySelector(".grabber");
   const ionTabs = document.querySelector("ion-tabs");
 
   function handleOut(e) {
@@ -267,22 +269,14 @@ window.addEventListener("load", function() {
   }
 
   function tabClick(e) {
-    
-
-    console.log(e.target.id);
-
     if (e.target.id == "tab-button-journey") {
-      
     }
 
     if (e.target.id === currentTab) {
       if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {
-     
         bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
-       
       } else {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE, null);
-       
       }
     } else {
       bottomSwiper.changeState(bottomSwiper.OUT_STATE, null);
@@ -305,9 +299,49 @@ window.addEventListener("load", function() {
   const map = document.querySelector(".map__container");
   const searchInput = document.querySelector(".drawer__search__input");
 
+//   $(".journey-planner__routes__scroll-area").click(e => {
+//     e.stopPropagation();
+//   });
 
-  $('.journey-planner__routes__scroll-area').click((e)=>{
-      e.stopPropagation();
-      
-  })
+//   $(".journey-planner__routes-container").on("touchmove", function(e) {
+//     e.stopPropagation();
+//   });
+//   $("#route-descriptions").on("touchmove", function(e) {
+//     e.stopPropagation();
+//   });
+
+  $(".drawer__container").css("display", "block");
+
+  
 });
+
+// function preventPullToRefresh(element) {
+//   var prevent = false;
+
+//   document.querySelector(element).addEventListener("touchstart", function(e) {
+//     if (e.touches.length !== 1) {
+//       return;
+//     }
+
+//     var scrollY =
+//       window.pageYOffset ||
+//       document.body.scrollTop ||
+//       document.documentElement.scrollTop;
+//     prevent = scrollY === 0;
+//   });
+
+//   document.querySelector(element).addEventListener("touchmove", function(e) {
+//     if (prevent) {
+//       prevent = false;
+//     }
+//   });
+// }
+
+// function cancelTouch(element) {
+//   document.querySelector(element).addEventListener("touchstart", function(e) {
+//     if (e.touches.length !== 1) {
+//       return;
+//     }
+//   });
+// }
+

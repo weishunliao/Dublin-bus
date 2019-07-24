@@ -29,7 +29,8 @@
   &__routes-container {
     height: 67%;
     width: 100%;
-    overflow: scroll;
+    display: none;
+    background: blue;
   }
 
   &__routes {
@@ -39,6 +40,7 @@
       margin: 0 auto;
       padding: 1rem;
       width: 100%;
+      
       height: calc(100% - 2rem);
     }
 
@@ -51,6 +53,93 @@
     &__container {
       height: 14rem;
       width: 100%;
+
+      &::after{
+       
+        content: "";
+        clear: both;
+        display: table;
+        
+      }
+    }
+
+    &__left {
+        width: 40%;
+        height: 100%;
+        float: left;
+        position: relative;
+
+        &__depTitle {
+            width: 90%;
+            margin-left: 1rem;
+            margin-top: 1rem;
+ 
+            color: #3d5f7e;
+
+            & h2 {
+                @media screen and (max-width: 600px){
+                    font-size: 1.6rem !important;
+                }
+                margin: 0;
+            }
+        }
+
+        &__minsTitle {
+            
+            top: 50%;
+            position: absolute;
+            transform: translateY(-50%);
+            left: 1rem;
+            width: 100%;
+            padding-left: .5rem
+        }
+    }
+
+    &__right {
+   
+        width: 60%;
+        height: 100%;
+        float: right;
+        position: relative;
+
+        &__travelTime {
+            margin-top: 1rem;
+            width: 100%;
+            & h2 {
+                @media screen and (max-width: 600px){
+                    font-size: 1.6rem !important;
+                }
+                margin: 0;
+            }
+        }
+
+        &__descriptionContainer {
+  
+            height: 80%;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-top: 1rem;
+            padding-bottom: 2rem;
+           
+            &::after{
+       
+                content: "";
+                clear: both;
+                display: table;
+                
+              }
+        }
+
+        &__iconContainer {
+            box-sizing: border-box;
+       
+            width: 33%;
+            height: 70%;
+            display: inline-block;
+            position: relative;
+        
+        }
     }
 
     &__title {
@@ -58,11 +147,7 @@
       font-size: 2rem !important;
       color: #3d5f7e;
       margin: 0;
-      &--departingTitle {
-        padding: 1rem;
-
-        padding-left: 2rem;
-      }
+      
 
       &--travelTime {
        
@@ -80,24 +165,25 @@
       padding: 0;
       color: #409ce0;
       font-size: 5.6rem !important;
+
+      @media screen and (max-width: 600px){
+        font-size: 3rem !important;
+        transform: translateY(9px);
+    }
       display: inline-block;
-      transform: translateY(calc(-40% + 12px));
-      padding-left: 0.2rem;
-      position: absolute;
-      top: 50%;
-      left: 5.5rem;
+      transform: translateY(13px);
+      
     }
 
     &__minuteSpan {
-      transform: translateY(-40%);
-
-      position: absolute;
-      top: 50%;
       font-size: 7.2rem !important;
-      padding-left: 2rem;
-      line-height: 0;
-      display: inline-block;
+
+      @media screen and (max-width: 600px){
+          font-size: 4.6rem !important;
+      }
       color: #409ce0;
+      display: inline-block;
+      line-height: 0;
     }
 
     &__detailsContainer {
@@ -118,21 +204,22 @@
     &__icon {
         font-size: 4rem;
         position: absolute;
-        top: 45%;
+        top: 35%;
         transform: translate(-50%, -50%);
         color: #3d5f7e;
 
-        &--from {
-            left: 7%;
+        &--walk {
+            left: 50%;
         }
 
         &--to {
             left: 85%;
-
         }
 
-        &--firstarr {
-            left: 25%;
+        &--arrow {
+            top: 50%;
+           left: 100%;
+           font-size: 2rem;
         }
 
         &--bus {
@@ -146,22 +233,11 @@
 
     &__numberbox {
         position: absolute;
-        top: 70%;
+        top: 75%;
         transform: translate(-50%, -50%);
-        font-size: 2rem;
+        font-size: 1.5rem;
         color: #3d5f7e;
-        &--from {
-            left: 7%;
-        }
-
-        &--bus {
-            left: 45%;
-            color: #FFA200;
-        }
-
-        &--to {
-            left: 85%;
-        }
+        left: 50%;
     }
   }
 
@@ -273,6 +349,10 @@ ion-datetime {
     & .journey-planner__form__label {
       transform: scale(0.7) translateX(1rem) translateY(-6px);
     }
+  }
+
+  & .journey-planner__routes-container {
+      display: block;
   }
 
   & .journey-planner__title {

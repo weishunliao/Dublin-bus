@@ -1,4 +1,4 @@
-import { search, fromInput, toInput, selectedTab } from "./nodes";
+import { search, fromInput, toInput, selectedTab, Route } from "./nodes";
 import { searchToggle } from "./index";
 
 const { searchInput } = search;
@@ -6,6 +6,7 @@ let resp;
 let directionsDisplay;
 
 export default function initMap() {
+  // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
   setTimeout(() => {
     let map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 53.3471, lng: -6.26059 },
@@ -124,7 +125,7 @@ export default function initMap() {
     }
 
     document.getElementById("go-submit").addEventListener("click", function() {
-        $('#routesHere').html("")
+      $("#routesHere").html("");
       directionsService.route(
         {
           origin: document.getElementById("from").value,
@@ -134,8 +135,9 @@ export default function initMap() {
         },
         function(response, status) {
           resp = response;
+          console.log(response)
           if (status === "OK") {
-              console.log(response.routes)
+            console.log(response.routes);
             for (let i = 0; i < response.routes.length; i++) {
               let length = response.routes[i].legs[0].steps.length;
               let error_count = 0; // used to track if any steps in the route are not run by Dublin Bus
@@ -174,6 +176,9 @@ export default function initMap() {
                   full_travel_time += walkTime;
                   routeDescription.push(["walking", walkTime]);
                 } else {
+                  // DUMMY CODE =====
+                  routeDescription.push(["bus", 200]);
+                  // DUMMY CODE ======
                   let num_stops =
                     response.routes[i].legs[0].steps[step].transit.num_stops;
                   departure_stop =
@@ -196,66 +201,53 @@ export default function initMap() {
                   departure_time =
                     response.routes[i].legs[0].steps[step].transit
                       .departure_time.text;
-                  fetch("get_travel_time", 
-                  {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({
-                        route_id: route_id,
-                        start_point: departure_stop,
-                        end_point: arrival_stop,
-                        num_stops: num_stops,
-                        departure_time_value: departure_time_value
-                      }),
-                  })
-                  .then(response => {
-                    full_travel_time += response.journey_time;
-                    routeDescription.push(["bus", response.journey_time]);
-                  })
+                  //   fetch("get_travel_time",
+                  //   {
+                  //     method: "POST",
+                  //     headers: {
+                  //         "Content-Type": "application/json",
+                  //         "Accept": "application/json"
+                  //     },
+                  //     body: JSON.stringify({
+                  //         route_id: route_id,
+                  //         start_point: departure_stop,
+                  //         end_point: arrival_stop,
+                  //         num_stops: num_stops,
+                  //         departure_time_value: departure_time_value
+                  //       }),
+                  //   })
+                  //   .then(response => {
+                  //     full_travel_time += response.journey_time;
+                  //     routeDescription.push(["bus", response.journey_time]);
+                  //   })
                 }
                 step++;
               }
               if (true) {
-                let full_journey = Math.round(full_travel_time / 60);
+                // let full_journey = Math.round(full_travel_time / 60);
+
+                console.log(routeDescription);
+                // const cardString = cardBuilder(routeDescription, departure_time=0, i)
+
+                const newRoute = new Route({routeDescription, departure_time, id: i})
+                Route.appendToDom(newRoute);
+                // console.log(newRoute)
+         
                 
 
-                $("#routesHere").append(`
-                <div class="journey-planner__routes__card">
-            <ion-card>
-              <ion-card-content>
-                <div class="journey-planner__card__container">
-                  <h2 class="journey-planner__card__title journey-planner__card__title--departingTitle">Departing in:</h2>
-                  <span class="journey-planner__card__minuteSpan">${departure_time}</span><h1 class="journey-planner__card__timeTitle">mins</h1>
-                  <div class="journey-planner__card__detailsContainer">
-                      <div class="journey-planner__card__detailsRel">
-                            <h2 class="journey-planner__card__title journey-planner__card__title--travelTime">Travel Time: 
-                                    <span class="journey-planner__card__timeNumber" id="jp-travel-time">${full_journey}</span>
-                                    minutes
-                            </h2>
+                // const buttons = document.querySelectorAll('.routeCard')
 
-                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--from" name="walk" id="walk-from"></ion-icon>
-                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--firstarr" name="arrow-forward"></ion-icon>
-                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--bus" name="bus"></ion-icon>
-                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--to" name="walk" id="walk-from"></ion-icon>
+                // buttons.forEach(button => {
+                //     button.addEventListener('click', (e) => {
+                //         console.log(e.currentTarget.id)
+                //     })
+                // })
 
-                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--secondarr" name="arrow-forward"></ion-icon>
-                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox--from">4</div>
-                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox--bus">${route_id}</div>
-                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox--to">8</div>
-                      </div>
-                  </div>
-
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-                        
-                    `);
-
-                
+                // const routesHere = document.querySelector('#routesHere')
+                // routesHere.addEventListener('click', (e) => {
+                //     console.log(e.target)
+                // })
+              
               }
             }
             directionsDisplay.setDirections(response);
@@ -281,6 +273,16 @@ export default function initMap() {
     });
   }, 200);
 }
+
+
+
+
+
+//   Dummy text to add extras
+
+//   finString = finString + '<div class="journey-planner__card__right__iconContainer"> <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon> <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div><ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon></div>'
+
+
 
 function change_route(route_index) {
   directionsDisplay.setRouteIndex(route_index);
@@ -497,11 +499,11 @@ function AddMarkers(data, map) {
 //     );
 //   });
 
-
-
-{/* <h1>${route_id}</h1>
+{
+  /* <h1>${route_id}</h1>
                         // ${route_id}
                         <p>${head_sign}</p>
                         <p>${departure_stop}</p>
                         <p>${departure_time}</p>
-                        <p>${full_journey}</p> */}
+                        <p>${full_journey}</p> */
+}
