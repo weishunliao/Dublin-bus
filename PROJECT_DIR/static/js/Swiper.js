@@ -150,7 +150,7 @@ window.requestAnimFrame = (function() {
       switch (newState) {
         case this.IN_STATE:
           this.startTransform = this.inTransformVal;
-          console.log(this.tabs);
+      
           this.tabs.addClass("color-add");
           this.map.removeClass("drawer-open");
   
