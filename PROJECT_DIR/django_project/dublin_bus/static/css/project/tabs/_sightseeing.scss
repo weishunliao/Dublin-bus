@@ -32,6 +32,7 @@
       }
 
       &__label {
+        margin-top: 0;
         color: $db_blue;
         font-size: 3.5vw;
         font-weight: bold;
@@ -41,6 +42,20 @@
   }
 
   &__options {
+    &__head {
+      background-color: $bus_yellow;
+    }
+
+    &__search__title__label {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: bold;
+      color: $db_blue;
+      font-family: Helvetica;
+    }
+    &__back-btn {
+
+    }
     &__cards {
       height: 450px;
       overflow-y: scroll;

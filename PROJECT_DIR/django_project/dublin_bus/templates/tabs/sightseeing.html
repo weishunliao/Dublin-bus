@@ -1,5 +1,5 @@
 <ion-tab tab="sightseeing">
-    <div id="sightseeing__category" class="sightseeing__category" style="display: none">
+    <div id="sightseeing__category" class="sightseeing__category">
         <ion-grid>
             <ion-row class="sightseeing__category__head">
                 <ion-col size="12" align-self-center>
@@ -11,7 +11,7 @@
             <ion-row class="sightseeing__category__content__row" justify-content-center>
                 <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
                     <ion-icon name="md-images" class="sightseeing__category__content__icon" id="Sightseeing"></ion-icon>
-                    <span class="sightseeing__category__content__label">Sightseeing</span>
+                    <h6 class="sightseeing__category__content__label">Sightseeing</h6>
 
                 </ion-col>
                 <ion-col size="2">
@@ -20,46 +20,56 @@
                 <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
                     <ion-icon name="ios-restaurant" class="sightseeing__category__content__icon"
                               id="Restaurant"></ion-icon>
-                    <span class="sightseeing__category__content__label">Restaurant</span>
+                    <h6 class="sightseeing__category__content__label">Restaurant</h6>
                 </ion-col>
             </ion-row>
             <ion-row class="sightseeing__category__content__row" justify-content-center>
                 <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
-                    <ion-icon name="md-wine" class="sightseeing__category__content__icon" id="Nightlife"></ion-icon>
-                    <span class="sightseeing__category__content__label">Nightlife</span>
+                    <ion-icon name="md-wine" class="sightseeing__category__content__icon"
+                              id="Nightlife"></ion-icon>
+                    <h6 class="sightseeing__category__content__label">Nightlife</h6>
+                </ion-col>
+                <ion-col size="2">
+                </ion-col>
+                <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
+                    <ion-icon name="ios-cafe" class="sightseeing__category__content__icon"
+                              id="Coffee"></ion-icon>
+                    <h6 class="sightseeing__category__content__label">Coffee</h6>
+                </ion-col>
+            </ion-row>
+            <ion-row class="sightseeing__category__content__row" justify-content-center>
+                <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
+                    <ion-icon name="ios-bed" class="sightseeing__category__content__icon"
+                              id="Hotel"></ion-icon>
+                    <h6 class="sightseeing__category__content__label">Hotel</h6>
 
                 </ion-col>
                 <ion-col size="2">
 
                 </ion-col>
                 <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
-                    <ion-icon name="ios-cafe" class="sightseeing__category__content__icon" id="Coffee"></ion-icon>
-                    <span class="sightseeing__category__content__label">Coffee</span>
-                </ion-col>
-            </ion-row>
-            <ion-row class="sightseeing__category__content__row" justify-content-center>
-                <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
-                    <ion-icon name="ios-bed" class="sightseeing__category__content__icon" id="Hotel"></ion-icon>
-                    <span class="sightseeing__category__content__label">Hotel</span>
-
-                </ion-col>
-                <ion-col size="2">
-
-                </ion-col>
-                <ion-col size="3" class="sightseeing__category__content__col" align-self-center>
-                    <ion-icon name="md-basket" class="sightseeing__category__content__icon" id="Shopping"></ion-icon>
-                    <span class="sightseeing__category__content__label">Shopping</span>
+                    <ion-icon name="md-basket" class="sightseeing__category__content__icon"
+                              id="Shopping"></ion-icon>
+                    <h6 class="sightseeing__category__content__label">Shopping</h6>
                 </ion-col>
             </ion-row>
         </ion-grid>
     </div>
 
-    <div id="sightseeing__options" class="sightseeing__options">
-        <div class="stops__head">
-            <div id="stops__head__content">
-                <div class="drawer__search__title">
-                    <div class="drawer__search__title__label">
-                        <span id="drawer__search__title__label">Dublin sightseeing</span><br>
+    <div id="sightseeing__options" class="sightseeing__options" style="display: none">
+        <div class="sightseeing__options__head">
+            <div id="sightseeing__options__head__content">
+                <ion-toolbar class="sightseeing__options__toolbar" color="busyellow">
+                    <ion-buttons slot="start">
+                        <ion-button class="sightseeing__options__back-btn" id="sightseeing__options__back-btn">
+                            <ion-icon name="arrow-back"></ion-icon>
+                            Back
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+                <div class="sightseeing__options__search__title">
+                    <div class="sightseeing__options__search__title__label">
+                        <span id="sightseeing__options__search__title__label">Dublin Sightseeing</span><br>
                     </div>
                 </div>
                 <ion-grid class="search-container">
@@ -75,7 +85,8 @@
             </div>
         </div>
         <div class="sightseeing__options__cards">
-            <div id="sightseeing__options__cards">
+            <ion-loading-controller></ion-loading-controller>
+            <div id="sightseeing__options__cards" style="display: none">
                 <ion-card>
                     <ion-grid>
                         <ion-row>

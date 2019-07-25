@@ -1,28 +1,32 @@
 const get_sights_info = (category) => {
-    fetch('sights_info?category=' + category, {method: 'get'})
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (document.getElementById("sightseeing__options__cards") !== null) {
-                document.getElementById('sightseeing__options__cards').remove();
-                $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
-            } else {
-                $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
-            }
+    return new Promise((resolve, reject) => {
+        fetch('sights_info?category=' + category, {method: 'get'})
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (document.getElementById("sightseeing__options__cards") !== null) {
+                    document.getElementById('sightseeing__options__cards').remove();
+                    $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
+                } else {
+                    $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
+                }
 
-            let points = data['points'];
-            for (let point of points) {
-                create_card(point);
-            }
+                let points = data['points'];
+                for (let point of points) {
+                    create_card(point);
+                }
+                resolve();
+            }).catch(() => {
+            reject();
         });
+    });
 };
-
 const cards = document.getElementsByClassName("sightseeing__category__content__icon");
 for (let card of cards) {
     card.addEventListener('click', function () {
-
-        get_sights_info(this.id);
+        // get_sights_info(this.id);
+        handleButtonClick(this.id);
     });
 }
 get_sights_info("Sightseeing");
@@ -41,5 +45,39 @@ const create_card = (point) => {
         '<ion-icon name="md-time" size="medium"></ion-icon><span id="sightseeing__options__cards__info__opening-hour">' + point[4] + '</span></ion-col></ion-row></ion-col></ion-row>' +
         '</ion-grid></ion-card>';
 
-        $('#sightseeing__options__cards').append(card);
+    $('#sightseeing__options__cards').append(card);
 };
+
+const page_switch = () => {
+    if (document.getElementById('sightseeing__category').style.display === 'none') {
+        $("#sightseeing__category").fadeIn();
+        $("#sightseeing__options").fadeOut();
+    } else {
+        $("#sightseeing__category").fadeOut();
+        $("#sightseeing__options").fadeIn();
+    }
+};
+document.getElementById("sightseeing__options__back-btn").addEventListener('click', page_switch);
+
+$(".sightseeing__options__cards").on("touchmove", function (e) {
+    e.stopPropagation();
+});
+
+
+
+const controller = document.querySelector('ion-loading-controller');
+
+
+function handleButtonClick(category) {
+    controller.componentOnReady();
+    controller.create({
+        message: 'Please wait...',
+        spinner: 'crescent',
+    }).then((loading) => {
+        loading.present();
+        get_sights_info(category).then(() => {
+            loading.dismiss();
+            page_switch();
+        });
+    });
+}
