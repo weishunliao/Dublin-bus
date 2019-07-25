@@ -10,7 +10,7 @@ from dublin_bus import functions
 import json
 import os
 from django_project.settings import BASE_DIR
-from django.db import connection
+import requests
 from datetime import datetime
 from django_project.settings import MAP_KEY
 
@@ -130,3 +130,38 @@ def get_server_route(request):
         for route in data:
             server_route.add(route[0])
     return JsonResponse({'server_route': list(server_route)})
+
+
+def get_sights_info(request):
+    category = request.GET['category']
+    if category == "Sightseeing":
+        url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + MAP_KEY + \
+              "&query=Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z/data=!3m1!4b1"
+    infos = requests.get(url=url).json()['results']
+    points = []
+    count = 1
+    for i in infos:
+        if count > 10:
+            break
+        temp = []
+        temp.append(i['name'])
+        temp.append(i['formatted_address'][:i['formatted_address'].find('Dublin') - 2])
+        temp.append(i['rating'])
+        photo_ref = i['photos'][0]['photo_reference']
+        photo = requests.get(
+            "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
+            allow_redirects=True).url
+        temp.append(photo)
+        place_id = i['place_id']
+        resp = requests.get(
+            "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&fields=name,opening_hours&key=" + MAP_KEY).json()['result']
+        if 'opening_hours' in resp:
+            weekday = datetime.now().weekday()
+            opening_hour = resp['opening_hours']['weekday_text'][weekday]
+            opening_hour = opening_hour[opening_hour.find(":") + 1:]
+            temp.append(opening_hour)
+        else:
+            temp.append("All day")
+        count += 1
+        points.append(temp)
+    return JsonResponse({"points": points})

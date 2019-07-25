@@ -1,11 +1,10 @@
 .sightseeing {
-
-
   &__category {
 
     &__head {
 
       height: 15vh;
+
       &__col {
         text-align: center;
         color: $db_blue;
@@ -13,13 +12,16 @@
         font-weight: bold;
       }
     }
+
     &__content {
       &__row {
         height: 20vh;
       }
+
       &__col {
         text-align: center;
       }
+
       &__icon {
         font-size: 40px;
         color: white;
@@ -33,6 +35,66 @@
         color: $db_blue;
         font-size: 3.5vw;
         font-weight: bold;
+      }
+    }
+
+  }
+
+  &__options {
+    &__cards {
+      height: 450px;
+      overflow-y: scroll;
+      &__photo {
+      }
+
+      &__info {
+        &__name {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: $db_blue;
+        }
+
+        &__addr {
+          color: $db_blue;
+        }
+
+        &__ratting {
+          unicode-bidi: bidi-override;
+          color: #ccc;
+          font-size: 1.8rem;
+          position: relative;
+          margin: 0;
+          padding: 0;
+          width: 9rem;
+          &__top {
+            width: 0%;
+            color: $bus_orange;
+            //color: #e7711b;
+            padding: 0;
+            position: absolute;
+            z-index: 1;
+            display: block;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+
+            span {
+              display: inline-block;
+            }
+          }
+
+          &__bottom {
+            padding: 0;
+            display: block;
+            z-index: 0;
+          }
+
+        }
+
+        &__opening-hour {
+            color: $db_blue;
+        }
+
       }
     }
 
