@@ -2,6 +2,7 @@ import { initMap } from "./google_maps";
 
 import { selectedTab } from "./nodes";
 
+export let bottomSwiper;
 window.requestAnimFrame = (function() {
   return (
     window.requestAnimationFrame ||
@@ -232,7 +233,7 @@ class Swiper {
 }
 
 window.addEventListener("load", function() {
-  let bottomSwiper;
+  bottomSwiper;
   var h = Math.max(
     document.documentElement.clientHeight,
     window.innerHeight || 0

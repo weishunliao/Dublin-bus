@@ -2,6 +2,7 @@ import {search, fromInput, toInput, selectedTab, sightInput} from "./nodes";
 import {searchToggle} from "./index";
 import {get_bus_real_time_info, detail, drawer_default_height} from "./stops";
 import {get_sights_info_search} from "./sightseeing";
+import {bottomSwiper} from "./touches";
 
 const {searchInput} = search;
 let resp;
@@ -60,7 +61,6 @@ export default function initMap() {
 
         sightAutocomplete.addListener('place_changed', () => {
             let place = sightAutocomplete.getPlace();
-            console.log(place.place_id);
             get_sights_info_search(place.place_id);
         });
 
@@ -187,26 +187,47 @@ function AddMarkers(data, map) {
             id: stopID
         });
         busMarker.addListener('click', function (e) {
-            document.querySelector('ion-tabs').getSelected().then(function (current_tab) {
-                if (current_tab === 'stops') {
-                    document.querySelector('ion-tabs').select('none').then(() => {
-                        document.querySelector('ion-tabs').select('stops');
-                    });
-                } else {
-                    document.querySelector('ion-tabs').select('stops');
-                }
-                get_bus_real_time_info(stopID);
-                const stops_container_position = $("#stops-container").css('margin-left');
-                if (stops_container_position === '0px') {
-                    window.setTimeout(detail, 500);
-                }
-                drawer_default_height();
-            });
+            markerListener(stopID);
         });
         markers[stopID] = busMarker;
     }
 }
 
+const markerListener = (stopID) => {
+    document.querySelector('ion-tabs').getSelected().then(function (current_tab) {
+        if (current_tab === 'stops') {
+            document.querySelector('ion-tabs').select('none').then(() => {
+                document.querySelector('ion-tabs').select('stops');
+            });
+        } else {
+            document.querySelector('ion-tabs').select('stops');
+        }
+        const stops_container_position = $("#stops-container").css('margin-left');
+        if (stops_container_position === '0px') {
+            detail();
+        }
+        get_bus_real_time_info(stopID);
+        change_btn();
+        window.setTimeout(drawer_default_height, 500);
+    });
+};
+
+const change_btn = () => {
+    document.getElementById("stops__toolbar__back-btn").innerText = "";
+    document.getElementById("stops__show-on-map-btn__name").style.display = 'none';
+    $("#stops__toolbar__back-btn").append("<ion-icon name='md-close' size=\"medium\"></ion-icon>");
+    document.getElementById("stops__toolbar__back-btn").removeEventListener('click', detail);
+    document.getElementById("stops__toolbar__back-btn").addEventListener('click', close_btn);
+};
+
+const close_btn = () => {
+    bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
+    document.getElementById("stops__toolbar__back-btn").innerText = "";
+    $("#stops__toolbar__back-btn").append("<ion-icon name='arrow-back'></ion-icon>Back");
+    document.getElementById("stops__show-on-map-btn__name").style.display = '';
+    document.getElementById("stops__toolbar__back-btn").removeEventListener('click', close_btn);
+    document.getElementById("stops__toolbar__back-btn").addEventListener('click', detail);
+};
 //   function() {
 //     handleLocationError(true, infoWindow, map.getCenter());
 //   }
