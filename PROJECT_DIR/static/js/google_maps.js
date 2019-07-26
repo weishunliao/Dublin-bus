@@ -1,6 +1,7 @@
-import {search, fromInput, toInput, selectedTab} from "./nodes";
+import {search, fromInput, toInput, selectedTab, sightInput} from "./nodes";
 import {searchToggle} from "./index";
 import {get_bus_real_time_info, detail, drawer_default_height} from "./stops";
+import {get_sights_info_search} from "./sightseeing";
 
 const {searchInput} = search;
 let resp;
@@ -34,9 +35,9 @@ export default function initMap() {
 
         let options = {
             bounds: defaultBounds,
-            types: ["establishment"]
+            types: ["establishment"],
+            country: 'Ireland'
         };
-
 
         const searchAutocomplete = new google.maps.places.Autocomplete(
             searchInput,
@@ -52,8 +53,18 @@ export default function initMap() {
             options,
         );
 
+        const sightAutocomplete = new google.maps.places.Autocomplete(
+            sightInput,
+            options,
+        );
 
-        $('ion-tab-button').addClass('color-add')
+        sightAutocomplete.addListener('place_changed', () => {
+            let place = sightAutocomplete.getPlace();
+            console.log(place.place_id);
+            get_sights_info_search(place.place_id);
+        });
+
+        $('ion-tab-button').addClass('color-add');
         searchAutocomplete.addListener("place_changed", function () {
             var place = searchAutocomplete.getPlace();
             if (!place.geometry) {
