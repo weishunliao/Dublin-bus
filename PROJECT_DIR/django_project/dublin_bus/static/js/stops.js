@@ -1,5 +1,8 @@
 import {map, markers} from "./google_maps";
+export const window_height = parseInt(window.innerHeight);
 
+document.getElementById("stops__time-table").style.height = window_height * 0.53 + "px";
+document.getElementById("stops__content__wrapper").style.height = window_height * 0.48 + "px";
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
     // console.log(type, suggestion);
@@ -160,10 +163,6 @@ export const drawer_default_height = () => {
     $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
     document.getElementById("stops__toolbar__back-btn").style.display = '';
     document.getElementById("routes__toolbar__back-btn").style.display = '';
-    let h = Math.max(
-        document.documentElement.clientHeight,
-        window.innerHeight || 0
-    );
     $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
 };
 

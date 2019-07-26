@@ -1,3 +1,6 @@
+import {window_height} from "./stops";
+
+document.querySelector(".sightseeing__options__cards").style.height = window_height * 0.53 + "px";
 const get_sights_info = (category) => {
     return new Promise((resolve, reject) => {
         fetch('sights_info?category=' + category, {method: 'get'})

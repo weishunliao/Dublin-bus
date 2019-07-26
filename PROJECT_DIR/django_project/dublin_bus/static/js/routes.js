@@ -1,5 +1,8 @@
 import {markers, map} from "./google_maps";
+import {window_height} from "./stops";
 
+document.getElementById("routes__content__wrapper").style.height = window_height * 0.5 + "px";
+document.querySelector(".timeline-wrapper__content__box").style.height = window_height * 0.52 + "px";
 let route_id;
 let stop_list = [];
 
