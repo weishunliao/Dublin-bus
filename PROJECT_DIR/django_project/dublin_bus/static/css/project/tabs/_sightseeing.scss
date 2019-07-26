@@ -8,7 +8,7 @@
       &__col {
         text-align: center;
         color: $db_blue;
-        font-size: 7vw;
+        font-size: 3.5rem;
         font-weight: bold;
       }
     }
@@ -81,8 +81,12 @@
           margin: 0;
           padding: 0;
           width: 9rem;
+          &__number {
+            color: $bus_orange;
+            //font-size: 1.6rem;
+          }
           &__top {
-            width: 0%;
+            width: 0;
             color: $bus_orange;
             //color: #e7711b;
             padding: 0;
@@ -102,6 +106,7 @@
             padding: 0;
             display: block;
             z-index: 0;
+            width: 110%;
           }
 
         }

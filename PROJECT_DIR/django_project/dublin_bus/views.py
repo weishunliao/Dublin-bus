@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from dublin_bus.functions import is_weekday, is_bank_holiday, get_service_id, get_real_time_data, get_trip_id, \
-    get_trip_info, calculate_time_diff
+    get_trip_info, calculate_time_diff, get_opening_hour, clean_resp
 from .forms import JourneyPlannerForm
 
 from dublin_bus import functions
@@ -147,7 +147,6 @@ def get_sights_info(request):
         url += "hotel+dublin/@53.3454768,-6.2690574,16z/data=!3m1!4b1"
     elif category == "Shopping":
         url += "shopping+dublin/@53.3455021,-6.2690574,16z/data=!3m1!4b1"
-
     infos = requests.get(url=url).json()['results']
     points = []
     count = 1
@@ -155,29 +154,32 @@ def get_sights_info(request):
         if count > 8:
             break
         try:
-            temp = []
-            temp.append(i['name'])
-            temp.append(i['formatted_address'][:i['formatted_address'].find('Dublin') - 2])
-            temp.append(i['rating'])
-            photo_ref = i['photos'][0]['photo_reference']
-            photo = requests.get(
-                "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
-                allow_redirects=True).url
-            temp.append(photo)
-            place_id = i['place_id']
-            resp = requests.get(
-                "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&fields=name,opening_hours&key=" + MAP_KEY).json()[
-                'result']
-            if 'opening_hours' in resp:
-                weekday = datetime.now().weekday()
-                opening_hour = resp['opening_hours']['weekday_text'][weekday]
-                opening_hour = opening_hour[opening_hour.find(":") + 1:]
-                temp.append(opening_hour)
-            else:
-                temp.append("All day")
-            count += 1
-            points.append(temp)
+            info = clean_resp(i)
+            points.append(info)
         except KeyError as e:
             print(e)
+        count += 1
 
     return JsonResponse({"points": points})
+
+
+def get_sights_info_by_place_id(request):
+    place_id = request.GET['place_id']
+    point = []
+    resp = requests.get(
+        "https://maps.googleapis.com/maps/api/place/details/json?fields=photos,formatted_address,name,rating,"
+        "opening_hours,geometry&key=" + MAP_KEY + "&placeid=" + place_id).json()['result']
+    try:
+        point.append(resp['name'])
+        point.append(resp['formatted_address'][:resp['formatted_address'].find('Dublin') - 2])
+        point.append(resp['rating'])
+        photo_ref = resp['photos'][0]['photo_reference']
+        photo = requests.get(
+            "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
+            allow_redirects=True).url
+        point.append(photo)
+        opening_hour = get_opening_hour(resp)
+        point.append(opening_hour)
+    except KeyError as e:
+        print(e)
+    return JsonResponse({"point": point})

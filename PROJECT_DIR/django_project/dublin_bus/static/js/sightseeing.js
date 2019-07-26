@@ -29,15 +29,14 @@ for (let card of cards) {
         handleButtonClick(this.id);
     });
 }
-get_sights_info("Sightseeing");
 const create_card = (point) => {
-    let rating = (parseFloat(point[2]) / 5) * 100 + "%";
+    let rating = Math.round(parseFloat(point[2]) / 5 * 100) + "%";
     let card = '<ion-card><ion-grid><ion-row><ion-col align-self-center size="5" class="sightseeing__options__cards__photo" >' +
         '<img id="sightseeing__options__cards__photo" src="' + point[3] + '"/></ion-col><ion-col align-self-center size="7" ' +
         'class="sightseeing__options__cards__info"><ion-row><ion-col size="12" class="sightseeing__options__cards__info__name">' +
         '<span id="sightseeing__options__cards__info__name">' + point[0] + '</span></ion-col></ion-row><ion-row><ion-col size="12" ' +
         'class="sightseeing__options__cards__info__addr"><span id="sightseeing__options__cards__info__addr">' + point[1] + '</span>' +
-        '</ion-col></ion-row><ion-row><ion-col size="12" class=""><div class="sightseeing__options__cards__info__ratting">\n' +
+        '</ion-col></ion-row><ion-row><ion-col size="2" class="sightseeing__options__cards__info__ratting__number"><span>'+point[2]+'</span></ion-col><ion-col size="10" class=""><div class="sightseeing__options__cards__info__ratting">\n' +
         '<div class="sightseeing__options__cards__info__ratting__top" id="sightseeing__options__cards__info__ratting" ' +
         'style="width: ' + rating + '"> \n' +
         ' <span>★★★★★</span></div><div class="sightseeing__options__cards__info__ratting__bottom"><span>★★★★★</span>' +
@@ -64,9 +63,7 @@ $(".sightseeing__options__cards").on("touchmove", function (e) {
 });
 
 
-
 const controller = document.querySelector('ion-loading-controller');
-
 
 function handleButtonClick(category) {
     controller.componentOnReady();
@@ -81,3 +78,22 @@ function handleButtonClick(category) {
         });
     });
 }
+
+export const get_sights_info_search = (place_id) => {
+    fetch('place_detail?place_id=' + place_id, {method: 'get'})
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (document.getElementById("sightseeing__options__cards") !== null) {
+                document.getElementById('sightseeing__options__cards').remove();
+                $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
+            } else {
+                $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
+            }
+            let point = data['point'];
+            create_card(point);
+        }).catch((e) => {
+        console.log(e);
+    })
+};
