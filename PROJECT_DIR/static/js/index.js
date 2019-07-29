@@ -5,6 +5,7 @@ import "./auto-complete"
 import "./stops"
 import "./routes"
 import "./journey_planner"
+import "./sightseeing"
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";
 import "./touches.js";

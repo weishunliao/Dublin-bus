@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 import json
-from django_project.settings import BASE_DIR
+from django_project.settings import BASE_DIR, MAP_KEY
 from django.db import connection
 
 def load_model():
@@ -521,3 +521,34 @@ def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_
                 elif start == 0 and (all_stops.index(stop) - num_stops + 1 >= 0):
                     return stop[0]
         return -1
+
+
+def get_opening_hour(resp):
+    res = []
+    if 'opening_hours' in resp:
+        weekday = datetime.datetime.now().weekday()
+        opening_hour = resp['opening_hours']['weekday_text'][weekday]
+        opening_hour = opening_hour[opening_hour.find(":") + 1:]
+        res.append(opening_hour)
+    else:
+        res.append("All day")
+    return res
+
+
+def clean_resp(resp):
+    point = list()
+    point.append(resp['name'])
+    point.append(resp['formatted_address'][:resp['formatted_address'].find('Dublin') - 2])
+    point.append(resp['rating'])
+    photo_ref = resp['photos'][0]['photo_reference']
+    photo = requests.get(
+        "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
+        allow_redirects=True).url
+    point.append(photo)
+    place_id = resp['place_id']
+    resp = requests.get(
+        "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&fields=name,opening_hours&key=" + MAP_KEY).json()[
+        'result']
+    opening_hour = get_opening_hour(resp)
+    point.append(opening_hour)
+    return point

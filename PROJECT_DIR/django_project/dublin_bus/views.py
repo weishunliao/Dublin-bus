@@ -3,14 +3,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from dublin_bus.functions import is_weekday, is_bank_holiday, get_service_id, get_real_time_data, get_trip_id, \
-    get_trip_info, calculate_time_diff
+    get_trip_info, calculate_time_diff, get_opening_hour, clean_resp
 from .forms import JourneyPlannerForm
 
 from dublin_bus import functions
 import json
 import os
 from django_project.settings import BASE_DIR
-from django.db import connection
+import requests
 from datetime import datetime
 from django_project.settings import MAP_KEY
 
@@ -138,3 +138,56 @@ def get_server_route(request):
         for route in data:
             server_route.add(route[0])
     return JsonResponse({'server_route': list(server_route)})
+
+
+def get_sights_info(request):
+    category = request.GET['category']
+    url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + MAP_KEY + "&query="
+    if category == "Sightseeing":
+        url += "Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z/data=!3m1!4b1"
+    elif category == "Restaurant":
+        url += "restaurant+Dublin/@53.3559966,-6.3761839,12z/data=!4m4!2m3!5m1!4e9!6e5"
+    elif category == "Nightlife":
+        url += "bar%2BDublin/@53.3211591,-6.3004305,12z/data=!4m4!2m3!5m1!4e3!6e5"
+    elif category == "Coffee":
+        url += "/coffee+dublin/@53.3454515,-6.2690574,16z/data=!3m1!4b1"
+    elif category == "Hotel":
+        url += "hotel+dublin/@53.3454768,-6.2690574,16z/data=!3m1!4b1"
+    elif category == "Shopping":
+        url += "shopping+dublin/@53.3455021,-6.2690574,16z/data=!3m1!4b1"
+    infos = requests.get(url=url).json()['results']
+    points = []
+    count = 1
+    for i in infos:
+        if count > 10:
+            break
+        try:
+            info = clean_resp(i)
+            points.append(info)
+        except KeyError as e:
+            print(e)
+        count += 1
+
+    return JsonResponse({"points": points})
+
+
+def get_sights_info_by_place_id(request):
+    place_id = request.GET['place_id']
+    point = []
+    resp = requests.get(
+        "https://maps.googleapis.com/maps/api/place/details/json?fields=photos,formatted_address,name,rating,"
+        "opening_hours,geometry&key=" + MAP_KEY + "&placeid=" + place_id).json()['result']
+    try:
+        point.append(resp['name'])
+        point.append(resp['formatted_address'][:resp['formatted_address'].find('Dublin') - 2])
+        point.append(resp['rating'])
+        photo_ref = resp['photos'][0]['photo_reference']
+        photo = requests.get(
+            "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
+            allow_redirects=True).url
+        point.append(photo)
+        opening_hour = get_opening_hour(resp)
+        point.append(opening_hour)
+    except KeyError as e:
+        print(e)
+    return JsonResponse({"point": point})
