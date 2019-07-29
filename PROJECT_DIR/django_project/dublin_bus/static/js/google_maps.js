@@ -223,27 +223,31 @@ export default function initMap() {
                       head_sign: head_sign
                     })
                   }).then(response => {
-                    full_travel_time += response.journey_time;
-                    routeDescription.push(["bus", response.journey_time]);
-                  });
+                    return response.json()
+                    }).then(data => {
+                        full_travel_time += data.journey_time;
+                        routeDescription.push(["bus", data.journey_time]);
+                    });
+     
                 }
                 step++;
               }
               if (true) {
-                console.log("route desc", routeDescription);
+        
                 // let full_journey = Math.round(full_travel_time / 60);
 
                 // const cardString = cardBuilder(routeDescription, departure_time=0, i)
 
                 const newRoute = new Route({
                   route: [response.routes[i]],
+                  full_travel_time,
                   directions,
                   routeDescription,
                   departure_time,
                   id: i
                 });
                 Route.appendToDom(newRoute);
-                // console.log(newRoute)
+                console.log(newRoute)
               }
             }
             // directionsDisplay.setDirections(response);

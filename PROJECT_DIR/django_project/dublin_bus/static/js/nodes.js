@@ -23,7 +23,8 @@ export class Route {
     this.nodeHTML = this.cardBuilder(
       routeData.routeDescription,
       routeData.departureTime,
-      routeData.id
+      routeData.id,
+      routeData.full_travel_time
     );
     this.domNode = null;
     this.showContainer = document.querySelector("#show-container");
@@ -53,11 +54,13 @@ export class Route {
     Route.addClick(route);
   }
 
-  cardBuilder(routeDescription, departureTime, id) {
+  cardBuilder(routeDescription, departureTime, id, full_travel_time) {
     // const time = new Date();
     // const time_now = Date.now();
     // console.log(time_now)
     // const givenDate = new Date("Wed, 27 July 2016 13:30:00");
+
+    console.log("ROUTE DESCRIPTION", routeDescription)
 
     const card = `<div class="journey-planner__routes__card routeCard" id="route-${id}">
       
@@ -87,7 +90,7 @@ export class Route {
                     <span
                       class="journey-planner__card__timeNumber"
                       id="jp-travel-time"
-                      >33</span
+                      >${Math.round(full_travel_time / 60)}</span
                     >
                     minutes
                   </h2>
@@ -135,7 +138,7 @@ export class Route {
         `<div class="journey-planner__card__right__iconContainer">
                           ${icon}
                           <div class="journey-planner__card__numberbox journey-planner__card__numberbox">${
-                            routeSection[1]
+                            Math.round(routeSection[1] / 60)
                           }</div>
                           ${finalArr}
                     </div>`;

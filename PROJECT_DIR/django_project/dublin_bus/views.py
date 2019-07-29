@@ -42,10 +42,10 @@ def test_routing(request):
 
 @csrf_exempt
 def get_travel_time(request):
-
+  
     body = json.loads(request.body)
 
-    print(body)
+    print("body of the request", body)
     
     route_id = body['route_id']
     

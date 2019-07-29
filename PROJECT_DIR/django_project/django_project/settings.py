@@ -90,10 +90,10 @@ DATABASES = {
         'PORT': '3306',
 
     #     # PRODUCTION
-        'HOST': '127.0.0.1',
+        # 'HOST': '127.0.0.1',
 
     #     # UCD - 137.43.49.50 is for development
-        # 'HOST': '137.43.49.50'
+        'HOST': '137.43.49.50'
     }
 
 }

@@ -52,7 +52,7 @@
   &__card {
     &__container {
         cursor: pointer;
-      height: 14rem;
+      height: 12rem;
       width: 100%;
         background: white;
       &::after{
@@ -87,7 +87,7 @@
 
         &__minsTitle {
             
-            top: 50%;
+            top: 55%;
             position: absolute;
             transform: translateY(-50%);
             left: 1rem;
@@ -120,7 +120,7 @@
 
             overflow-y: auto;
             overflow-x: hidden;
-            margin-top: 1rem;
+            margin-top: 1.2rem;
             padding-bottom: 2rem;
            
             &::after{
@@ -224,7 +224,7 @@
         }
 
         &--bus {
-            left: 45%;
+            left: 50%;
         }
 
         &--secondarr {
@@ -234,7 +234,7 @@
 
     &__numberbox {
         position: absolute;
-        top: 75%;
+        top: 85%;
         transform: translate(-50%, -50%);
         font-size: 1.5rem;
         color: #3d5f7e;
