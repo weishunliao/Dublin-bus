@@ -23,11 +23,11 @@
       }
 
       &__icon {
-        font-size: 40px;
+        font-size: 7vw;
         color: white;
         background-color: $db_blue;
         border-radius: 50%;
-        padding: 20px;
+        padding: 3vh;
         margin-bottom: 5px;
       }
 
@@ -53,12 +53,15 @@
       color: $db_blue;
       font-family: Helvetica;
     }
+
     &__back-btn {
 
     }
+
     &__cards {
       height: 450px;
       overflow-y: scroll;
+
       &__photo {
       }
 
@@ -81,10 +84,12 @@
           margin: 0;
           padding: 0;
           width: 9rem;
+
           &__number {
             color: $bus_orange;
             //font-size: 1.6rem;
           }
+
           &__top {
             width: 0;
             color: $bus_orange;
@@ -112,10 +117,15 @@
         }
 
         &__opening-hour {
-            color: $db_blue;
+          color: $db_blue;
         }
 
       }
+    }
+
+    &__cards::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* make scrollbar transparent */
     }
 
   }

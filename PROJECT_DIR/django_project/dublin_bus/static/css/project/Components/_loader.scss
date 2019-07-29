@@ -1,0 +1,67 @@
+
+.loader__wrapper {
+  width: 50%;
+  margin: 0 auto;
+  padding-top: 20%;
+  position: relative;
+  text-align: center;
+}
+
+.loader__wrapper2 {
+  width: 10%;
+  margin: 0 auto;
+  text-align: right;
+}
+
+.loader__bus {
+  width: 50%;
+  z-index: 10;
+  animation: bounce 100ms infinite alternate;
+}
+
+.loader__road {
+  position: absolute;
+  bottom: 2px;
+  right: 50%;
+  animation: road 1s ease-out infinite;
+}
+
+@keyframes road {
+  0% {
+    transform: translateX(0);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-200%);
+    opacity: 0;
+  }
+
+}
+
+//@keyframes size {
+//  from {
+//    transform: scale3d(0.75, 0.75, 0.75);
+//    transform: translateX(-350%);
+//
+//  }
+//
+//  20% {
+//    transform: scale3d(1, 1, 1);
+//  }
+//
+//  to {
+//    transform: scale3d(0.75, 0.75, 0.75);
+//    transform: translateX(-350%);
+//  }
+//}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0)
+  }
+  100% {
+    transform: translateY(-2%)
+  }
+}

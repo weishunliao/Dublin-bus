@@ -140,11 +140,7 @@ const route_show_on_map = () => {
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
-        let h = Math.max(
-            document.documentElement.clientHeight,
-            window.innerHeight || 0
-        );
-        $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
+        $('.drawer__container').animate({'height': window_height * 0.95}, 200, 'linear');
     } else {
         clear_markers();
         let mid_stop = stop_list[Math.floor(stop_list.length / 2)];

@@ -151,7 +151,7 @@ def get_sights_info(request):
     points = []
     count = 1
     for i in infos:
-        if count > 8:
+        if count > 10:
             break
         try:
             info = clean_resp(i)
