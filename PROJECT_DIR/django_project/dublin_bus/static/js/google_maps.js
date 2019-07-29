@@ -226,7 +226,7 @@ export default function initMap() {
                     return response.json()
                     }).then(data => {
                         full_travel_time += data.journey_time;
-                        routeDescription.push(["bus", data.journey_time]);
+                        routeDescription.push(["bus", route_id]);
                     });
      
                 }

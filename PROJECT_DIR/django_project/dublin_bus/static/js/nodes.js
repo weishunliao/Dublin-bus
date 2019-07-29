@@ -119,9 +119,12 @@ export class Route {
     routeDescription.forEach(routeSection => {
       let icon;
       let finalArr;
+       let walkTimeOrBusNo;
       if (routeSection[0] == "walking") {
+          walkTimeOrBusNo = Math.round(routeSection[1] / 60);
         icon = `<ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>`;
       } else {
+          walkTimeOrBusNo = routeSection[1]
         icon = `<ion-icon class="journey-planner__card__icon journey-planner__card__icon--bus" name="bus"></ion-icon>`;
       }
 
@@ -138,7 +141,7 @@ export class Route {
         `<div class="journey-planner__card__right__iconContainer">
                           ${icon}
                           <div class="journey-planner__card__numberbox journey-planner__card__numberbox">${
-                            Math.round(routeSection[1] / 60)
+                            walkTimeOrBusNo
                           }</div>
                           ${finalArr}
                     </div>`;
