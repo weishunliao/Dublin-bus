@@ -1,5 +1,7 @@
 import { search, fromInput, toInput, selectedTab, Route } from "./nodes";
 import { searchToggle } from "./index";
+import {get_sights_info_search} from "./sightseeing";
+import {get_bus_real_time_info, detail, drawer_default_height} from "./stops";
 
 const {searchInput} = search;
 let resp;
@@ -31,10 +33,11 @@ export default function initMap() {
       new google.maps.LatLng(53.400044, -6.215727)
     );
 
-    let options = {
-      bounds: defaultBounds,
-      types: ["establishment"]
-    };
+        let options = {
+            bounds: defaultBounds,
+            types: ["establishment"],
+            country: 'Ireland'
+        };
 
     const searchAutocomplete = new google.maps.places.Autocomplete(
       searchInput,
@@ -72,6 +75,12 @@ export default function initMap() {
       searchInput.value = "";
       // marker.setPosition(place.geometry.location);
       // marker.setVisible(true);
+        sightAutocomplete.addListener('place_changed', () => {
+            let place = sightAutocomplete.getPlace();
+            console.log(place.place_id);
+            get_sights_info_search(place.place_id);
+        });
+
 
       // var address = '';
       // if (place.address_components) {
