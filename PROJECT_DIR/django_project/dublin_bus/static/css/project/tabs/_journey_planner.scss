@@ -1,286 +1,467 @@
 .journey-planner {
-    overflow:hidden;
-    height: 100%;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+
+  // ^ FORM CONTAINER
+
+  &__form-container {
+    height: 50%;
     width: 100%;
-    
+    position: relative;
+    text-align: center;
+    transition: all 0.3s linear;
 
-    // ^ FORM CONTAINER
+    &::after {
+      position: absolute;
+      top: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: $light_grey;
+      width: 40%;
+      height: 1px;
+      content: "";
+    }
 
-    &__form-container {
-        height: 50%;
-        width: 100%;
+    // background: $db_yellow;  it will be yellow on transform
+  }
+
+  &__routes-container {
+    height: 67%;
+    width: 100%;
+    display: none;
+    background: blue;
+  }
+
+  &__routes {
+    &__scroll-area {
+      overflow: scroll;
+      background: white;
+      margin: 0 auto;
+      padding: 1rem;
+      width: 100%;
+      
+      height: calc(100% - 2rem);
+    }
+
+    &__card {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__card {
+    &__container {
+        cursor: pointer;
+      height: 12rem;
+      width: 100%;
+        background: white;
+      &::after{
+       
+        content: "";
+        clear: both;
+        display: table;
+        
+      }
+    }
+
+    &__left {
+        width: 40%;
+        height: 100%;
+        float: left;
         position: relative;
-        text-align: center;
-        transition: all .3s linear;
 
-        &::after {
+        &__depTitle {
+            width: 90%;
+            margin-left: 1rem;
+            margin-top: 1rem;
+ 
+            color: #3d5f7e;
+
+            & h2 {
+                @media screen and (max-width: 600px){
+                    font-size: 1.6rem !important;
+                }
+                margin: 0;
+            }
+        }
+
+        &__minsTitle {
+            
+            top: 55%;
             position: absolute;
-            top: 5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: $light_grey;
-            width: 40%;
-            height: 1px;
-            content: "";
-        }
-
-        // background: $db_yellow;  it will be yellow on transform
-    }
-
-    &__routes-container {
-        background: green;
-        height: 60%;
-        width: 100%;
-    }
-
-    &__routes {
-
-        &__scroll-area {
-            height: 200%;
-            overflow: scroll;
-            background: white;
-            margin: 0 auto;
+            transform: translateY(-50%);
+            left: 1rem;
             width: 100%;
+            padding-left: .5rem
         }
     }
 
-    // * styles for converting to smaller version
-    & .converted {
-        background: blue;
+    &__right {
+   
+        width: 60%;
+        height: 100%;
+        float: right;
+        position: relative;
+
+        &__travelTime {
+            margin-top: 1rem;
+            width: 100%;
+            & h2 {
+                @media screen and (max-width: 600px){
+                    font-size: 1.6rem !important;
+                }
+                margin: 0;
+            }
+        }
+
+        &__descriptionContainer {
+  
+            height: 80%;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-top: 1.2rem;
+            padding-bottom: 2rem;
+           
+            &::after{
+       
+                content: "";
+                clear: both;
+                display: table;
+                
+              }
+        }
+
+        &__iconContainer {
+            box-sizing: border-box;
+       
+            width: 33%;
+            height: 70%;
+            display: inline-block;
+            position: relative;
+        
+        }
     }
 
     &__title {
-        font-size: 3.2rem;
-        color: $db_blue;
+
+      font-size: 2rem !important;
+      color: #3d5f7e;
+      margin: 0;
+      
+
+      &--travelTime {
+       
+          padding-top:1rem;
+          margin-top: 0 !important;
+      }
     }
 
-    &__form {
-        padding: 1rem 4rem;
-        width: 100%;
-        margin-top: 4rem;
-        position: relative;
+    &__timeNumber {
+        color: #409ce0;
+       
+    }
 
-        &__input-container {
-            position: relative;
-            
-            &:after {
-                content: "";
-                width: 100%;
-                height: 1px;
-                background: $db_blue;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-            }
+    &__timeTitle {
+      padding: 0;
+      color: #409ce0;
+      font-size: 5.6rem !important;
 
-            & ion-icon {
-                font-size: 2rem;
-                position: absolute;
-                top: 50%;
-                right:0;
-                color: $db_blue;
-                transform: translateY(-50%);
-                transition: all .5s linear;
-            }
+      @media screen and (max-width: 600px){
+        font-size: 3rem !important;
+        transform: translateY(9px);
+    }
+      display: inline-block;
+      transform: translateY(13px);
+      
+    }
+
+    &__minuteSpan {
+      font-size: 7.2rem !important;
+
+      @media screen and (max-width: 600px){
+          font-size: 4.6rem !important;
+      }
+      color: #409ce0;
+      display: inline-block;
+      line-height: 0;
+    }
+
+    &__detailsContainer {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      padding: 0;
+      right: 0;
+      top: 0;
+ 
+    }
+
+    &__detailsRel {
+      @include relative;
+      box-sizing: border-box;
+    }
+
+    &__icon {
+        font-size: 4rem;
+        position: absolute;
+        top: 35%;
+        transform: translate(-50%, -50%);
+        color: #3d5f7e;
+
+        &--walk {
+            left: 50%;
         }
 
-        &__label {
-            position: absolute;
-            transform-origin: left;
-            left: 0; 
+        &--to {
+            left: 85%;
+        }
+
+        &--arrow {
             top: 50%;
-            transform: translateY(-50%);
-            transition: all .3s linear;
-            z-index: 10;
-
-            
-
-            & h3 {
-                margin: 0;
-                color: $db_blue;
-
-            }
+           left: 100%;
+           font-size: 2rem;
         }
 
-        &__submit {
-            padding: 2rem;
-     
-            background: $db_yellow;
-            border: none;
-            border-radius: 1.5rem;
-            font-size: 1.8rem;
-            width: 10rem;
-            height: 10rem;
-            margin: 3rem auto;
-            position: relative;
+        &--bus {
+            left: 50%;
         }
 
-        &__input {
-            width: 90%;
-            font-size: 1.8rem;
-            display: block;
-            border: none;
-            color: $db_blue;
-            padding: 1rem;
-            padding-left: 0;
-            margin-bottom: 2rem;
-            padding-bottom: .5rem;
-           
+        &--secondarr {
+            left: 65%;
         }
     }
+
+    &__numberbox {
+        position: absolute;
+        top: 85%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        color: #3d5f7e;
+        left: 50%;
+    }
+  }
+
+
+  // * styles for converting to smaller version
+  & .converted {
+    background: blue;
+  }
+
+  &__title {
+    font-size: 3.2rem;
+    color: $db_blue;
+  }
+
+  &__form {
+    padding: 1rem 4rem;
+    width: 100%;
+    margin-top: 4rem;
+    position: relative;
+
+    &__input-container {
+      position: relative;
+
+      &:after {
+        content: "";
+        width: 100%;
+        height: 1px;
+        background: $db_blue;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+
+      & ion-icon {
+        font-size: 2rem;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        color: $db_blue;
+        transform: translateY(-50%);
+        transition: all 0.5s linear;
+      }
+    }
+
+    &__label {
+      position: absolute;
+      transform-origin: left;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.3s linear;
+      z-index: 10;
+
+      & h3 {
+        margin: 0;
+        color: $db_blue;
+      }
+    }
+
+    &__submit {
+      padding: 2rem;
+
+      background: $db_yellow;
+      border: none;
+      border-radius: 1.5rem;
+      font-size: 1.8rem;
+      width: 10rem;
+      height: 10rem;
+      margin: 3rem auto;
+      position: relative;
+    }
+
+    &__input {
+      width: 90%;
+      font-size: 1.8rem;
+      display: block;
+      border: none;
+      color: $db_blue;
+      padding: 1rem;
+      padding-left: 0;
+      margin-bottom: 2rem;
+      padding-bottom: 0.5rem;
+    }
+  }
 }
 
 ion-datetime {
-    font-size: 1.8rem;
-    padding: 0;
-    padding-top:1rem;
-    padding-bottom: 0.5rem;
-    color: $db_blue;
-    text-align: left;
- 
-    width: 90%;
+  font-size: 1.8rem;
+  padding: 0;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  color: $db_blue;
+  text-align: left;
 
+  width: 90%;
 }
 
 .focussed {
-
-    & .journey-planner__form__label {
-        top:-1rem;
-        transform: scale(0.4);
-    }
+  & .journey-planner__form__label {
+    top: -1rem;
+    transform: scale(0.4);
+  }
 }
 
 // Styles for when the submit button is clicked
 
 .converted {
-
-   & .focussed {
+  & .focussed {
     & .journey-planner__form__label {
-        
-        transform: scale(0.7) translateX(1rem) translateY(-6px);
-        
+      transform: scale(0.7) translateX(1rem) translateY(-6px);
     }
-   }
+  }
 
-   
+  & .journey-planner__routes-container {
+      display: block;
+  }
 
-    & .journey-planner__title {
-        display: none;
+  & .journey-planner__title {
+    display: none;
+  }
+
+  & .journey-planner__form {
+    padding-left: 2rem;
+    margin-top: 0;
+    width: 100%;
+  }
+
+  & .journey-planner__form__label {
+    transform: translateX(3rem) translateY(-50%);
+    & h3 {
+      font-size: 1.2rem;
     }
+  }
 
-    & .journey-planner__form {
-        padding-left: 2rem;
-        margin-top: 0;  
-        width: 100%;
+  & .journey-planner__form-container {
+    background: $db_yellow;
+    padding-top: 2rem;
+    height: 19rem;
+
+    &::after {
+      display: none;
     }
+  }
 
-    & .journey-planner__form__label {
-       transform: translateX(3rem) translateY(-50%);
-        & h3 {
-            font-size: 1.2rem;
-        }
-    }
-
-    & .journey-planner__form-container {
-  
-        background: $db_yellow;
-        padding-top: 2rem;
-        height: 19rem;
-
-        &::after {
-            display: none;
-        }
-    }
-
-    & .journey-planner__form__input-container {
-        border-radius: 1.5rem;
-        background: white;
-        margin-bottom: 1.5rem;
-        width: 80%;
-        & ion-icon {
-            left: .5rem;
-            z-index: 2000;
-        }
-
-        &::after {
-            display: none;
-        }
-
-        & input {
-            font-size: 1.2rem;
-            border-radius: 1.5rem;
-            padding: 1rem 0;
-            padding-left: 2.8rem;
-            
-        }
+  & .journey-planner__form__input-container {
+    border-radius: 1.5rem;
+    background: white;
+    margin-bottom: 1.5rem;
+    width: 80%;
+    & ion-icon {
+      left: 0.5rem;
+      z-index: 2000;
     }
 
-    & .journey-planner__form__input {
-        margin-bottom: 1rem;
+    &::after {
+      display: none;
     }
 
-    & ion-datetime {
-        border-radius: 1.5rem;
-        background: white;
-        padding: 1rem 0;
-        padding-left: 3rem;
-        font-size: 1.2rem;
-      
+    & input {
+      font-size: 1.2rem;
+      border-radius: 1.5rem;
+      padding: 1rem 0;
+      padding-left: 2.8rem;
     }
+  }
 
-    & .form-submit {
-        border-radius: 50%;
-        background: white;
-        
-        height: 5rem;
-        width: 5rem;
-        font-size: 1.2rem;
-      
+  & .journey-planner__form__input {
+    margin-bottom: 1rem;
+  }
 
-    }
+  & ion-datetime {
+    border-radius: 1.5rem;
+    background: white;
+    padding: 1rem 0;
+    padding-left: 3rem;
+    font-size: 1.2rem;
+  }
 
-    .img-button {
-        display: block;
-        position: absolute;
-        right: 10%;
-        top: 1rem;
-        width: 5rem;
-        height: 5rem;
-    }
+  & .form-submit {
+    border-radius: 50%;
+    background: white;
 
-    .submitter {
-        position: absolute;
-        right: 10%;
-        bottom: 0;
-    }
-    
+    height: 5rem;
+    width: 5rem;
+    font-size: 1.2rem;
+  }
+
+  .img-button {
+    display: block;
+    position: absolute;
+    right: 10%;
+    top: 1rem;
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .submitter {
+    position: absolute;
+    right: 10%;
+    bottom: 0;
+  }
 }
 
 .img-button {
-    display: none;
+  display: none;
 }
-
-
 
 .form-abs {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-    & h3 {
-        margin: 0;
-        color: $db_blue;
-    }
-    
+  & h3 {
+    margin: 0;
+    color: $db_blue;
+  }
 }
-
 
 ion-tab-button {
-    --color: #3D5F7E;
+  --color: #3d5f7e;
 }
 
-
 .color-add {
-    color: #3D5F7E;
+  color: #3d5f7e;
 }

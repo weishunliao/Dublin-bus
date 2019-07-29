@@ -4,6 +4,7 @@
 @import 'project/Variables/mixins';
 @import 'project/Drawer/drawer';
 @import 'project/tabs/journey_planner';
+@import 'project/tabs/journey_show';
 @import 'project/Map/map';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
@@ -72,5 +73,13 @@ ion-tabs {
 ion-fab-button {
     margin-top: 1rem;
     margin-right: 1rem;
-    
+}
+
+ion-card-content {
+    padding: 0 !important;
+}
+
+ion-card {
+    border-radius: 1.5rem !important;
+  
 }

@@ -42,12 +42,20 @@ def test_routing(request):
 
 @csrf_exempt
 def get_travel_time(request):
-    route_id = request.POST['route_id']
-    headsign = request.POST['head_sign']
-    start_point = request.POST['start_point']
-    end_point = request.POST['end_point']
-    num_stops = int(request.POST['num_stops'])
-    departure_time_value = request.POST['departure_time_value']
+  
+    body = json.loads(request.body)
+
+    print("body of the request", body)
+    
+    route_id = body['route_id']
+    
+    start_point = body['start_point']
+    num_stops = int(body['num_stops'])
+    end_point = body['end_point']
+    departure_time_value = body['departure_time_value']
+    num_stops = int(body['num_stops'])
+    route_id = body['route_id']
+    headsign = body['head_sign']
     departure_time = datetime.fromtimestamp(int(departure_time_value))
     # get the list of stops that the bus will pass along
     stop_list = functions.get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time)
