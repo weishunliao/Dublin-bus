@@ -38,7 +38,7 @@ export class Route {
     route.domNode.addEventListener("click", () => {
       console.log("going to set directions: ", route);
 
-      route.showContainer.innerHTML = route.nodeHTML;
+      route.showContainer.innerHTML = Route.journeyShowCard(route.nodeHTML, route.routeData.id);
       route.showContainer.style.display = "block";
       bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
       bottomSwiper.tabs.removeClass("color-add");
@@ -53,62 +53,7 @@ export class Route {
   }
 
   static cardBuilder(routeDescription, departureTime, id, full_travel_time) {
-    // const time = new Date();
-    // const time_now = Date.now();
-    // console.log(time_now)
-    // const givenDate = new Date("Wed, 27 July 2016 13:30:00");
-
-    //     const card = `<div class="journey-planner__routes__card routeCard" id="route-${id}">
-
-    //         <ion-card>
-    //           <ion-card-content>
-    //             <div class="journey-planner__card__container">
-    //               <div class="journey-planner__card__left">
-    //                 <div class="journey-planner__card__left__depTitle">
-    //                   <h2
-    //                     class="journey-planner__card__title journey-planner__card__title--departingTitle"
-    //                   >
-    //                     Departing in:
-    //                   </h2>
-    //                 </div>
-    //                 <div class="journey-planner__card__left__minsTitle">
-
-    //                   <span class="journey-planner__card__minuteSpan">5</span>
-    //                   <h1 class="journey-planner__card__timeTitle">mins</h1>
-    //                 </div>
-    //               </div>
-    //               <div class="journey-planner__card__right">
-    //                 <div class="journey-planner__card__right__travelTime">
-    //                   <h2
-    //                     class="journey-planner__card__title journey-planner__card__title--departingTitle"
-    //                   >
-    //                     Travel time:
-    //                     <span
-    //                       class="journey-planner__card__timeNumber"
-    //                       id="jp-travel-time"
-    //                       >${Math.round(full_travel_time / 60)}</span
-    //                     >
-    //                     minutes
-    //                   </h2>
-    //                 </div>
-    //                 <div
-    //                   class="journey-planner__card__right__descriptionContainer" id="route-descriptions"
-    //                 >
-
-    //                 ${this.iconsBuilder(routeDescription)}
-
-    //                 </div>
-    //               </div>
-    //             </div>
-    //           </ion-card-content>
-    //         </ion-card>
-
-    //       </div>`;
-
-    //     return card;
-    //   }
     const card = `
-      
             <div class="journey-planner__card__container">
               <div class="journey-planner__card__left">
                 <div class="journey-planner__card__left__depTitle">
@@ -195,6 +140,16 @@ export class Route {
           </ion-card-content>
           </ion-card>
         </div>`;
+  }
+
+  static journeyShowCard(innerText, id) {
+    return `<div class="journey-planner__routes__card routeCard" id="route-${id}">
+    <ion-card>
+       <ion-card-content>
+       ${innerText}
+       </ion-card-content>
+       </ion-card>
+     </div>`;
   }
 }
 

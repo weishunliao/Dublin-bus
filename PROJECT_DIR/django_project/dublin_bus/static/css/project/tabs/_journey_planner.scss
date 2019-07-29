@@ -465,3 +465,89 @@ ion-tab-button {
 .color-add {
   color: #3d5f7e;
 }
+
+
+// SHOW CARD STYLES
+
+.showCard {
+   
+    & .journey-planner__card__container {
+        height: 14rem;
+    }
+
+    & .journey-planner__card__left, .journey-planner__card__right {
+        height: 70%;
+    }
+    
+    & .journey-planner__card__left__depTitle,  .journey-planner__card__right__travelTime {
+        margin-top: 0;
+    }
+
+    & .journey-planner__card__right .journey-planner__card__title--departingTitle {
+        margin-left: 3rem;
+    }
+
+    & .journey-planner__card__left__depTitle {
+        margin-left: 2rem;
+    }
+
+    & .journey-planner__card__left__minsTitle {
+
+        left: 2rem;
+        top: 50%;
+    }
+    &__toggleButtonsContainer {
+        height: 30%;
+        width: 100%;
+        position: relative;
+    }
+
+    &__backArrow {
+        font-size: 2.4rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #3d5f7e;
+        left: .5rem;
+    }
+
+    &__backToRoutesContainer {
+        @include relative;
+        width: 50%;
+        float: left;
+    }
+
+    &__moreInfoContainer {
+        @include relative;
+        width: 50%;
+        float: right;
+
+        
+    }
+
+    &__moreInfoButton {
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        transform: translateY(-50%);
+        font-size: 2rem;
+        color: #3d5f7e;
+    }
+
+    .showText {
+        color:#3d5f7e;
+        font-size: 1.2rem !important;
+        margin: 0 !important; 
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &__routeText {
+        left: 3.2rem;
+    }
+
+    &__infoText {
+        right: 3.6rem;
+    }
+}
