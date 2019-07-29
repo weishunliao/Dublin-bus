@@ -1,5 +1,10 @@
 import {markers, map} from "./google_maps";
 
+
+console.log("ROUTES MAP", map)
+
+
+
 let route_id;
 let stop_list = [];
 

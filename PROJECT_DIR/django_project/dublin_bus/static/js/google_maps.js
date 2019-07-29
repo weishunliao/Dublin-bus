@@ -12,7 +12,7 @@ export let directionsDisplay;
 export default function initMap() {
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
   setTimeout(() => {
-    let map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 53.3471, lng: -6.26059 },
       zoom: 13,
       disableDefaultUI: true
@@ -360,7 +360,7 @@ function AddMarkers(data, map) {
     maxZoom: 16
 };
 
-  let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
+//   let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
 
 //   function() {
