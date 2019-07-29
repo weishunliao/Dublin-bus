@@ -1,6 +1,6 @@
 import { search, fromInput, toInput, selectedTab, Route } from "./nodes";
 import { searchToggle } from "./index";
-import MarkerClusterer from '@google/markerclusterer'
+import MarkerClusterer from './markerclusterer'
 
 const { searchInput } = search;
 let resp;
@@ -23,6 +23,11 @@ export default function initMap() {
       AddMarkers(data, map);
     });
 
+    // let markerOpts = {
+    //     icon: google.maps.Icon({
+
+    //     })
+    // }
     let directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
       map: map
@@ -141,10 +146,10 @@ export default function initMap() {
           resp = response;
           console.log(response);
           if (status === "OK") {
-            console.log("RESPONSE IS ", response);
+            
             for (let i = 0; i < response.routes.length; i++) {
               let directions = new google.maps.DirectionsRenderer({
-                map: map,
+                preserveViewport: true,
                 directions: response,
                 routeIndex: i
               });
@@ -237,6 +242,12 @@ export default function initMap() {
                 // let full_journey = Math.round(full_travel_time / 60);
 
                 // const cardString = cardBuilder(routeDescription, departure_time=0, i)
+                
+                const newDirections = directions.directions.routes.slice(i, i+1)
+                // the directions object is adjusted to only contain the information about one particular route
+                // this is so that we can associate the directions with a particular card
+                directions.directions.routes = newDirections
+      
 
                 const newRoute = new Route({
                   route: [response.routes[i]],
@@ -247,7 +258,7 @@ export default function initMap() {
                   id: i
                 });
                 Route.appendToDom(newRoute);
-                console.log(newRoute)
+              
               }
             }
             // directionsDisplay.setDirections(response);
@@ -360,7 +371,7 @@ function AddMarkers(data, map) {
     maxZoom: 16
 };
 
-//   let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
+  let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
 
 //   function() {
