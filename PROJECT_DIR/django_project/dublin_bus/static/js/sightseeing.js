@@ -29,7 +29,7 @@ const cards = document.getElementsByClassName("sightseeing__category__content__i
 for (let card of cards) {
     card.addEventListener('click', function () {
         // get_sights_info(this.id);
-        handleButtonClick(this.id);
+        category_btn(this.id);
     });
 }
 const create_card = (point) => {
@@ -72,8 +72,8 @@ $(".sightseeing__options__cards").on("touchmove", function (e) {
 });
 
 
-const controller = document.querySelector('ion-loading-controller');
-// function handleButtonClick(category) {
+// const controller = document.querySelector('ion-loading-controller');
+// function category_btn(category) {
 //     // controller.componentOnReady();
 //     controller.create({
 //         message: 'Please wait...',
@@ -86,13 +86,12 @@ const controller = document.querySelector('ion-loading-controller');
 //         });
 //     });
 // }
-function handleButtonClick(category) {
+function category_btn(category) {
     page_switch();
     document.getElementById("bus_loader").style.display = "";
     get_sights_info(category).then(() => {
         document.getElementById("bus_loader").style.display = "none";
     });
-
 }
 
 

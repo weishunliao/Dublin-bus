@@ -37,7 +37,15 @@
     transform: translateX(-200%);
     opacity: 0;
   }
+}
 
+@keyframes bounce {
+  0% {
+    transform: translateY(0)
+  }
+  100% {
+    transform: translateY(-2%)
+  }
 }
 
 //@keyframes size {
@@ -57,11 +65,3 @@
 //  }
 //}
 
-@keyframes bounce {
-  0% {
-    transform: translateY(0)
-  }
-  100% {
-    transform: translateY(-2%)
-  }
-}

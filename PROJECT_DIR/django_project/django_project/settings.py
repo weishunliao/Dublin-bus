@@ -80,36 +80,36 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 
 
-# DATABASES = {
-#     'default': {
-#
-#         'NAME': 'db_route_info',  # database name
-#         'USER': 'team8',
-#         'ENGINE': 'django.db.backends.mysql',
-#         'PASSWORD': config('DATABASE_PASSWORD'),
-#         'PORT': '3306',
-#
-#         # PRODUCTION
-#         'HOST': 'localhost',
-#
-#         # UCD - 137.43.49.50 is for development
-#         # 'HOST': '137.43.49.50',
-#     }
-#
-#
-# }
+DATABASES = {
+    'default': {
+
+        'NAME': 'db_route_info',  # database name
+        'USER': 'team8',
+        'ENGINE': 'django.db.backends.mysql',
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'PORT': '3306',
+
+        # PRODUCTION
+        'HOST': 'localhost',
+
+        # UCD - 137.43.49.50 is for development
+        # 'HOST': '137.43.49.50',
+    }
+
+
+}
 
 # these setting is uni-test use
-# if 'test' in sys.argv:
-#     DATABASES['default'] = {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'unit_test',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
-#     }
-#     SECRET_KEY = "$SECRET_KEY"
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'unit_test',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }
+    SECRET_KEY = "$SECRET_KEY"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
