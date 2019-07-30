@@ -101,7 +101,7 @@ document.getElementById("tab-button-favourites").addEventListener('click', () =>
 
 window.onload = function () {
     const mySwiper = new Swiper('.swiper-container', {
-        loop: true,
+        // loop: true,
         observer: true,
         observeParents: true,
     });

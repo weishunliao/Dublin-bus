@@ -195,18 +195,45 @@ const heart_solid = document.getElementById("stops__content__card__heart-solid")
 const heart_empty = document.getElementById("stops__content__card__heart-empty");
 
 heart_solid.addEventListener('click', () => {
-    let confirm_remove = confirm("Do you want to remove your favourite stop?");
-    if (confirm_remove) {
-        remove_favourites();
-        alert("Your favourite stop remove!");
-        toggle_heart();
-    }
+    handleButtonClick();
+    // let confirm_remove = confirm("Do you want to remove your favourite stop?");
+    // if (confirm_remove) {
+    //     remove_favourites();
+    //     alert("Your favourite stop remove!");
+    //     toggle_heart();
+    // }
 });
 
 heart_empty.addEventListener('click', () => {
     save_favourites();
     toggle_heart();
 });
+
+
+const controller = document.querySelector('ion-alert-controller');
+
+function handleButtonClick() {
+    controller.create({
+        header: 'CONFIRM!',
+        message: 'Do you want to <strong>remove</strong> your favourite stop?',
+        buttons: [
+            {
+                text: 'Cancel',
+                role: 'cancel',
+                cssClass: 'secondary',
+            }, {
+                text: 'Okay',
+                handler: () => {
+                    remove_favourites();
+                    toggle_heart();
+                }
+            }
+        ]
+    }).then(alert => {
+        alert.present();
+    });
+}
+
 
 const is_favourite = (stop_id) => {
     stop_id = String(stop_id);
