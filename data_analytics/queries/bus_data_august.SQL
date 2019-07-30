@@ -1,8 +1,6 @@
-select 'dayofservice', 'tripid', 'lineid', 'routeid', 'direction', 'progrnumber', 'stoppointid',
-'actualtime_arr_stop', 'actualtime_dep_stop'
+select 'dayofservice', 'tripid', 'lineid', 'progrnumber', 'stoppointid', 'actualtime_arr_stop'
 union all
-select t.dayofservice, t.tripid, t.lineid, t.routeid, t.direction,
-l.prognumber, l.stoppointid, l.actualtime_arr, l.actualtime_dep
+select t.dayofservice, t.tripid, t.lineid, l.prognumber, l.stoppointid, l.actualtime_arr
 from rt_trips t, rt_leavetimes l
 where t.dayofservice = l.dayofservice 
 and t.tripid = l.tripid
