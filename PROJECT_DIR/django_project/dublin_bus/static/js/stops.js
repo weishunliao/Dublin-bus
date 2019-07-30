@@ -25,6 +25,13 @@ export const get_bus_real_time_info = (stop_id) => {
         .then(function (data) {
             document.getElementById("stops__content__card__stop-id").innerText = stop_id;
             document.getElementById("stops__content__card__stop-name").innerText = data['stop_name'];
+            if (is_favourite(stop_id)) {
+                heart_empty.style.display = 'none';
+                heart_solid.style.display = '';
+            } else {
+                heart_empty.style.display = '';
+                heart_solid.style.display = 'none';
+            }
             get_stop_server_route(stop_id);
             // create_chip(data[stop_id]);
             if (document.getElementById('slots') !== null) {
@@ -183,3 +190,65 @@ $(".stops__content__wrapper").on("touchmove", function (e) {
 $(".stops__time-table").on("touchmove", function (e) {
     e.stopPropagation();
 });
+
+const heart_solid = document.getElementById("stops__content__card__heart-solid");
+const heart_empty = document.getElementById("stops__content__card__heart-empty");
+
+heart_solid.addEventListener('click', () => {
+    let confirm_remove = confirm("Do you want to remove your favourite stop?");
+    if (confirm_remove) {
+        remove_favourites();
+        alert("Your favourite stop remove!");
+        toggle_heart();
+    }
+});
+
+heart_empty.addEventListener('click', () => {
+    save_favourites();
+    toggle_heart();
+});
+
+const is_favourite = (stop_id) => {
+    stop_id = String(stop_id);
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    for (let i = 0; i < stop_arr.length; i++) {
+        if (stop_arr[i] === stop_id) {
+            return true;
+        }
+    }
+    return false;
+};
+
+const toggle_heart = () => {
+    if (heart_solid.style.display === '') {
+        heart_empty.style.display = '';
+        heart_solid.style.display = 'none';
+    } else {
+        heart_empty.style.display = 'none';
+        heart_solid.style.display = '';
+    }
+};
+
+const save_favourites = () => {
+    let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    if (!stop_arr) {
+        stop_arr = [];
+    }
+    stop_arr.push(stop_id);
+    stop_arr = new Set(stop_arr);
+    localStorage.setItem("stops", JSON.stringify(stop_arr));
+};
+
+const remove_favourites = () => {
+    let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    let temp = [];
+    for (let i = 0; i < stop_arr.length; i++) {
+        if (stop_arr[i] !== stop_id) {
+            temp.push(stop_arr[i]);
+        }
+    }
+    localStorage.setItem("stops", JSON.stringify(temp));
+
+};
