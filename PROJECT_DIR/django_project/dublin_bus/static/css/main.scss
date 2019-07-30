@@ -8,6 +8,7 @@
 @import 'project/Map/map';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
+@import 'project/Components/card';
 @import 'project/Timeline/timeline';
 @import 'project/Timeline/switch';
 @import 'project/AutoComplete/auto-complete';
@@ -77,6 +78,7 @@ ion-fab-button {
 
 ion-card-content {
     padding: 0 !important;
+    z-index: 3;
 }
 
 ion-card {

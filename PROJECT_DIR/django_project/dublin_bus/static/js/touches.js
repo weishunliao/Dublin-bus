@@ -91,6 +91,8 @@ window.addEventListener("load", function() {
   
 });
 
+
+
 // function preventPullToRefresh(element) {
 //   var prevent = false;
 

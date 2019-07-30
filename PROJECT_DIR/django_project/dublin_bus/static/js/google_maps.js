@@ -190,64 +190,71 @@ export default function initMap() {
                 ')">Show</button>';
               let step = 0;
               let routeDescription = [];
+              let start = response.routes[i].legs[0].start_address;
+              let end = response.routes[i].legs[0].end_address;
               let departure_stop = "";
               let route_id = "Walking";
               let head_sign = "";
               let departure_time = "";
               while (step < length) {
+                  let distance = response.routes[i].legs[0].steps[step].distance.text;
                 let travel_mode =
                   response.routes[i].legs[0].steps[step].travel_mode;
                 if (travel_mode === "WALKING") {
                   let walkTime =
                     response.routes[i].legs[0].steps[step].duration.value;
                   full_travel_time += walkTime;
-                  routeDescription.push(["walking", walkTime]);
+                  let departurePoint = 
+                  routeDescription.push(["walking", walkTime, distance, start, end]);
                 } else {
-                  let num_stops =
-                    response.routes[i].legs[0].steps[step].transit.num_stops;
-                  departure_stop =
-                    response.routes[i].legs[0].steps[step].transit
-                      .departure_stop.name;
-                  let arrival_stop =
-                    response.routes[i].legs[0].steps[step].transit.arrival_stop
-                      .name;
-                  let departure_time_value =
-                    response.routes[i].legs[0].steps[
-                      step
-                    ].transit.departure_time.value.getTime() /
-                      1000 +
-                    3600;
-                  route_id =
-                    response.routes[i].legs[0].steps[step].transit.line
-                      .short_name;
-                  head_sign =
-                    response.routes[i].legs[0].steps[step].transit.headsign;
-                  departure_time =
-                    response.routes[i].legs[0].steps[step].transit
-                      .departure_time.text;
+                    // clear this when the server is back
+                    let departureStop = response.routes[i].legs[0].steps[step].transit.departure_stop.name;
+                    routeDescription.push(["bus", route_id, distance, departureStop, start, end]);
+                //   let num_stops =
+                //     response.routes[i].legs[0].steps[step].transit.num_stops;
+                //   departure_stop =
+                //     response.routes[i].legs[0].steps[step].transit
+                //       .departure_stop.name;
+                //   let arrival_stop =
+                //     response.routes[i].legs[0].steps[step].transit.arrival_stop
+                //       .name;
+                //   let departure_time_value =
+                //     response.routes[i].legs[0].steps[
+                //       step
+                //     ].transit.departure_time.value.getTime() /
+                //       1000 +
+                //     3600;
+                //   route_id =
+                //     response.routes[i].legs[0].steps[step].transit.line
+                //       .short_name;
+                //   head_sign =
+                //     response.routes[i].legs[0].steps[step].transit.headsign;
+                //   departure_time =
+                //     response.routes[i].legs[0].steps[step].transit
+                //       .departure_time.text;
 
-                  await fetch("get_travel_time", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Accept: "application/json"
-                    },
-                    body: JSON.stringify({
-                      route_id: route_id,
-                      start_point: departure_stop,
-                      end_point: arrival_stop,
-                      num_stops: num_stops,
-                      departure_time_value: departure_time_value,
-                      head_sign: head_sign
-                    })
-                  })
-                    .then(response => {
-                      return response.json();
-                    })
-                    .then(data => {
-                      full_travel_time += data.journey_time;
-                      routeDescription.push(["bus", route_id]);
-                    });
+                //   await fetch("get_travel_time", {
+                //     method: "POST",
+                //     headers: {
+                //       "Content-Type": "application/json",
+                //       Accept: "application/json"
+                //     },
+                //     body: JSON.stringify({
+                //       route_id: route_id,
+                //       start_point: departure_stop,
+                //       end_point: arrival_stop,
+                //       num_stops: num_stops,
+                //       departure_time_value: departure_time_value,
+                //       head_sign: head_sign
+                //     })
+                //   })
+                //     .then(response => {
+                //       return response.json();
+                //     })
+                //     .then(data => {
+                //       full_travel_time += data.journey_time;
+                //       routeDescription.push(["bus", route_id]);
+                //     });
                 }
                 step++;
               }
@@ -268,8 +275,9 @@ export default function initMap() {
                   departure_time,
                   id: i
                 });
+           
                 Route.appendToDom(newRoute);
-                console.log(newRoute);
+                
               }
             }
             // directionsDisplay.setDirections(response);
