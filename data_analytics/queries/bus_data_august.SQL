@@ -1,6 +1,8 @@
+select 'dayofservice', 'tripid', 'lineid', 'routeid', 'direction', 'progrnumber', 'stoppointid',
+'actualtime_arr_stop', 'actualtime_dep_stop'
+union all
 select t.dayofservice, t.tripid, t.lineid, t.routeid, t.direction,
-l.prognumber as 'progrnumber', l.stoppointid, l.actualtime_arr as 'actualtime_arr_stop', 
-l.actualtime_dep as 'actualtime_dep_stop'
+l.prognumber, l.stoppointid, l.actualtime_arr, l.actualtime_dep
 from rt_trips t, rt_leavetimes l
 where t.dayofservice = l.dayofservice 
 and t.tripid = l.tripid
