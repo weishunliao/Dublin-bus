@@ -1,4 +1,6 @@
 import "../css/main.scss";
+// // import "../ionic/core/dist/ionic.js";
+// import "../ionic/core/dist/ionic/ionic.esm.js";
 import "./google_maps";
 import { drawers, search } from './nodes';
 import "./auto-complete"
@@ -9,6 +11,7 @@ import "./sightseeing"
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";
 import "./touches.js";
+
 
 
 buildWeather(icon);

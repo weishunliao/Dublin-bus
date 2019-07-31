@@ -22,7 +22,7 @@ class HomeView(TemplateView):
     def get(self, request):
 
         return render(request, self.template_name,
-                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY})
+                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY })
 
     def post(self, request):
         if request.method == "POST":

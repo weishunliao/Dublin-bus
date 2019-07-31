@@ -1,12 +1,13 @@
-import { jpFormInputs, fromInput, toInput } from './nodes'
+import { jpFormInputs, fromInput, toInput, dateInput, dateContainer } from './nodes'
 
 
 
-const dateInput = document.querySelector('ion-datetime')
+
 
 jpFormInputs.focus((e) => {
     $(`#${e.target.id}-container`).addClass('focussed');
 })
+
 
 jpFormInputs.blur((e) => {
     if (e.target.value == "") {
@@ -14,21 +15,17 @@ jpFormInputs.blur((e) => {
     }
 })
 
-dateInput.addEventListener('ionFocus', (e) => {
-    $(`#${e.target.id}-container`).addClass('focussed');
+
+dateInput.addEventListener('ionChange', (e) => {
+   dateContainer.classList.add('focussed');
 })
 
-// ^ Submit
-
-const formSubmit = $('.form-submit')
-
-formSubmit.click((e) => {
-    e.preventDefault();
-
- 
-
-    $('.journey-planner').addClass('converted');
+dateInput.addEventListener('ionCancel', (e) => {
+    if (e.target.value === ""){
+        dateContainer.classList.remove('focussed')
+    }
 })
+
 
 
 // ^ switch Button

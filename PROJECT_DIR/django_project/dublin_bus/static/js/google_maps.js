@@ -1,8 +1,8 @@
 
 
-// ^ CHRIS CODE!!!!!!! ==================================
 
-import { search, fromInput, toInput, selectedTab, Route, sightInput } from "./nodes";
+
+import { search, fromInput, toInput, selectedTab, Route, sightInput, fromContainer } from "./nodes";
 import { searchToggle } from "./index";
 import MarkerClusterer from "./markerclusterer";
 import { get_bus_real_time_info, detail, drawer_default_height } from "./stops";
@@ -17,6 +17,8 @@ export let map;
 export let directionsDisplay;
 
 export default function initMap() {
+    let geocoder = new google.maps.Geocoder;
+
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
   setTimeout(() => {
     map = new google.maps.Map(document.getElementById("map"), {
@@ -124,9 +126,23 @@ export default function initMap() {
             var marker = new google.maps.Marker({
               position: pos,
               map: map,
-              title: "Hello World!",
               icon: "./static/images/location32.png"
             });
+
+            geocoder.geocode({'location': pos}, function(results, status) {
+                console.log("GETTING")
+                if (status === 'OK') {
+                  if (results[0]) {
+                      let res = results[0].formatted_address.slice(0, 30) + "..."
+                    fromInput.value = res;
+                    fromContainer.classList.add('focussed');
+                  } else {
+                    console.log('No results found');
+                  }
+                } else {
+                  console.log("The whole thing failed")
+                }
+              });
           },
           function() {
             handleLocationError(true, map.getCenter());
@@ -146,8 +162,10 @@ export default function initMap() {
       }
     }
 
-    document.getElementById("go-submit").addEventListener("click", function() {
-      $("#routesHere").html("");
+    document.getElementById("form-submitter").addEventListener("submit", function(e) {
+        e.preventDefault();
+      document.querySelector("#routesHere").innerHTML = "";
+      document.querySelector('.journey-planner').classList.add('converted');
       directionsService.route(
         {
           origin: document.getElementById("from").value,
@@ -196,7 +214,9 @@ export default function initMap() {
               let route_id = "Walking";
               let head_sign = "";
               let departure_time = "";
+              
               while (step < length) {
+                let duration =  response.routes[i].legs[0].steps[step].duration.text;
                   let distance = response.routes[i].legs[0].steps[step].distance.text;
                 let travel_mode =
                   response.routes[i].legs[0].steps[step].travel_mode;
@@ -205,56 +225,57 @@ export default function initMap() {
                     response.routes[i].legs[0].steps[step].duration.value;
                   full_travel_time += walkTime;
                   let departurePoint = 
-                  routeDescription.push(["walking", walkTime, distance, start, end]);
+                  routeDescription.push(["walking", walkTime, distance, null, null, start, end, duration]);
                 } else {
                     // clear this when the server is back
                     let departureStop = response.routes[i].legs[0].steps[step].transit.departure_stop.name;
-                    routeDescription.push(["bus", route_id, distance, departureStop, start, end]);
-                //   let num_stops =
-                //     response.routes[i].legs[0].steps[step].transit.num_stops;
-                //   departure_stop =
-                //     response.routes[i].legs[0].steps[step].transit
-                //       .departure_stop.name;
-                //   let arrival_stop =
-                //     response.routes[i].legs[0].steps[step].transit.arrival_stop
-                //       .name;
-                //   let departure_time_value =
-                //     response.routes[i].legs[0].steps[
-                //       step
-                //     ].transit.departure_time.value.getTime() /
-                //       1000 +
-                //     3600;
-                //   route_id =
-                //     response.routes[i].legs[0].steps[step].transit.line
-                //       .short_name;
-                //   head_sign =
-                //     response.routes[i].legs[0].steps[step].transit.headsign;
-                //   departure_time =
-                //     response.routes[i].legs[0].steps[step].transit
-                //       .departure_time.text;
+                    let arrivalStop = response.routes[i].legs[0].steps[step].transit.arrival_stop.name;
+                    
+                  let num_stops =
+                    response.routes[i].legs[0].steps[step].transit.num_stops;
+                  departure_stop =
+                    response.routes[i].legs[0].steps[step].transit
+                      .departure_stop.name;
+                  let arrival_stop =
+                    response.routes[i].legs[0].steps[step].transit.arrival_stop
+                      .name;
+                  let departure_time_value =
+                    response.routes[i].legs[0].steps[
+                      step
+                    ].transit.departure_time.value.getTime() /
+                      1000 +
+                    3600;
+                  route_id =
+                    response.routes[i].legs[0].steps[step].transit.line
+                      .short_name;
+                  head_sign =
+                    response.routes[i].legs[0].steps[step].transit.headsign;
+                  departure_time =
+                    response.routes[i].legs[0].steps[step].transit
+                      .departure_time.text;
 
-                //   await fetch("get_travel_time", {
-                //     method: "POST",
-                //     headers: {
-                //       "Content-Type": "application/json",
-                //       Accept: "application/json"
-                //     },
-                //     body: JSON.stringify({
-                //       route_id: route_id,
-                //       start_point: departure_stop,
-                //       end_point: arrival_stop,
-                //       num_stops: num_stops,
-                //       departure_time_value: departure_time_value,
-                //       head_sign: head_sign
-                //     })
-                //   })
-                //     .then(response => {
-                //       return response.json();
-                //     })
-                //     .then(data => {
-                //       full_travel_time += data.journey_time;
-                //       routeDescription.push(["bus", route_id]);
-                //     });
+                  await fetch("get_travel_time", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Accept: "application/json"
+                    },
+                    body: JSON.stringify({
+                      route_id: route_id,
+                      start_point: departure_stop,
+                      end_point: arrival_stop,
+                      num_stops: num_stops,
+                      departure_time_value: departure_time_value,
+                      head_sign: head_sign
+                    })
+                  })
+                    .then(response => {
+                      return response.json();
+                    })
+                    .then(data => {
+                      full_travel_time += data.journey_time;
+                      routeDescription.push(["bus", route_id, distance, departureStop, arrivalStop, start, end, duration]);
+                    });
                 }
                 step++;
               }

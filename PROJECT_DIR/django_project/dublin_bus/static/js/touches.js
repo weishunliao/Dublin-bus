@@ -1,9 +1,7 @@
-
-import { selectedTab } from "./nodes";
-import Swiper from './Swiper'
+import { selectedTab, dateInput} from "./nodes";
+import Swiper from "./Swiper";
 
 export let bottomSwiper;
-
 
 // Main window load
 
@@ -14,7 +12,6 @@ var h = Math.max(
 $(".drawer__container").css("height", h * 0.95);
 
 window.addEventListener("load", function() {
-
   //   assigns the height of the drawer depending on how large the screen is.
 
   const main = document.querySelector(".main");
@@ -46,6 +43,10 @@ window.addEventListener("load", function() {
 
   function tabClick(e) {
     if (e.target.id == "tab-button-journey") {
+      const dateobj = new Date();
+      const dateString = dateobj.toISOString();
+      console.log(dateInput.value);
+      dateInput.value = dateString;
     }
 
     if (e.target.id === currentTab) {
@@ -87,11 +88,7 @@ window.addEventListener("load", function() {
   });
 
   $(".drawer__container").css("display", "block");
-
-  
 });
-
-
 
 // function preventPullToRefresh(element) {
 //   var prevent = false;
@@ -122,4 +119,3 @@ window.addEventListener("load", function() {
 //     }
 //   });
 // }
-

@@ -7,10 +7,13 @@ const searchButton = document.querySelector(".search-button");
 const searchContainer = document.querySelector(".search-container");
 const searchInput = document.querySelector(".search-input");
 export const sightInput = document.querySelector("#search-sightseeing");
+export const dateInput = document.querySelector('ion-datetime')
+export const dateContainer = document.querySelector('#departing-container');
 
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
 export const fromInput = document.querySelector("#from");
+export const fromContainer = document.querySelector("#from-container");
 export const toInput = document.querySelector("#to");
 
 export const drawers = {
@@ -52,11 +55,11 @@ export class Route {
       const mic = document.querySelector("#moreInfo-click");
       const showContainer = document.querySelector("#show-container");
       const card = document.querySelector("#stretchCard");
-      const clickMe = document.querySelector('#clickMe');
+    //   const clickMe = document.querySelector('#clickMe');
 
-      clickMe.addEventListener('click', () => {
-          console.log('lol')
-      })
+    //   clickMe.addEventListener('click', () => {
+    //       console.log('lol')
+    //   })
 
       const backToRoutes = document.querySelector("#backToRoutes");
       mic.addEventListener("click", () => {
@@ -147,7 +150,7 @@ export class Route {
       let finalArr;
       let walkTimeOrBusNo;
       if (routeSection[0] == "walking") {
-        walkTimeOrBusNo = Math.round(routeSection[1] / 60);
+        walkTimeOrBusNo = Math.round(routeSection[1] / 60) + " mins";
         icon = `<ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>`;
       } else {
         walkTimeOrBusNo = routeSection[1];
@@ -180,6 +183,7 @@ export class Route {
       let finString = "";
       let travelText;
       let destinationText;
+      let four = 'DESTINATION'
       let whereWeAre;
       let whereWeAreGoing;
       routeDescription.forEach((routeSection, index) => {
@@ -193,8 +197,12 @@ export class Route {
         //     whereWeAre = routeSection[4]
         //     whereWeAreGoing = routeDescription[index + 1][4]
         // }
+
+        if (index === 0) {
+            whereWeAre = routeSection[4]
+        }
             
-        destinationText = routeSection[2] + "from <span id='clickMe'>here</span>"
+        destinationText = routeSection[2];
     
 
           finString += `
@@ -211,23 +219,29 @@ export class Route {
            
           } else{
               icon = `<ion-icon class="more-route-info__icon__internal" name="bus"></ion-icon>`
-              travelText = 'Take the bus'
-              
-              
+              travelText = `Take the ${routeSection[1]}`
           }
           
           finString += icon;
           
           finString += `
          </div>
-         <div class="more-route-info__distanceText">
-             <h2><span class="type-span">${travelText}</span> ${destinationText}</h2>
+         <div class="more-route-info__locationText">
+          ${index === 0 ? (`<h2>${routeSection[5]}</h2>`) : ((routeSection[0] === "bus" ? `<h2>${routeSection[3]}</h2>`: `<h2>${routeDescription[index -1][4]}`))}
          </div>
-
+         <div class="more-route-info__distanceText">
+             <h2><span class="type-span">${travelText}</span> ${destinationText} (${routeSection[7]})</h2>
+         </div>
+         ${index === (routeDescription.length - 1) ?  
+            `<div class='more-route-info__finalCircle'></div>
+            <div class="more-route-info__finalText"><h2>${routeSection[6]}</h2></div>
+            `
+            : ``}
           </div>
           `
-          
+         
       })
+      
       return finString;
   }
 

@@ -4,7 +4,7 @@
       <div class="journey-planner__form-container">
         <h1 class="journey-planner__title">Journey Planner</h1>
 
-        <form action="" class="journey-planner__form">
+        <form action="" class="journey-planner__form" id="submitter-form">
           <div
             class="journey-planner__form__input-container"
             id="from-container"
@@ -14,6 +14,7 @@
               <h3>From</h3>
             </div>
             <input
+              required
               type="text"
               class="journey-planner__form__input"
               id="from"
@@ -26,6 +27,7 @@
               <h3>To</h3>
             </div>
             <input
+              required
               type="text"
               class="journey-planner__form__input"
               id="to"
@@ -42,17 +44,18 @@
             </div>
             <ion-datetime
               id="departing"
-              display-format="DD MMM, HH:mm"
+              display-format="MMM DD, HH:mm"
+              value=""
             ></ion-datetime>
           </div>
           <div class="submitter">
             <div
               id="go-submit"
-              class="journey-planner__form__submit form-submit"
+              class="journey-planner__form__submit"
             >
-              <div class="form-abs">
-                <h3>Go!</h3>
-              </div>
+              <button class="form-abs">
+                Go!
+              </button>
             </div>
           </div>
           <div class="img-button">
