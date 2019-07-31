@@ -1,5 +1,8 @@
 import {markers, map} from "./google_maps";
-
+// import {window_height} from "./stops";
+//
+// document.getElementById("routes__content__wrapper").style.height = window_height * 0.5 + "px";
+// document.querySelector(".timeline-wrapper__content__box").style.height = window_height * 0.52 + "px";
 let route_id;
 let stop_list = [];
 
@@ -137,11 +140,7 @@ const route_show_on_map = () => {
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
-        let h = Math.max(
-            document.documentElement.clientHeight,
-            window.innerHeight || 0
-        );
-        $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
+        $('.drawer__container').animate({'height': window_height * 0.95}, 200, 'linear');
     } else {
         clear_markers();
         let mid_stop = stop_list[Math.floor(stop_list.length / 2)];

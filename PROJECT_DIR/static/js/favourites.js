@@ -24,6 +24,7 @@ const get_serve_route = (stop_id) => {
             })
             .then(data => {
                 let list = data["" + stop_id];
+                console.log(data);
                 let set = new Set();
                 for (let r of list) {
                     set.add(r[0]);

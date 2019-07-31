@@ -30,6 +30,7 @@
       margin-bottom: 10px;
       position: relative;
     }
+
     &__event__fill {
       border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
       //padding-bottom: 25px;
@@ -42,6 +43,7 @@
       margin-bottom: 0;
       border: none;
     }
+
     &__event__fill:last-of-type {
       padding-bottom: 0;
       margin-bottom: 0;
@@ -53,6 +55,7 @@
       display: block;
       top: 0;
     }
+
     &__event__fill:before, &__event__fill:after {
       position: absolute;
       display: block;
@@ -70,6 +73,7 @@
       content: "";
       top: 5px;
     }
+
     &__event__fill:after {
       box-shadow: 0 0 0 4px $bus_blue;
       left: -57.85px;
@@ -85,6 +89,11 @@
     &__box {
       overflow: scroll;
       height: 250px;
+    }
+
+    &__box::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* make scrollbar transparent */
     }
   }
 
@@ -109,12 +118,14 @@
     padding-left: 20px;
   }
 }
+
 @keyframes blinker {
   50% {
     opacity: 0;
   }
 }
+
 .bus-icon {
   font-size: 20px;
-  color: $bus_yellow
+  color: $bus_orange
 }
