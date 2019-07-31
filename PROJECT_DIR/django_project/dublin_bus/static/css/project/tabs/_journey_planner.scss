@@ -11,6 +11,7 @@
     position: relative;
     text-align: center;
     transition: all 0.3s linear;
+    margin-top: 4rem;
 
     &::after {
       position: absolute;
@@ -23,7 +24,7 @@
       content: "";
     }
 
-    // background: $db_yellow;  it will be yellow on transform
+    
   }
 
   &__routes-container {
@@ -291,14 +292,16 @@
     &__submit {
       padding: 2rem;
 
-      background: $db_yellow;
+      background: $bus_yellow;
       border: none;
       border-radius: 1.5rem;
       font-size: 1.8rem;
-      width: 10rem;
-      height: 10rem;
+      width: 100%;
+      height: 6rem;
       margin: 3rem auto;
       position: relative;
+      font-size: 2.8rem;
+      color: $db_blue;
     }
 
     &__input {
@@ -322,8 +325,7 @@ ion-datetime {
   padding-bottom: 0.5rem;
   color: $db_blue;
   text-align: left;
-
-  width: 90%;
+  width: 100%;
 }
 
 .focussed {
@@ -338,7 +340,7 @@ ion-datetime {
 .converted {
   & .focussed {
     & .journey-planner__form__label {
-      transform: scale(0.7) translateX(1rem) translateY(-6px);
+      transform: scale(0.7) translateX(1rem) translateY(-10px);
     }
   }
 
@@ -364,9 +366,10 @@ ion-datetime {
   }
 
   & .journey-planner__form-container {
-    background: $db_yellow;
+    background: $bus_yellow;
     padding-top: 2rem;
     height: 19rem;
+    margin-top: 0;
 
     &::after {
       display: none;
@@ -396,7 +399,7 @@ ion-datetime {
   }
 
   & .journey-planner__form__input {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 
   & ion-datetime {
@@ -660,4 +663,13 @@ ion-tab-button {
       margin: 0 !important;
     }
   }
+}
+
+
+#sub-button {
+    background: transparent;
+    border: none;
+    height: 100%;
+    width: 100%;
+    color: inherit;
 }

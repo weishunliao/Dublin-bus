@@ -1,7 +1,12 @@
-import { jpFormInputs, fromInput, toInput, dateInput, dateContainer } from './nodes'
+import { jpFormInputs, fromInput, toInput, dateInput, dateContainer, submitButton } from './nodes'
 
 
-
+dateContainer.addEventListener('click', () => {
+    if (!dateInput.getAttribute('aria-expanded')) {
+        dateInput.open();
+    }
+  
+})
 
 
 jpFormInputs.focus((e) => {
@@ -16,6 +21,8 @@ jpFormInputs.blur((e) => {
 })
 
 
+
+
 dateInput.addEventListener('ionChange', (e) => {
    dateContainer.classList.add('focussed');
 })
@@ -25,6 +32,7 @@ dateInput.addEventListener('ionCancel', (e) => {
         dateContainer.classList.remove('focussed')
     }
 })
+
 
 
 

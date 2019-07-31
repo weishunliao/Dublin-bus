@@ -9,6 +9,7 @@ const searchInput = document.querySelector(".search-input");
 export const sightInput = document.querySelector("#search-sightseeing");
 export const dateInput = document.querySelector('ion-datetime')
 export const dateContainer = document.querySelector('#departing-container');
+export const submitButton = document.querySelector('#sub-button');
 
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
@@ -20,6 +21,24 @@ export const drawers = {
   top: topDrawer,
   bottom: bottomDrawer
 };
+
+export function switchUpText(){
+    let selection = [
+        'Take me for a ride!',
+        'Bus me!',
+        'Vroom vroom!',
+        'The wheels on the bus...',
+        "Let's go!",
+        "Trip me!",
+        "Go public transport!",
+        "Let's bus!",
+        "RT_Trips gave my CPU a stroke"
+    ];
+
+    let num = Math.floor(Math.random() * selection.length);
+    let relText = selection[num];
+    submitButton.innerHTML = relText;
+}
 
 export class Route {
   constructor(routeData) {

@@ -1,5 +1,7 @@
-import { selectedTab, dateInput} from "./nodes";
+
+import { selectedTab, dateInput, switchUpText} from "./nodes";
 import Swiper from "./Swiper";
+
 
 export let bottomSwiper;
 
@@ -42,11 +44,13 @@ window.addEventListener("load", function() {
   }
 
   function tabClick(e) {
-    if (e.target.id == "tab-button-journey") {
+    if (e.target.id == "tab-button-journey" && bottomSwiper.currentState === bottomSwiper.IN_STATE &&  !(document.querySelector('.journey-planner').classList.contains('converted'))) {
+        switchUpText();
       const dateobj = new Date();
       const dateString = dateobj.toISOString();
       console.log(dateInput.value);
       dateInput.value = dateString;
+  
     }
 
     if (e.target.id === currentTab) {

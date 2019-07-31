@@ -2,7 +2,7 @@
 
 
 
-import { search, fromInput, toInput, selectedTab, Route, sightInput, fromContainer } from "./nodes";
+import { search, fromInput, toInput, selectedTab, Route, sightInput, fromContainer, submitButton } from "./nodes";
 import { searchToggle } from "./index";
 import MarkerClusterer from "./markerclusterer";
 import { get_bus_real_time_info, detail, drawer_default_height } from "./stops";
@@ -162,8 +162,9 @@ export default function initMap() {
       }
     }
 
-    document.getElementById("form-submitter").addEventListener("submit", function(e) {
+    document.getElementById("submitter-form").addEventListener("submit", function(e) {
         e.preventDefault();
+        submitButton.innerHTML = 'Go!'
       document.querySelector("#routesHere").innerHTML = "";
       document.querySelector('.journey-planner').classList.add('converted');
       directionsService.route(
