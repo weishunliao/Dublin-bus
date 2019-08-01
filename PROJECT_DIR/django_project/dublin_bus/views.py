@@ -42,13 +42,12 @@ def test_routing(request):
 
 @csrf_exempt
 def get_travel_time(request):
-  
     body = json.loads(request.body)
 
     print("body of the request", body)
-    
+
     route_id = body['route_id']
-    
+
     start_point = body['start_point']
     num_stops = int(body['num_stops'])
     end_point = body['end_point']
@@ -191,3 +190,19 @@ def get_sights_info_by_place_id(request):
     except KeyError as e:
         print(e)
     return JsonResponse({"point": point})
+
+
+@csrf_exempt
+def snap_to_road(request):
+    stop_list = json.loads(request.body)['stop_list']
+    filepath = os.path.join(BASE_DIR, '../static/cache/stops.json')
+    path = ""
+    with open(filepath, 'r') as json_file:
+        data = json.load(json_file)
+        for i in stop_list:
+            lat = data[str(i)][0]
+            lng = data[str(i)][1]
+            path += str(lat) + "," + str(lng) + "|"
+    path = path[:-1]
+    resp = requests.get("https://roads.googleapis.com/v1/snapToRoads?path=" + path + "&interpolate=true&key=" + MAP_KEY).json()
+    return JsonResponse(resp)

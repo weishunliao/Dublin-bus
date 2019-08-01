@@ -118,7 +118,7 @@ export const detail2 = () => {
     }
 };
 
-document.getElementById("routes__toolbar__back-btn").addEventListener('click', ()=>{
+document.getElementById("routes__toolbar__back-btn").addEventListener('click', () => {
     detail2();
     update_favourites_routes();
 });
@@ -134,16 +134,23 @@ const clear_markers = () => {
     for (let [key, value] of Object.entries(markers)) {
         value.setMap(null);
     }
-    for (let stop_ID of stop_list) {
-        markers["" + stop_ID].setMap(map);
-    }
+    // for (let stop_ID of stop_list) {
+    //     markers["" + stop_ID].setMap(map);
+    // }
 };
 
-const draw_markers = () => {
-    for (let [key, value] of Object.entries(markers)) {
-        value.setMap(map);
-    }
-    map.setZoom(15);
+const snap_to_road = () => {
+    fetch('/snap_to_road', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"stop_list": stop_list})
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        console.log(data);
+    });
 };
 
 
@@ -153,8 +160,9 @@ const route_show_on_map = () => {
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
-        $('.drawer__container').animate({'height': window_height * 0.95}, 200, 'linear');
+        $('.drawer__container').animate({'height': window.innerHeight * 0.95}, 200, 'linear');
     } else {
+        // snap_to_road();
         clear_markers();
         let mid_stop = stop_list[Math.floor(stop_list.length / 2)];
         map.setZoom(12);
