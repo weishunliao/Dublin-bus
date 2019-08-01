@@ -83,31 +83,6 @@ class TestTimestampToDayBus(unittest.TestCase):
         """Test to check the value returned for a day at the end of feb (non leap year) when seconds are >= 86400."""
         self.assertEqual(convert_timestamp.timestamp_to_day_bus('2018-02-28 00:00:00', 86450), 1)
 
-
-class TestTimestampToMonthBus(unittest.TestCase):
-    """Unit tests for the timestamp_to_month_bus function."""
-
-    def test_same_day(self):
-        """Test to check the value returned for a value less than 86400 seconds (24*60*60)."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-01-31 00:00:00', 37000), 1)
-
-    def test_after_midnight_mid_month(self):
-        """Test to check the value returned for a day that is mid-month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-01-05 00:00:00', 86500), 1) 
-
-    def test_after_midnight_end_31(self):
-        """Test to check the value returned for a day at the end of a 31 day month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-01-31 00:00:00', 86400), 2) 
-
-    def test_after_midnight_end_30(self):
-        """Test to check the value returned for a day at the end of a 31 day month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-11-30 00:00:00', 86450), 12)
-
-    def test_after_midnight_end_feb(self):
-        """Test to check the value returned for a day at the end of feb (non leap year) when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-02-28 00:00:00', 86450), 3)
-
-
 class TestTimestampToDayOfWeek(unittest.TestCase):
     """Unit tests for the timestamp_to_day_of_week function."""
 
