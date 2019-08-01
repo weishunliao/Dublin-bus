@@ -35,7 +35,7 @@ def transform_data(df):
             # if it is the same trip as the last row...
             else:
                 # check if prog has incremented by 1, if not we're missing data
-                if current_prog - last_prog == 1:
+                if int(current_prog) - int(last_prog) == 1:
                     # if we're not missing data, complete the last row with data from this row
                     count, transformed = complete_row(count, current_prog, row, last_row, transformed)
                 # save the relevant data from this row
