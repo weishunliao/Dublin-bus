@@ -23,9 +23,10 @@ def timestamp_to_hour_bus(seconds):
         hour = (seconds - 86400) // 3600
     return hour % 24
 
-def timestamp_to_day_bus(timestamp, seconds, month):
+def timestamp_to_day_bus(timestamp, seconds):
     """Takes a timestamp and number of seconds as input, and returns the day of the month."""
     day = int(str(timestamp)[8:10])
+    month = int(str(timestamp)[5:7])
     if seconds < 86400:
         return day
     else:
