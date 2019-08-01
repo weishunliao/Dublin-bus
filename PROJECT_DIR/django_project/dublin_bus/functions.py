@@ -201,10 +201,10 @@ def convert_to_seconds(hour, minute):
     return seconds
 
 
-def is_weekday(day_of_week):
-    """Returns 1 if the day of week is mon-fri (0-4), returns 0 otherwise."""
+def is_weekday(day_of_week, day, month):
+    """Returns 1 if the day of week is mon-fri (0-4), returns 0 if the day is sat, sun or a bank holiday."""
 
-    if day_of_week in [0, 1, 2, 3, 4]:
+    if day_of_week in [0, 1, 2, 3, 4] and not is_bank_holiday:
         return 1
     return 0
 
@@ -217,23 +217,22 @@ def is_bank_holiday(day, month):
 
     bank_holidays = [(5, 8), (28, 10), (25, 12), (26, 12)]
     if (day, month) in bank_holidays:
-        return 1
-    return 0
+        return True
+    return False
 
 
 def parse_timestamp(timestamp):
     """Function that takes a datetime object as input and returns time in seconds, 
-    the hour, day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
+    the hour, and month. Also returns a weekday flag (1 for Mon-Fri, 0 for Sat, Sun & Bank Holidays)."""
 
     time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
     day_of_week = timestamp.weekday()
     day = timestamp.day
     month = timestamp.month
     hour = timestamp.hour
-    weekday = is_weekday(day_of_week)
-    bank_holiday = is_bank_holiday(day, month)
+    weekday = is_weekday(day_of_week, day, month)
 
-    return time_in_seconds, day_of_week, month, weekday, bank_holiday, hour
+    return time_in_seconds, month, weekday, hour
 
 
 def format_stop_list(stops):
@@ -267,7 +266,7 @@ def predict_journey_time(stops, timestamp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday, hour = parse_timestamp(timestamp)
+    actualtime_arr_stop_first, month, weekday, hour = parse_timestamp(timestamp)
     # call the OpenWeather API and parse the response
     weather_data = openweather_forecast()
     rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
