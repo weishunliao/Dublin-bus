@@ -23,20 +23,6 @@ def timestamp_to_hour_bus(seconds):
         hour = (seconds - 86400) // 3600
     return hour % 24
 
-def timestamp_to_day_bus(timestamp, seconds):
-    """Takes a timestamp and number of seconds as input, and returns the day of the month."""
-    day = int(str(timestamp)[8:10])
-    month = int(str(timestamp)[5:7])
-    if seconds < 86400:
-        return day
-    else:
-        if (month in [1,3,5,7,8,10,12] and day == 31) \
-        or (month in [4,6,9,11] and day == 30) \
-        or (month == 2 and day == 28):  # 2018 is not a leap year!
-            return 1
-        else:
-            return day + 1
-
 def timestamp_to_day_of_week(timestamp):
     """Takes a timestamp as input and returns the day of the week."""
     timestamp = pd.to_datetime(timestamp)
