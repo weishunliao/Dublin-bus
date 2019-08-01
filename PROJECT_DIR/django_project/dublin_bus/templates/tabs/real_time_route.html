@@ -26,30 +26,8 @@
                 </ion-label>
             </ion-item>
             <div class="routes__content__wrapper" id="routes__content__wrapper">
-                <ion-card class="routes__content__card" id="routes__content__card" data-direction="in" data-id="15a">
-                    <ion-grid no-padding>
-                        <ion-row>
-                            <ion-col size="9">
-                                <div class="routes__content__card__direction">
-                                    <span> Towards Ringsend Rd. (Barrow St.)</span>
-                                </div>
-                            </ion-col>
-                            <ion-col align-self-end size="3">
-                                <div class="routes__content__card__heart">
-                                    <ion-icon name="heart" class="routes__content__card__heart"
-                                              slot="end"></ion-icon>
-                                </div>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="12" align-self-baseline>
-                                <ion-item lines="none" class="routes__content__card__route-id">
-                                    <span>15a</span>
-                                </ion-item>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-card>
+                <div id="favourite_routes__cards__in__route">
+                </div>
             </div>
         </div>
         <div id="routes_div2" class="routes__div2">
@@ -82,9 +60,11 @@
                             </ion-col>
                             <ion-col align-self-end size="3">
                                 <div class="routes__content__card__heart">
-                                    <ion-icon name="heart" class="stops__content__card__heart"
-                                              slot="end"></ion-icon>
+                                    <ion-icon name="heart" id="routes__content__card__heart-solid" style=""></ion-icon>
+                                    <ion-icon name="heart-empty" id="routes__content__card__heart-empty"
+                                              style="display: none"></ion-icon>
                                 </div>
+                                <ion-alert-controller></ion-alert-controller>
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -98,7 +78,6 @@
                     </ion-grid>
                 </ion-item>
             </div>
-
 
 
             <div id="drawer_container_timeline">
@@ -121,3 +100,29 @@
         </div>
     </div>
 </ion-tab>
+
+
+{#<ion-card class="routes__content__card" id="routes__content__card" data-direction="in" data-id="15a">#}
+{#    <ion-grid no-padding>#}
+{#        <ion-row>#}
+{#            <ion-col size="9">#}
+{#                <div class="routes__content__card__direction">#}
+{#                    <span> Towards Ringsend Rd. (Barrow St.)</span>#}
+{#                </div>#}
+{#            </ion-col>#}
+{#            <ion-col align-self-end size="3">#}
+{#                <div class="routes__content__card__heart">#}
+{#                    <ion-icon name="heart" class="routes__content__card__heart"#}
+{#                              slot="end"></ion-icon>#}
+{#                </div>#}
+{#            </ion-col>#}
+{#        </ion-row>#}
+{#        <ion-row>#}
+{#            <ion-col size="12" align-self-baseline>#}
+{#                <ion-item lines="none" class="routes__content__card__route-id">#}
+{#                    <span>15a</span>#}
+{#                </ion-item>#}
+{#            </ion-col>#}
+{#        </ion-row>#}
+{#    </ion-grid>#}
+{#</ion-card>#}

@@ -1,4 +1,6 @@
 import {markers, map} from "./google_maps";
+import {create_favourite_route_card, create_favourite_stop_card} from "./favourites";
+import {controller} from "./stops";
 // import {window_height} from "./stops";
 //
 // document.getElementById("routes__content__wrapper").style.height = window_height * 0.5 + "px";
@@ -16,7 +18,7 @@ $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     window.setTimeout(detail2, 800);
 });
 
-const get_bus_stop_list = (route_id, direction) => {
+export const get_bus_stop_list = (route_id, direction) => {
     fetch('bus_stop_list_by_route?route_id=' + route_id + "&direction=" + direction + "&t=", {method: 'get'})
         .then(function (response) {
             if (response.status >= 200 && response.status < 300) {
@@ -59,6 +61,13 @@ const display_stops = (stops, route_id) => {
     let split_index = stops[0][3].indexOf("-");
     document.getElementById("routes__content__card__direction").innerText = "Towards" + stops[0][3].substring(split_index + 1);
     document.getElementById("routes__content__card__route-id").innerText = route_id;
+    if (is_favourite(route_id)) {
+        route_heart_empty.style.display = 'none';
+        route_heart_solid.style.display = '';
+    } else {
+        route_heart_empty.style.display = '';
+        route_heart_solid.style.display = 'none';
+    }
     return stops;
 };
 
@@ -100,7 +109,7 @@ const display_bus_arrival_time = (num) => {
 };
 
 
-const detail2 = () => {
+export const detail2 = () => {
     const container = $("#routes-container");
     if (container.css('margin-left') === '0px') {
         container.animate({'margin-left': '-100%'}, 200, 'linear');
@@ -108,7 +117,11 @@ const detail2 = () => {
         container.animate({'margin-left': '0'}, 200, 'linear');
     }
 };
-document.getElementById("routes__toolbar__back-btn").addEventListener('click', detail2);
+
+document.getElementById("routes__toolbar__back-btn").addEventListener('click', ()=>{
+    detail2();
+    update_favourites_routes();
+});
 const cards = document.getElementsByClassName("routes__content__card");
 for (let card of cards) {
     card.addEventListener('click', function () {
@@ -166,3 +179,113 @@ $(".timeline-wrapper__content__box").on("touchmove", function (e) {
 $(".routes__content__wrapper").on("touchmove", function (e) {
     e.stopPropagation();
 });
+
+
+const route_heart_solid = document.getElementById("routes__content__card__heart-solid");
+const route_heart_empty = document.getElementById("routes__content__card__heart-empty");
+
+route_heart_solid.addEventListener('click', () => {
+    let route_id = document.getElementById("routes__content__card__route-id").innerText;
+    route_confirm_box(route_id);
+});
+
+route_heart_empty.addEventListener('click', () => {
+    let route_id = document.getElementById("routes__content__card__route-id").innerText;
+    route_save_favourites(route_id);
+    route_toggle_heart();
+});
+
+
+export function route_confirm_box(route_id) {
+    controller.create({
+        header: 'CONFIRM!',
+        message: 'Do you want to <strong>remove</strong> this route?',
+        buttons: [
+            {
+                text: 'Cancel',
+                role: 'cancel',
+                cssClass: 'secondary',
+            }, {
+                text: 'Okay',
+                handler: () => {
+                    route_remove_favourites(route_id);
+                    route_toggle_heart();
+                    update_hide_card(route_id);
+                }
+            }
+        ]
+    }).then(alert => {
+        alert.present();
+    });
+}
+
+
+const is_favourite = (route_id) => {
+    route_id = String(route_id);
+    let route_arr = JSON.parse(localStorage.getItem("routes"));
+    if (!route_arr || route_arr.length === 0) {
+        return false;
+    }
+    for (let i = 0; i < route_arr.length; i++) {
+        if (route_arr[i] === route_id) {
+            return true;
+        }
+    }
+    return false;
+};
+
+export const route_toggle_heart = () => {
+    if (route_heart_solid.style.display === '') {
+        route_heart_empty.style.display = '';
+        route_heart_solid.style.display = 'none';
+    } else {
+        route_heart_empty.style.display = 'none';
+        route_heart_solid.style.display = '';
+    }
+};
+
+export const route_save_favourites = (route_id) => {
+    let route_arr = JSON.parse(localStorage.getItem("routes"));
+    if (!route_arr) {
+        route_arr = [];
+    }
+    route_arr.push(route_id);
+    route_arr = new Set(route_arr);
+    localStorage.setItem("routes", JSON.stringify(route_arr));
+};
+
+export const route_remove_favourites = (route_id) => {
+    let route_arr = JSON.parse(localStorage.getItem("routes"));
+    let temp = [];
+    for (let i = 0; i < route_arr.length; i++) {
+        if (route_arr[i] !== route_id) {
+            temp.push(route_arr[i]);
+        }
+    }
+    localStorage.setItem("routes", JSON.stringify(temp));
+};
+
+document.getElementById("tab-button-routes").addEventListener('click', () => {
+    update_favourites_routes();
+});
+
+const update_favourites_routes = () => {
+    let route_arr = JSON.parse(localStorage.getItem("routes"));
+    let elem = document.getElementById("favourite_routes__cards__in__route");
+    if (elem) {
+        elem.remove();
+        $('#routes__content__wrapper').append('<div id="favourite_routes__cards__in__route"></div>');
+    }
+    if (route_arr && route_arr.length !== 0) {
+        for (let id of route_arr) {
+            create_favourite_route_card(id, "route");
+        }
+    }
+};
+
+const update_hide_card = (route_id) => {
+    let cards = document.querySelectorAll("#routes__content__card__" + route_id);
+    for (let card of cards) {
+        card.style.display = 'none';
+    }
+};

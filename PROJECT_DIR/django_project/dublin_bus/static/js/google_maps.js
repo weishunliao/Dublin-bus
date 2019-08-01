@@ -333,18 +333,18 @@ function AddMarkers(data, map) {
         markers[stopID] = busMarker;
         allMarkers.push(busMarker);
     }
-        let clusterStyles = [{
-            textColor: 'rgba(0,0,0,0)',
-            url: '/static/images/marker.png',
-            height: 50,
-            width: 50
-        }];
+    let clusterStyles = [{
+        textColor: 'rgba(0,0,0,0)',
+        url: '/static/images/marker.png',
+        height: 50,
+        width: 50
+    }];
 
-        let mcOptions = {
-            gridSize: 50,
-            styles: clusterStyles,
-            maxZoom: 16
-        };
+    let mcOptions = {
+        gridSize: 50,
+        styles: clusterStyles,
+        maxZoom: 16
+    };
 
 
     let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
@@ -363,16 +363,16 @@ export const markerListener = (stopID) => {
         if (stops_container_position === '0px') {
             detail();
         }
+        drawer_default_height();
         get_bus_real_time_info(stopID);
         change_btn();
-        window.setTimeout(drawer_default_height, 500);
     });
 };
 
 const change_btn = () => {
-    document.getElementById("stops__toolbar__back-btn").innerText = "";
+    document.getElementById("stops__toolbar__back-btn").innerText = "Close";
     document.getElementById("stops__show-on-map-btn__name").style.display = 'none';
-    $("#stops__toolbar__back-btn").append("<ion-icon name='md-close' size='medium'></ion-icon>");
+    // $("#stops__toolbar__back-btn").append("<ion-icon name='md-close' size='medium'></ion-icon>");
     document.getElementById("stops__toolbar__back-btn").removeEventListener('click', detail);
     document.getElementById("stops__toolbar__back-btn").addEventListener('click', close_btn);
 };

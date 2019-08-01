@@ -204,7 +204,7 @@ heart_empty.addEventListener('click', () => {
 });
 
 
-const controller = document.querySelector('ion-alert-controller');
+export const controller = document.querySelector('ion-alert-controller');
 
 export function confirm_box(stop_id) {
     controller.create({
