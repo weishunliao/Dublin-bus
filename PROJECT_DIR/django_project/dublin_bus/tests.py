@@ -225,43 +225,47 @@ class TestIsWeekday(TestCase):
 
     def test_is_weekday_mon(self):
         """Test that the value 1 is returned for Monday"""
-        self.assertEqual(functions.is_weekday(0), 1)
+        self.assertEqual(functions.is_weekday(0, 29, 7), 1)
 
     def test_is_weekday_tue(self):
         """Test that the value 1 is returned for Tuesday"""
-        self.assertEqual(functions.is_weekday(1), 1)
+        self.assertEqual(functions.is_weekday(1, 30, 7), 1)
 
     def test_is_weekday_wed(self):
         """Test that the value 1 is returned for Wednesday"""
-        self.assertEqual(functions.is_weekday(2), 1)
+        self.assertEqual(functions.is_weekday(2, 31, 7), 1)
 
     def test_is_weekday_thu(self):
         """Test that the value 1 is returned for Thursday"""
-        self.assertEqual(functions.is_weekday(3), 1)
+        self.assertEqual(functions.is_weekday(3, 1, 8), 1)
 
     def test_is_weekday_fri(self):
         """Test that the value 1 is returned for Friday"""
-        self.assertEqual(functions.is_weekday(4), 1)
+        self.assertEqual(functions.is_weekday(4, 2, 8), 1)
 
     def test_is_weekday_sat(self):
         """Test that the value 0 is returned for Saturday"""
-        self.assertEqual(functions.is_weekday(5), 0)
+        self.assertEqual(functions.is_weekday(5, 3, 8), 0)
 
     def test_is_weekday_sun(self):
         """Test that the value 0 is returned for Sunday"""
-        self.assertEqual(functions.is_weekday(6), 0)
+        self.assertEqual(functions.is_weekday(6, 4, 8), 0)
+
+    def test_is_weekday_bank_hol(self):
+          """Test that the value 0 is returned for a Bank Holiday Monday"""
+          self.assertEqual(functions.is_weekday(0, 5, 8), 1)
 
 
 class TestIsBankHoliday(TestCase):
     """Test cases for the is_bank_holiday function."""
 
     def test_is_bank_holiday(self):
-        """Test that the value 1 is returned for a bank holiday"""
-        self.assertEqual(functions.is_bank_holiday(5, 8), 1)
+        """Test that the value True is returned for a bank holiday"""
+        self.assertEqual(functions.is_bank_holiday(5, 8), True)
 
     def test_not_bank_holiday(self):
-        """Test that the value 0 is returned for a normal day"""
-        self.assertEqual(functions.is_bank_holiday(4, 8), 0)
+        """Test that the value False is returned for a normal day"""
+        self.assertEqual(functions.is_bank_holiday(4, 8), False)
 
 
 class TestParseTimestamp(TestCase):
