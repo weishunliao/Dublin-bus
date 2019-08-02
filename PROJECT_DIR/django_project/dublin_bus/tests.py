@@ -10,9 +10,10 @@ class TestLoadModel(TestCase):
     def test_load_model_success(self):
         """Test to ensure that a model is loaded correctly."""
         try:
-            functions.load_model()
-        except Exception as e:
-            self.fail("load_model() raised an exception unexpectedly!\n Error is:" + str(e))
+            month = 8   
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
 
 
 class TestCreateHourFeatureRef(TestCase):
@@ -44,62 +45,32 @@ class TestCreateHourFeatureRef(TestCase):
                     23: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
         self.assertEqual(functions.create_hour_feature_ref(), hour_ref)
 
-
-class TestCreateDayOfWeekFeatureRef(TestCase):
-    """Test cases for the create_day_of_week_feature_ref function."""
-
-    def test_create_day_of_week_feature_ref(self):
-        """Test for the ouput of the create_day_of_week_feature_ref function."""
-        day_of_week_ref = {
-            0: [1, 0, 0, 0, 0, 0, 0],
-            1: [0, 1, 0, 0, 0, 0, 0],
-            2: [0, 0, 1, 0, 0, 0, 0],
-            3: [0, 0, 0, 1, 0, 0, 0],
-            4: [0, 0, 0, 0, 1, 0, 0],
-            5: [0, 0, 0, 0, 0, 1, 0],
-            6: [0, 0, 0, 0, 0, 0, 1]
-        }
-        self.assertEqual(functions.create_day_of_week_feature_ref(), day_of_week_ref)
-
-
-class TestCreateMonthFeatureRef(TestCase):
-    """Test cases for the create_month_feature_ref function."""
-
-    def test_create_month_feature_ref(self):
-        """Test for the ouput of the create_month_feature_ref function."""
-        month_ref = {
-            1: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            2: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            3: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            4: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            5: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-            6: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-            7: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            8: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            9: [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            10: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            12: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-        }
-        self.assertEqual(functions.create_month_feature_ref(), month_ref)
-
-
 class TestCreateSegmentRef(TestCase):
     """Test cases for the create_segment_ref function."""
 
-    def test_create_segment_ref(self):
+    def test_create_segment_ref_mean(self):
         """Test for the ouput of the create_segment_ref function."""
-        segment_ref = functions.create_segment_ref()
-        self.assertEqual(segment_ref["946_1131"], 69)
+        segment_ref = functions.create_segment_ref(8)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 151.0)
+
+    def test_create_segment_ref_std(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(8)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 54.0)
 
 
 class TestCreateSegmentRefGtfs(TestCase):
     """Test cases for the create_segment_ref_gtfs function."""
 
-    def test_create_segment_ref_gtfs(self):
+    def test_create_segment_ref_gtfs_mean(self):
         """Test for the ouput of the create_segment_ref_gtfs function."""
         segment_ref = functions.create_segment_ref_gtfs()
-        self.assertEqual(segment_ref["1154_946"], 80)
+        self.assertEqual(segment_ref["1154_946"]["mean"], 80)
+
+    def test_create_segment_ref_gtfs_std(self):
+        """Test for the ouput of the create_segment_ref_gtfs function."""
+        segment_ref = functions.create_segment_ref_gtfs()
+        self.assertEqual(segment_ref["1154_946"]["std"], 14)
 
 
 class TestRoutePrediction(TestCase):
@@ -113,16 +84,13 @@ class TestRoutePrediction(TestCase):
                  1103, 1104]
         rain = 0.1
         temp = 15
-        rhum = 75
-        msl = 1000
         actualtime_arr_stop_first = 32400  # 9:00
         hour = 9
-        day_of_week = 4  # monday
-        month = 7  # july
+        peak = 1
+        month = 8  # august
         weekday = 1
-        bank_holiday = 0
-        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
-                                                    weekday, bank_holiday, rain, temp, rhum, msl), 2485)
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
+               rain, temp, month), 2527)
 
 
 class TesParseWeatherForecast(TestCase):
@@ -163,7 +131,7 @@ class TesParseWeatherForecast(TestCase):
                         "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
                                  "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 5 2019  2:30PM', '%b %d %Y %I:%M%p')
-        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125, 18.82, 81, 1019.31))
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.041666666666666664, 18.82))
 
     def test_parse_weather_forecast_not_found(self):
         """Test that parse_weather_forecast raises an exception when weather info not found for the timestamp."""
@@ -200,8 +168,7 @@ class TesParseWeatherForecast(TestCase):
                         "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
                                  "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 4 2019  2:30PM', '%b %d %Y %I:%M%p')
-        with self.assertRaises(Exception):
-            functions.parse_weather_forecast(timestamp, weather_data)
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0, 17.0))
 
 
 class TestConvertToSeconds(TestCase):
@@ -256,21 +223,31 @@ class TestIsBankHoliday(TestCase):
     """Test cases for the is_bank_holiday function."""
 
     def test_is_bank_holiday(self):
-        """Test that the value 1 is returned for a bank holiday"""
+        """Test that the value True is returned for a bank holiday"""
         self.assertEqual(functions.is_bank_holiday(5, 8), 1)
 
     def test_not_bank_holiday(self):
-        """Test that the value 0 is returned for a normal day"""
+        """Test that the value False is returned for a normal day"""
         self.assertEqual(functions.is_bank_holiday(4, 8), 0)
 
 
 class TestParseTimestamp(TestCase):
     """Test cases for the parse_timestamp function."""
 
-    def test_parse_timestamp(self):
-        """Test that the correct values are returned for a given timestamp."""
+    def test_parse_timestamp_weekday(self):
+        """Test that the correct values are returned for a weekday timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
-        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 0, 7, 1, 0, 10))
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10, 0))
+
+    def test_parse_timestamp_weekend(self):
+        """Test that the correct values are returned for a weekend timestamp."""
+        timestamp = datetime.utcfromtimestamp(1564830000)
+        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11, 0))
+
+    def test_parse_timestamp_bank_holiday(self):
+        """Test that the correct values are returned for a bank holiday timestamp."""
+        timestamp = datetime.utcfromtimestamp(1565019000)
+        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15, 0))
 
 
 class TestFormatStopList(TestCase):
@@ -659,12 +636,12 @@ class TestPredictJourneyTime(TestCase):
     def test_predict_journey_time_invalid_list(self):
         """Test that the function returns -1 when an empty list is entered."""
         timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
-        self.assertEqual(functions.predict_journey_time((('8350DB007574',)), timestamp), -1)
+        self.assertEqual(functions.predict_journey_time((('8350DB007574',)), timestamp, 0.1, 15), -1)
 
     def test_predict_journey_time_invalid_list2(self):
         """Test that the function returns -1 when a list with length 1 is entered."""
         timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
-        self.assertEqual(functions.predict_journey_time([], timestamp), -1)
+        self.assertEqual(functions.predict_journey_time([], timestamp, 0.1, 15), -1)
 
 
 class TestGetStopListStartPoint(TestCase):
@@ -752,3 +729,26 @@ class TestGetSightInfo(TestCase):
                                                                                               'width': 3264}, ],
                     'rating': 4.7})
         self.assertEqual(get_opening_hour(resp), [' Open 24 hours'])
+
+class TestIsPeak(TestCase):
+    """Test cases for the is_peak function."""
+
+    def test_is_peak_weekday(self):
+        """Test that the correct values are returned for a weekday peak time."""
+        self.assertEqual(functions.is_peak(17, 1), 1)
+
+    def test_not_peak_weekday(self):
+        """Test that the correct values are returned for a weekday off peak time."""
+        self.assertEqual(functions.is_peak(15, 1), 0)
+
+    def test_not_peak_weekend(self):
+        """Test that the correct values are returned for a weekend."""
+        self.assertEqual(functions.is_peak(17, 0), 0)
+
+class TestGetWeatherDefaults(TestCase):
+    """Test cases for the get_weather_defaults function."""
+
+    def test_get_weather_defaults(self):
+        """Test that the correct values are returned for a given month."""
+
+        self.assertEqual(functions.get_weather_defaults(8), (0, 16.0))

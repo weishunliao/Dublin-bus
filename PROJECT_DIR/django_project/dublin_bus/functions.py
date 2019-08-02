@@ -8,12 +8,34 @@ import json
 from django_project.settings import BASE_DIR, MAP_KEY
 from django.db import connection
 
-def load_model():
-    """Loads and returns a machine learning model for all routes."""
-    path = os.path.join(settings.ML_MODEL_ROOT, 'all_routes_aug_linreg_model.sav')
-    with open(path, 'rb') as file:
+def load_model(month):
+    """Loads and returns a machine learning model & scaler depending on the month."""
+    months = {
+        1: "jan",
+        2: "feb",
+        3: "mar",
+        4: "apr",
+        5: "may",
+        6: "jun",
+        7: "jul",
+        8: "aug",
+        9: "sep",
+        10: "oct",
+        11: "nov",
+        12: "dec"
+    }
+    month_val = months[month]
+    # load the ml model
+    model_file = "model_" + month_val + ".sav"
+    model_path = os.path.join(settings.ML_MODEL_ROOT, model_file)
+    with open(model_path, 'rb') as file:
         model = pickle.load(file)
-    return model
+    # load the scaler
+    scaler_file = "scaler_" + month_val + ".sav"
+    scaler_path = os.path.join(settings.ML_MODEL_ROOT, scaler_file)
+    with open(scaler_path, 'rb') as file:
+        scaler = pickle.load(file)
+    return model, scaler
 
 def create_hour_feature_ref():
     """Builds a dictionary with hours (0 and 1 and 4-23) as key and 1D lists as values.
@@ -34,41 +56,25 @@ def create_hour_feature_ref():
         hour_feature_ref[i] = hour_array
     return hour_feature_ref
 
+def create_segment_ref(month):
+    """Builds a dictionary that gives the mean & standard deviation for each segment based on month."""
 
-def create_day_of_week_feature_ref():
-    """Builds a dictionary with weekdays (mon=0, tues=1, etc.) as key and 1D lists as values.
-
-    In each 1D list, one element will have the value 1, and all others will have the value 0."""
-    day_of_week_feature_ref = {}
-    for i in range(7):
-        day_of_week_array = [0] * 7
-        for j in range(7):
-            if i == j:
-                day_of_week_array[j] = 1
-        day_of_week_feature_ref[i] = day_of_week_array
-
-    return day_of_week_feature_ref
-
-
-def create_month_feature_ref():
-    """Builds a dictionary with months (jan=1, feb=2, etc.) as key and 1D lists as values.
-
-    In each 1D list, one element will have the value 1, and all others will have the value 0."""
-    month_feature_ref = {}
-    for i in range(1, 13):
-        month_array = [0] * 12
-        for j in range(12):
-            if j == i - 1:
-                month_array[j] = 1
-        month_feature_ref[i] = month_array
-
-    return month_feature_ref
-
-def create_segment_ref():
-    """Builds a dictionary from segment_means.JSON that gives the mean value for each segment \
-    based on historical bus data."""
-
-    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means.json')
+    files = {
+        1: 'cache/jan_segments.json',
+        2: 'cache/feb_segments.json',
+        3: 'cache/mar_segments.json',
+        4: 'cache/apr_segments.json',
+        5: 'cache/may_segments.json',
+        6: 'cache/jun_segments.json',
+        7: 'cache/jul_segments.json',
+        8: 'cache/aug_segments.json',
+        9: 'cache/sep_segments.json',
+        10: 'cache/oct_segments.json',
+        11: 'cache/nov_segments.json',
+        12: 'cache/dec_segments.json'
+    }
+    filename = files[month]
+    path = os.path.join(settings.STATIC_ROOT, filename)
     with open(path) as file:
         segment_mean_ref = json.load(file)
     return segment_mean_ref
@@ -77,35 +83,27 @@ def create_segment_ref_gtfs():
     """Builds a dictionary from segment_means_gtfs.JSON that gives the mean value for each segment \
     based on the GTFS data."""
 
-    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means_gtfs.json')
+    path = os.path.join(settings.STATIC_ROOT, 'cache/gtfs_segments.json')
     with open(path) as file:
         segment_mean_ref_gtfs = json.load(file)
     return segment_mean_ref_gtfs
 
-def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, weekday, bank_holiday,  
-    rain, temp, rhum, msl):
+def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, month):
     """Returns a prediction of journey length in seconds for any bus route.
 
     Takes a list of stops as input, as well as the arrival time of a bus at the first stop in the list. 
-    Also takes as input hour (0-23), day_of_week (0-6 for mon-sun), month(1-12 for jan-dec), 
-    weekday (1 for mon-fri, 0 for sat & sun) and bank holiday (1 if the journey date is a bank holiday, 0 otherwise). 
-    Also takes the following weather info as input: rain (in mm), temp (in C), rhum - relative humidity (%) and 
-    msl - mean sea level pressure (hPa)."""
+    Also takes as input hour (0-23), weekday (1 for mon-fri, 0 for sat & sun) and peak (1 for peak times, 
+    0 for off-peak). Also takes the following weather info as input: rain (in mm), temp (in C). Also takes
+    month as input for determining which model to load."""
 
-    # create dictionaries for hour, day_of_week, month and bus stop features
+    # create dictionaries for hour and segment features
     hour_ref = create_hour_feature_ref()
-    day_of_week_ref = create_day_of_week_feature_ref()
-    month_ref = create_month_feature_ref()
-    seg_ref = create_segment_ref()
+    seg_ref = create_segment_ref(month)
     seg_ref_gtfs = create_segment_ref_gtfs()
-    # get day of week and month from the relevant dictionaries
-    day_of_week = day_of_week_ref[day_of_week]
-    month = month_ref[month]
+    # get hour array from the relevant dictionary
     hour = hour_ref[hour]
-    # load the ml model
-    linreg = load_model()
-    # initialise an array to store all predictions
-    predictions = []
+    # load the ml model & scaler
+    model, scaler = load_model(month)
     # initialise an array to store arrival times at various stops
     arrival_time_at_stop = actualtime_arr_stop_first
     arrival_times = []
@@ -116,21 +114,25 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month,
         stop_next = stops[i+1]
         segment = str(stop_first) + "_" + str(stop_next)
         if segment in seg_ref:
-            segment_mean = seg_ref[segment]
+            segment_mean = seg_ref[segment]["mean"]
+            segment_std = seg_ref[segment]["std"]
         elif segment in seg_ref_gtfs:
-            segment_mean = seg_ref_gtfs[segment]
+            segment_mean = seg_ref_gtfs[segment]["mean"]
+            segment_std = seg_ref_gtfs[segment]["std"]
         else:
-            segment_mean = 66
-            print("Unexpected segment encountered! Using default value:", segment_mean)
+            segment_mean = 65
+            segment_std = 57
+            print("Unexpected segment encountered! Using default values for mean and standard deviation...")
         # specify the input for the prediction
-        input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
-        day_of_week + hour]
-        # get a prediction and append to the prediction list
-        prediction = (linreg.predict(input))
-        predictions.append(prediction[0])
-        # update arrival_time_at_stop and append it to the arrival_times list
-        arrival_time_at_stop = arrival_time_at_stop + prediction[0]
-        arrival_times.append(arrival_time_at_stop)
+        input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, rain, temp] + hour]
+        input_scaled = scaler.transform(input)
+        # get a prediction and append updated arrival_time to the list
+        prediction = (model.predict(input_scaled))
+        if prediction[0] <= 0:
+            arrival_times.append(arrival_time_at_stop)
+        else:
+            arrival_time_at_stop = arrival_time_at_stop + prediction[0]
+            arrival_times.append(arrival_time_at_stop)
     # calculate the time for the full trip
     full_trip = arrival_times[len(arrival_times)-1] - arrival_times[0]
     return int(full_trip)
@@ -149,9 +151,13 @@ def openweather_forecast():
         # retrieve weather forecast from the OpenWeather API and convert to JSON object
         r = requests.get(url=api_endpoint)
         data = r.json()
+        if data["cod"] != '200':
+            print("There was an issue retrieving data from the OpenWeather API, using default values.")
+            return -1
         return data
     except:
-        raise Exception("There was an issue retrieving data from the OpenWeather API.")
+        print("There was an issue retrieving data from the OpenWeather API, using default values.")
+        return -1
 
 
 def parse_weather_forecast(journey_timestamp, weather_data):
@@ -174,19 +180,19 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             found = True
             # extract the relevant weather data from the JSON
             temp = item.get("main").get("temp")
-            rhum = item.get("main").get("humidity")
-            msl = item.get("main").get("pressure")
             if "rain" in item and "3h" in item["rain"]:
-                rain = item.get("rain").get("3h")
+                rain = item.get("rain").get("3h")/3
             else:
                 rain = 0
             # once weather is found, break out of the loop
             break
     # if weather info was found, return it. Otherwise, raise an exceptions
     if (found):
-        return rain, temp, rhum, msl
+        return rain, temp
     else:
-        raise Exception("Weather forecast not available for the specified timestamp.")
+        print("Weather forecast not found, using default values.")
+        rain, temp = get_weather_defaults(timestamp.month)
+        return rain, temp
 
 
 def convert_to_seconds(hour, minute):
@@ -223,17 +229,14 @@ def is_bank_holiday(day, month):
 
 def parse_timestamp(timestamp):
     """Function that takes a datetime object as input and returns time in seconds, 
-    the hour, day of week and month. Also returns a weekday and bank holiday flag (1 for True)."""
+    the hour, and month. Also returns a weekday flag (1 for Mon-Fri, 0 for Sat, Sun & Bank Holidays)."""
 
     time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
-    day_of_week = timestamp.weekday()
-    day = timestamp.day
-    month = timestamp.month
-    hour = timestamp.hour
-    weekday = is_weekday(day_of_week)
-    bank_holiday = is_bank_holiday(day, month)
-
-    return time_in_seconds, day_of_week, month, weekday, bank_holiday, hour
+    weekday = is_weekday(timestamp.weekday())
+    if is_bank_holiday(timestamp.day, timestamp.month) == 1:
+        weekday = 0
+    peak = is_peak(timestamp.hour, weekday)
+    return time_in_seconds, weekday, timestamp.hour, peak
 
 
 def format_stop_list(stops):
@@ -256,7 +259,7 @@ def format_stop_list(stops):
     return formatted_stops
 
 
-def predict_journey_time(stops, timestamp):
+def predict_journey_time(stops, timestamp, rain, temp):
     """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
         time in minutes."""
 
@@ -267,13 +270,9 @@ def predict_journey_time(stops, timestamp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, day_of_week, month, weekday, bank_holiday, hour = parse_timestamp(timestamp)
-    # call the OpenWeather API and parse the response
-    weather_data = openweather_forecast()
-    rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
+    actualtime_arr_stop_first, weekday, hour, peak = parse_timestamp(timestamp)
     # make a prediction based on the input and return it
-    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
-        weekday, bank_holiday, rain, temp, rhum, msl)
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, timestamp.month)
     # return the prediction
     return prediction
 
@@ -374,9 +373,9 @@ def calculate_time_diff(trips, time):
 def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time):
     """Returns the list of stops that the bus will travel along between the user's origin and destination."""
     # format some of the input values as required for database queries
-    start_point = '%' + start_point.strip() + '%'
-    end_point = '%' + end_point.strip() + '%'
-    headsign = '%' + headsign.strip() + '%'
+    start_point = start_point.strip()
+    end_point = end_point.strip()
+    headsign = headsign.strip()
     stop_list = []
     # get the relevant service id based on the departure time
     service_id = get_current_service_id(departure_time)
@@ -396,8 +395,8 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
+                and s.stop_name = %s \
+                and st.stop_headsign = %s;"
         cursor.execute(sql, [route_id, start_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for start point: " + start_point)
@@ -419,8 +418,8 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
+                and s.stop_name = %s \
+                and st.stop_headsign = %s;"
         cursor.execute(sql, [route_id, end_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for end point: " + end_point)
@@ -469,7 +468,7 @@ def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
                 and t.service_id = %s \
                 and r.route_short_name = %s \
                 and s.stop_id = %s \
-                and st.stop_headsign like %s \
+                and st.stop_headsign = %s \
                 and (st.arrival_time - TIME(%s)) > 0 \
                 order by (st.arrival_time - TIME(%s)) \
                 limit 1) as b \
@@ -509,8 +508,8 @@ def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
+                and s.stop_name = %s \
+                and st.stop_headsign = %s;"
         cursor.execute(sql, [route_id, stop_name, headsign])
         stop_ids = cursor.fetchall()
         for stop in stop_ids:
@@ -552,3 +551,18 @@ def clean_resp(resp):
     opening_hour = get_opening_hour(resp)
     point.append(opening_hour)
     return point
+
+def is_peak(hour, weekday_flag):
+    """Takes an hour and weekday flag as input, and returns 1 for peak time and 0 for off-peak."""
+    peak_hours = [7,8,9,16,17,18]
+    if hour in peak_hours and weekday_flag == 1:
+        return 1
+    return 0
+
+def get_weather_defaults(month):
+    path = os.path.join(settings.STATIC_ROOT, 'cache/weather.json')
+    with open(path) as file:
+        temp_means = json.load(file)
+    temp = temp_means[str(month)]
+    rain = 0
+    return rain, temp

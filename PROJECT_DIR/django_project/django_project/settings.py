@@ -89,11 +89,10 @@ DATABASES = {
         'PASSWORD': config('DATABASE_PASSWORD'),
         'PORT': '3306',
 
-        #     # PRODUCTION
-        'HOST': 'localhost'
-        # 'HOST': '127.0.0.1',
+        # PRODUCTION
+        'HOST': 'localhost',
 
-        #     # UCD - 137.43.49.50 is for development
+        # UCD - 137.43.49.50 is for development
         # 'HOST': '137.43.49.50'
     }
 

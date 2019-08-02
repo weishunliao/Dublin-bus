@@ -48,19 +48,23 @@ def get_travel_time(request):
     print("body of the request", body)
     
     route_id = body['route_id']
-    
     start_point = body['start_point']
     num_stops = int(body['num_stops'])
     end_point = body['end_point']
     departure_time_value = body['departure_time_value']
-    num_stops = int(body['num_stops'])
     route_id = body['route_id']
     headsign = body['head_sign']
     departure_time = datetime.fromtimestamp(int(departure_time_value))
+    # call the OpenWeather API and parse the response
+    weather_data = functions.openweather_forecast()
+    if weather_data == -1:
+        rain, temp = functions.get_weather_defaults(departure_time.month)
+    else:
+        rain, temp = functions.parse_weather_forecast(departure_time, weather_data)
     # get the list of stops that the bus will pass along
     stop_list = functions.get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time)
     # call the machine learning model to get a prediction for journey time
-    journey_time = functions.predict_journey_time(stop_list, departure_time_value)
+    journey_time = functions.predict_journey_time(stop_list, departure_time_value, rain, temp)
     print("Journey Time:", journey_time)
     return JsonResponse({"journey_time": journey_time})
 
