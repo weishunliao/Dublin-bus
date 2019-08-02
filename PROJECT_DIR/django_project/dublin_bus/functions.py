@@ -34,20 +34,6 @@ def create_hour_feature_ref():
         hour_feature_ref[i] = hour_array
     return hour_feature_ref
 
-def create_month_feature_ref():
-    """Builds a dictionary with months (jan=1, feb=2, etc.) as key and 1D lists as values.
-
-    In each 1D list, one element will have the value 1, and all others will have the value 0."""
-    month_feature_ref = {}
-    for i in range(1, 13):
-        month_array = [0] * 12
-        for j in range(12):
-            if j == i - 1:
-                month_array[j] = 1
-        month_feature_ref[i] = month_array
-
-    return month_feature_ref
-
 def create_segment_ref():
     """Builds a dictionary from segment_means.JSON that gives the mean value for each segment \
     based on historical bus data."""
@@ -75,11 +61,9 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
 
     # create dictionaries for hour and segment features
     hour_ref = create_hour_feature_ref()
-    month_ref = create_month_feature_ref()
     seg_ref = create_segment_ref()
     seg_ref_gtfs = create_segment_ref_gtfs()
     # get hour array from the relevant dictionary
-    month = month_ref[month]
     hour = hour_ref[hour]
     # load the ml model
     linreg = load_model()

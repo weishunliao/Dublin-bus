@@ -44,29 +44,6 @@ class TestCreateHourFeatureRef(TestCase):
                     23: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
         self.assertEqual(functions.create_hour_feature_ref(), hour_ref)
 
-
-class TestCreateMonthFeatureRef(TestCase):
-    """Test cases for the create_month_feature_ref function."""
-
-    def test_create_month_feature_ref(self):
-        """Test for the ouput of the create_month_feature_ref function."""
-        month_ref = {
-            1: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            2: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            3: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            4: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            5: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-            6: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-            7: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            8: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            9: [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            10: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            12: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-        }
-        self.assertEqual(functions.create_month_feature_ref(), month_ref)
-
-
 class TestCreateSegmentRef(TestCase):
     """Test cases for the create_segment_ref function."""
 
