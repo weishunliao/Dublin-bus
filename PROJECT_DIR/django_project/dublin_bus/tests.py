@@ -84,16 +84,13 @@ class TestRoutePrediction(TestCase):
                  1103, 1104]
         rain = 0.1
         temp = 15
-        rhum = 75
-        msl = 1000
         actualtime_arr_stop_first = 32400  # 9:00
         hour = 9
-        day_of_week = 4  # monday
-        month = 7  # july
+        peak = 1
+        month = 8  # august
         weekday = 1
-        bank_holiday = 0
-        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
-                                                    weekday, bank_holiday, rain, temp, rhum, msl), 2485)
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
+               rain, temp, month), 2527)
 
 
 class TesParseWeatherForecast(TestCase):

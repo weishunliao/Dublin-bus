@@ -126,10 +126,10 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
             segment_std = 57
             print("Unexpected segment encountered! Using default values for mean and standard deviation...")
         # specify the input for the prediction
-        input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
-        day_of_week + hour]
+        input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, rain, temp] + hour]
+        input_scaled = scaler.transform(input)
         # get a prediction and append to the prediction list
-        prediction = (model.predict(input))
+        prediction = (model.predict(input_scaled))
         predictions.append(prediction[0])
         # update arrival_time_at_stop and append it to the arrival_times list
         arrival_time_at_stop = arrival_time_at_stop + prediction[0]
