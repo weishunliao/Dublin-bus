@@ -433,12 +433,6 @@ function AddMarkers(data, map) {
       url: "/static/marker.png",
       height: 50,
       width: 50
-    }
-    let clusterStyles = [{
-        textColor: 'rgba(0,0,0,0)',
-        url: '/static/images/marker.png',
-        height: 50,
-        width: 50
     }];
 
     let mcOptions = {
