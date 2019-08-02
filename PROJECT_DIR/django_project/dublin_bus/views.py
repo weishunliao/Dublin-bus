@@ -204,5 +204,9 @@ def snap_to_road(request):
             lng = data[str(i)][1]
             path += str(lat) + "," + str(lng) + "|"
     path = path[:-1]
-    resp = requests.get("https://roads.googleapis.com/v1/snapToRoads?path=" + path + "&interpolate=true&key=" + MAP_KEY).json()
-    return JsonResponse(resp)
+    resp = requests.get(
+        "https://roads.googleapis.com/v1/snapToRoads?path=" + path + "&interpolate=true&key=" + MAP_KEY).json()
+    road = []
+    for i in resp['snappedPoints']:
+        road.append({'lat': i['location']['latitude'], 'lng': i['location']['longitude']})
+    return JsonResponse({'road': road})

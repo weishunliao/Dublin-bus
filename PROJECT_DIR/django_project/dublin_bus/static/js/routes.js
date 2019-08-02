@@ -1,12 +1,14 @@
-import {markers, map} from "./google_maps";
-import {create_favourite_route_card, create_favourite_stop_card} from "./favourites";
+import {markers, map, bus_route_drawer} from "./google_maps";
+import {create_favourite_route_card} from "./favourites";
 import {controller} from "./stops";
 // import {window_height} from "./stops";
 //
 // document.getElementById("routes__content__wrapper").style.height = window_height * 0.5 + "px";
 // document.querySelector(".timeline-wrapper__content__box").style.height = window_height * 0.52 + "px";
 let route_id;
-let stop_list = [];
+export let stop_list = [];
+let realtime_bus_marker = [];
+let realtime_bus_marker_on_map = [];
 
 $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
@@ -18,7 +20,8 @@ $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     window.setTimeout(detail2, 800);
 });
 
-export const get_bus_stop_list = (route_id, direction) => {
+export const get_bus_stop_list = (id, direction) => {
+    route_id = id;
     fetch('bus_stop_list_by_route?route_id=' + route_id + "&direction=" + direction + "&t=", {method: 'get'})
         .then(function (response) {
             if (response.status >= 200 && response.status < 300) {
@@ -33,6 +36,7 @@ export const get_bus_stop_list = (route_id, direction) => {
             return display_stops(data['stops_list'], route_id);
         }).then(function (stops) {
         stop_list = [];
+        realtime_bus_marker = [];
         for (let i = 0; i < stops.length; i++) {
             stop_list.push(parseInt(stops[i][0]));
             update_real_time(i, stops[i][0], route_id);
@@ -90,6 +94,7 @@ const update_real_time = (num, stop_id, route_id) => {
         let elem = document.querySelectorAll("li")[num];
         if (data['time'] === 'Due') {
             display_bus_arrival_time(num);
+            realtime_bus_marker.push(stop_id);
             elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon class="bus-icon" name="md-bus" size="large"></ion-icon>';
         } else {
             elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ';
@@ -119,8 +124,10 @@ export const detail2 = () => {
 };
 
 document.getElementById("routes__toolbar__back-btn").addEventListener('click', () => {
+    clear_bus_marker_on_map();
     detail2();
     update_favourites_routes();
+    bus_route_drawer.setMap(null);
 });
 const cards = document.getElementsByClassName("routes__content__card");
 for (let card of cards) {
@@ -130,14 +137,7 @@ for (let card of cards) {
         window.setTimeout(detail2, 800);
     });
 }
-const clear_markers = () => {
-    for (let [key, value] of Object.entries(markers)) {
-        value.setMap(null);
-    }
-    // for (let stop_ID of stop_list) {
-    //     markers["" + stop_ID].setMap(map);
-    // }
-};
+
 
 const snap_to_road = () => {
     fetch('/snap_to_road', {
@@ -149,28 +149,70 @@ const snap_to_road = () => {
     }).then(function (response) {
         return response.json();
     }).then(function (data) {
-        console.log(data);
+        bus_route_drawer.setMap(map);
+        bus_route_drawer.setPath(data['road']);
     });
 };
-
+const clear_bus_marker_on_map = () => {
+    clearInterval(blinker);
+    for (let bus of realtime_bus_marker_on_map) {
+        bus.setMap(null);
+        bus = null;
+    }
+    realtime_bus_marker_on_map = [];
+};
+const draw_bus_markers_on_route = () => {
+    clear_bus_marker_on_map();
+    for (let bus of realtime_bus_marker) {
+        bus = parseInt(bus);
+        let latitude = markers["" + bus].getPosition().lat();
+        let longitude = markers["" + bus].getPosition().lng();
+        let latLng = new google.maps.LatLng(latitude, longitude);
+        let busStopIcon = {
+            url: "/static/images/bus_realtime.svg", // url for the image
+            scaledSize: new google.maps.Size(30, 30), // size of the image
+            origin: new google.maps.Point(0, 0), // origin
+        };
+        let busMarker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            icon: busStopIcon,
+            title: route_id,
+            id: route_id
+        });
+        realtime_bus_marker_on_map.push(busMarker);
+    }
+    setInterval(blinker, 800);
+};
+const blinker = () => {
+    for (let busMarker of realtime_bus_marker_on_map) {
+        if (busMarker.getMap() === null) {
+            busMarker.setMap(map);
+        } else {
+            busMarker.setMap(null);
+        }
+    }
+};
 
 const route_show_on_map = () => {
     const draw_height = $(".drawer__container").css('height');
     if (draw_height === "290px") {
+        bus_route_drawer.setMap(null);
+        clear_bus_marker_on_map();
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
         $('.drawer__container').animate({'height': window.innerHeight * 0.95}, 200, 'linear');
     } else {
-        // snap_to_road();
-        clear_markers();
+        snap_to_road();
+        draw_bus_markers_on_route();
         let mid_stop = stop_list[Math.floor(stop_list.length / 2)];
         map.setZoom(12);
         let mid_marker = markers["" + mid_stop].getPosition();
         map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         document.getElementById("routes__toolbar__back-btn").style.display = 'none';
-        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
         $('.drawer__container').animate({'height': 290}, 200, 'linear');
     }
 };
