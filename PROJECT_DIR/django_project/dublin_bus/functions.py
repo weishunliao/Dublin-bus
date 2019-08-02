@@ -61,7 +61,7 @@ def create_segment_ref_gtfs():
     """Builds a dictionary from segment_means_gtfs.JSON that gives the mean value for each segment \
     based on the GTFS data."""
 
-    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means_gtfs.json')
+    path = os.path.join(settings.STATIC_ROOT, 'cache/gtfs_segments.json')
     with open(path) as file:
         segment_mean_ref_gtfs = json.load(file)
     return segment_mean_ref_gtfs
@@ -97,10 +97,12 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
             segment_mean = seg_ref[segment]["mean"]
             segment_std = seg_ref[segment]["std"]
         elif segment in seg_ref_gtfs:
-            segment_mean = seg_ref_gtfs[segment]
+            segment_mean = seg_ref_gtfs[segment]["mean"]
+            segment_std = seg_ref_gtfs[segment]["std"]
         else:
-            segment_mean = 66
-            print("Unexpected segment encountered! Using default value:", segment_mean)
+            segment_mean = 65
+            segment_std = 57
+            print("Unexpected segment encountered! Using default values for mean and standard deviation...")
         # specify the input for the prediction
         input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
         day_of_week + hour]
