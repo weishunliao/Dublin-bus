@@ -227,7 +227,7 @@ def parse_timestamp(timestamp):
     weekday = is_weekday(timestamp.weekday())
     if is_bank_holiday(timestamp.day, timestamp.month) == 1:
         weekday = 0
-    return time_in_seconds, timestamp.month, weekday, timestamp.hour
+    return time_in_seconds, weekday, timestamp.hour
 
 
 def format_stop_list(stops):
@@ -261,7 +261,7 @@ def predict_journey_time(stops, timestamp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, month, weekday, hour = parse_timestamp(timestamp)
+    actualtime_arr_stop_first, weekday, hour = parse_timestamp(timestamp)
     # call the OpenWeather API and parse the response
     weather_data = openweather_forecast()
     rain, temp = parse_weather_forecast(timestamp, weather_data)
