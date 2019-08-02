@@ -168,8 +168,7 @@ class TesParseWeatherForecast(TestCase):
                         "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
                                  "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 4 2019  2:30PM', '%b %d %Y %I:%M%p')
-        with self.assertRaises(Exception):
-            functions.parse_weather_forecast(timestamp, weather_data)
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0, 17.0))
 
 
 class TestConvertToSeconds(TestCase):
@@ -745,3 +744,11 @@ class TestIsPeak(TestCase):
     def test_not_peak_weekend(self):
         """Test that the correct values are returned for a weekend."""
         self.assertEqual(functions.is_peak(17, 0), 0)
+
+class TestGetWeatherDefaults(TestCase):
+    """Test cases for the get_weather_defaults function."""
+
+    def test_get_weather_defaults(self):
+        """Test that the correct values are returned for a given month."""
+
+        self.assertEqual(functions.get_weather_defaults(8), (0, 16.0))
