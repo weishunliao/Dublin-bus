@@ -47,10 +47,15 @@ class TestCreateHourFeatureRef(TestCase):
 class TestCreateSegmentRef(TestCase):
     """Test cases for the create_segment_ref function."""
 
-    def test_create_segment_ref(self):
+    def test_create_segment_ref_mean(self):
         """Test for the ouput of the create_segment_ref function."""
-        segment_ref = functions.create_segment_ref()
-        self.assertEqual(segment_ref["946_1131"], 69)
+        segment_ref = functions.create_segment_ref(8)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 151.0)
+
+    def test_create_segment_ref_std(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(8)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 54.0)
 
 
 class TestCreateSegmentRefGtfs(TestCase):

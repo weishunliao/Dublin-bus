@@ -34,11 +34,25 @@ def create_hour_feature_ref():
         hour_feature_ref[i] = hour_array
     return hour_feature_ref
 
-def create_segment_ref():
-    """Builds a dictionary from segment_means.JSON that gives the mean value for each segment \
-    based on historical bus data."""
+def create_segment_ref(month):
+    """Builds a dictionary that gives the mean & standard deviation for each segment based on month."""
 
-    path = os.path.join(settings.STATIC_ROOT, 'cache/segment_means.json')
+    files = {
+        1: 'cache/jan_segments.json',
+        2: 'cache/feb_segments.json',
+        3: 'cache/mar_segments.json',
+        4: 'cache/apr_segments.json',
+        5: 'cache/may_segments.json',
+        6: 'cache/jun_segments.json',
+        7: 'cache/jul_segments.json',
+        8: 'cache/aug_segments.json',
+        9: 'cache/sep_segments.json',
+        10: 'cache/oct_segments.json',
+        11: 'cache/nov_segments.json',
+        12: 'cache/dec_segments.json'
+    }
+    filename = files[month]
+    path = os.path.join(settings.STATIC_ROOT, filename)
     with open(path) as file:
         segment_mean_ref = json.load(file)
     return segment_mean_ref
@@ -52,16 +66,17 @@ def create_segment_ref_gtfs():
         segment_mean_ref_gtfs = json.load(file)
     return segment_mean_ref_gtfs
 
-def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp):
+def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, month):
     """Returns a prediction of journey length in seconds for any bus route.
 
     Takes a list of stops as input, as well as the arrival time of a bus at the first stop in the list. 
     Also takes as input hour (0-23), weekday (1 for mon-fri, 0 for sat & sun) and peak (1 for peak times, 
-    0 for off-peak). Also takes the following weather info as input: rain (in mm), temp (in C)."""
+    0 for off-peak). Also takes the following weather info as input: rain (in mm), temp (in C). Also takes
+    month as input for determining which model to load."""
 
     # create dictionaries for hour and segment features
     hour_ref = create_hour_feature_ref()
-    seg_ref = create_segment_ref()
+    seg_ref = create_segment_ref(month)
     seg_ref_gtfs = create_segment_ref_gtfs()
     # get hour array from the relevant dictionary
     hour = hour_ref[hour]
@@ -79,7 +94,8 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
         stop_next = stops[i+1]
         segment = str(stop_first) + "_" + str(stop_next)
         if segment in seg_ref:
-            segment_mean = seg_ref[segment]
+            segment_mean = seg_ref[segment]["mean"]
+            segment_std = seg_ref[segment]["std"]
         elif segment in seg_ref_gtfs:
             segment_mean = seg_ref_gtfs[segment]
         else:
@@ -230,7 +246,7 @@ def predict_journey_time(stops, timestamp):
     weather_data = openweather_forecast()
     rain, temp = parse_weather_forecast(timestamp, weather_data)
     # make a prediction based on the input and return it
-    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp)
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, timestamp.month)
     # return the prediction
     return prediction
 
