@@ -151,7 +151,7 @@ def openweather_forecast():
         # retrieve weather forecast from the OpenWeather API and convert to JSON object
         r = requests.get(url=api_endpoint)
         data = r.json()
-        if data["cod"] != 200:
+        if data["cod"] != '200':
             print("There was an issue retrieving data from the OpenWeather API, using default values.")
             return -1
         return data
@@ -181,7 +181,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             # extract the relevant weather data from the JSON
             temp = item.get("main").get("temp")
             if "rain" in item and "3h" in item["rain"]:
-                rain = item.get("rain").get("3h")
+                rain = item.get("rain").get("3h")/3
             else:
                 rain = 0
             # once weather is found, break out of the loop
