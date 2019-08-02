@@ -153,7 +153,8 @@ def openweather_forecast():
         data = r.json()
         return data
     except:
-        raise Exception("There was an issue retrieving data from the OpenWeather API.")
+        print("There was an issue retrieving data from the OpenWeather API, using default values.")
+        return -1
 
 
 def parse_weather_forecast(journey_timestamp, weather_data):
@@ -186,7 +187,9 @@ def parse_weather_forecast(journey_timestamp, weather_data):
     if (found):
         return rain, temp
     else:
-        raise Exception("Weather forecast not available for the specified timestamp.")
+        print("Weather forecast not found, using default values.")
+        rain, temp = get_weather_defaults(timestamp.month)
+        return rain, temp
 
 
 def convert_to_seconds(hour, minute):
@@ -553,5 +556,10 @@ def is_peak(hour, weekday_flag):
         return 1
     return 0
 
-def get_weather_defaults(timestamp):
-    pass
+def get_weather_defaults(month):
+    path = os.path.join(settings.STATIC_ROOT, 'cache/weather.json')
+    with open(path) as file:
+        temp_means = json.load(file)
+    temp = temp_means[str(month)]
+    rain = 0
+    return rain, temp
