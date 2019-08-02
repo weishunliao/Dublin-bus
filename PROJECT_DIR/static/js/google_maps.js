@@ -223,7 +223,21 @@ export default function initMap() {
     document.getElementById("submitter-form").addEventListener("submit", function(e) {
         e.preventDefault();
         submitButton.innerHTML = 'Go!'
-      document.querySelector("#routesHere").innerHTML = "";
+      document.querySelector("#routesHere").innerHTML = `
+      
+      <div class="loader__wrapper loader-jp" id="bus_loader">
+      <h3>Please wait...</h3><br>
+      <div>
+          <img src="/static/images/bus.jpg" alt="" class="loader__bus">
+      </div>
+      <div class="loader__wrapper2">
+          <img src="/static/images/road.png" alt="" class="loader__road"/>
+      </div>
+            </div>
+      
+      
+      `;
+
       document.querySelector('.journey-planner').classList.add('converted');
       directionsService.route(
         {
@@ -356,11 +370,13 @@ export default function initMap() {
                   departure_time,
                   id: i
                 });
-           
+                
+                
                 Route.appendToDom(newRoute);
                 
               }
             }
+            document.getElementById("bus_loader").style.display = "none";
             // directionsDisplay.setDirections(response);
             console.log("directionsDisplay", directionsDisplay);
           } else {

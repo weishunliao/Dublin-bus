@@ -133,7 +133,7 @@ export class Route {
   }
 
   static appendToDom(route) {
-    $("#routesHere").append(
+    $("#routesHere").prepend(
       Route.jpDisplayCard(route.nodeHTML, route.routeData.id)
     );
     route.domNode = document.querySelector(`#route-${route.routeData.id}`);
