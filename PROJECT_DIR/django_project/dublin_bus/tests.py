@@ -61,10 +61,15 @@ class TestCreateSegmentRef(TestCase):
 class TestCreateSegmentRefGtfs(TestCase):
     """Test cases for the create_segment_ref_gtfs function."""
 
-    def test_create_segment_ref_gtfs(self):
+    def test_create_segment_ref_gtfs_mean(self):
         """Test for the ouput of the create_segment_ref_gtfs function."""
         segment_ref = functions.create_segment_ref_gtfs()
-        self.assertEqual(segment_ref["1154_946"], 80)
+        self.assertEqual(segment_ref["1154_946"]["mean"], 80)
+
+    def test_create_segment_ref_gtfs_std(self):
+        """Test for the ouput of the create_segment_ref_gtfs function."""
+        segment_ref = functions.create_segment_ref_gtfs()
+        self.assertEqual(segment_ref["1154_946"]["std"], 14)
 
 
 class TestRoutePrediction(TestCase):
