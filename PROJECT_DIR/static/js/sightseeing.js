@@ -1,3 +1,8 @@
+import { height, tabsHeight} from './nodes'
+
+
+
+document.querySelector(".sightseeing__options__cards").style.height = (height - tabsHeight - (height * 0.03) -175) + "px";
 const get_sights_info = (category) => {
     return new Promise((resolve, reject) => {
         fetch('sights_info?category=' + category, {method: 'get'})
@@ -5,13 +10,6 @@ const get_sights_info = (category) => {
                 return response.json();
             })
             .then(function (data) {
-                if (document.getElementById("sightseeing__options__cards") !== null) {
-                    document.getElementById('sightseeing__options__cards').remove();
-                    $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
-                } else {
-                    $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
-                }
-
                 let points = data['points'];
                 for (let point of points) {
                     create_card(point);
@@ -23,10 +21,11 @@ const get_sights_info = (category) => {
     });
 };
 const cards = document.getElementsByClassName("sightseeing__category__content__icon");
+
 for (let card of cards) {
+   
     card.addEventListener('click', function () {
-        // get_sights_info(this.id);
-        handleButtonClick(this.id);
+        category_btn(this.id);
     });
 }
 const create_card = (point) => {
@@ -36,7 +35,7 @@ const create_card = (point) => {
         'class="sightseeing__options__cards__info"><ion-row><ion-col size="12" class="sightseeing__options__cards__info__name">' +
         '<span id="sightseeing__options__cards__info__name">' + point[0] + '</span></ion-col></ion-row><ion-row><ion-col size="12" ' +
         'class="sightseeing__options__cards__info__addr"><span id="sightseeing__options__cards__info__addr">' + point[1] + '</span>' +
-        '</ion-col></ion-row><ion-row><ion-col size="2" class="sightseeing__options__cards__info__ratting__number"><span>'+point[2]+'</span></ion-col><ion-col size="10" class=""><div class="sightseeing__options__cards__info__ratting">\n' +
+        '</ion-col></ion-row><ion-row><ion-col size="2" class="sightseeing__options__cards__info__ratting__number"><span>' + point[2] + '</span></ion-col><ion-col size="10" class=""><div class="sightseeing__options__cards__info__ratting">\n' +
         '<div class="sightseeing__options__cards__info__ratting__top" id="sightseeing__options__cards__info__ratting" ' +
         'style="width: ' + rating + '"> \n' +
         ' <span>★★★★★</span></div><div class="sightseeing__options__cards__info__ratting__bottom"><span>★★★★★</span>' +
@@ -48,36 +47,35 @@ const create_card = (point) => {
 };
 
 const page_switch = () => {
-    if (document.getElementById('sightseeing__category').style.display === 'none') {
-        $("#sightseeing__category").fadeIn();
-        $("#sightseeing__options").fadeOut();
+    if (document.getElementById("sightseeing__options__cards") !== null) {
+        document.getElementById('sightseeing__options__cards').remove();
+        $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
     } else {
-        $("#sightseeing__category").fadeOut();
-        $("#sightseeing__options").fadeIn();
+        $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
+    }
+    if (document.getElementById('sightseeing__category').style.display === 'none') {
+        document.getElementById('sightseeing__category').style.display = "";
+        document.getElementById('sightseeing__options').style.display = "none";
+    } else {
+        document.getElementById('sightseeing__options').style.display = "";
+        document.getElementById('sightseeing__category').style.display = "none";
     }
 };
 document.getElementById("sightseeing__options__back-btn").addEventListener('click', page_switch);
 
-$(".sightseeing__options__cards").on("touchmove", function (e) {
+$(".sightseeing__options__cards").on("touchmove", (e) => {
     e.stopPropagation();
 });
 
 
-const controller = document.querySelector('ion-loading-controller');
-
-function handleButtonClick(category) {
-    controller.componentOnReady();
-    controller.create({
-        message: 'Please wait...',
-        spinner: 'crescent',
-    }).then((loading) => {
-        loading.present();
-        get_sights_info(category).then(() => {
-            loading.dismiss();
-            page_switch();
-        });
+function category_btn(category) {
+    page_switch();
+    document.getElementById("bus_loader").style.display = "";
+    get_sights_info(category).then(() => {
+        document.getElementById("bus_loader").style.display = "none";
     });
 }
+
 
 export const get_sights_info_search = (place_id) => {
     fetch('place_detail?place_id=' + place_id, {method: 'get'})

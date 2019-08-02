@@ -1,5 +1,5 @@
 .timeline-wrapper {
-  margin-top: 20px;
+  //margin-top: 20px;
   text-align: center;
 
   span {
@@ -99,6 +99,7 @@
 
     &__box {
       overflow: scroll;
+      -webkit-overflow-scrolling: touch;
       height: 50rem;
     }
 
@@ -139,4 +140,11 @@
 .bus-icon {
   font-size: 20px;
   color: $bus_orange
+}
+
+
+.direction_switch_btn {
+  button {
+    background-color: $db_blue;
+  }
 }

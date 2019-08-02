@@ -1,5 +1,12 @@
 import {map, markers} from "./google_maps";
+import {create_favourite_stop_card} from "./favourites";
 
+// export const window_height = Math.max(
+//     document.documentElement.clientHeight,
+//     window.innerHeight || 0
+// );
+// document.getElementById("stops__time-table").style.height = window_height * 0.53 + "px";
+// document.getElementById("stops__content__wrapper").style.height = window_height * 0.40 + "px";
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
     // console.log(type, suggestion);
@@ -19,6 +26,13 @@ export const get_bus_real_time_info = (stop_id) => {
         .then(function (data) {
             document.getElementById("stops__content__card__stop-id").innerText = stop_id;
             document.getElementById("stops__content__card__stop-name").innerText = data['stop_name'];
+            if (is_favourite(stop_id)) {
+                heart_empty.style.display = 'none';
+                heart_solid.style.display = '';
+            } else {
+                heart_empty.style.display = '';
+                heart_solid.style.display = 'none';
+            }
             get_stop_server_route(stop_id);
             // create_chip(data[stop_id]);
             if (document.getElementById('slots') !== null) {
@@ -29,7 +43,7 @@ export const get_bus_real_time_info = (stop_id) => {
             }
             // Real Time Information is currently unavailable for this bus stop
 
-            if (data[stop_id].length == 0) {
+            if (data[stop_id].length === 0) {
                 let elem = '<ion-row class="stops__time-table-list__content">' +
                     '<ion-col size="10" offset="1"><div class="stops__time-table-list__content__error"><ion-label ' +
                     'class="stops__time-table-list__content__label__des stops__time-table-list__content__label">' +
@@ -91,14 +105,11 @@ export const detail = () => {
         container.animate({'margin-left': '0'}, 200, 'linear');
     }
 };
-document.getElementById("stops__toolbar__back-btn").addEventListener('click', detail);
-const cards = document.getElementsByClassName("stops__content__card");
-for (let card of cards) {
-    card.addEventListener('click', function () {
-        get_bus_real_time_info(this.dataset.item);
-        window.setTimeout(detail, 800);
-    });
-}
+
+document.getElementById("stops__toolbar__back-btn").addEventListener('click', () => {
+    detail();
+    update_favourites_stops();
+});
 
 
 const get_stop_server_route = (stop_id) => {
@@ -160,11 +171,7 @@ export const drawer_default_height = () => {
     $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
     document.getElementById("stops__toolbar__back-btn").style.display = '';
     document.getElementById("routes__toolbar__back-btn").style.display = '';
-    let h = Math.max(
-        document.documentElement.clientHeight,
-        window.innerHeight || 0
-    );
-    $('.drawer__container').animate({'height': h * 0.95}, 200, 'linear');
+    $('.drawer__container').animate({'height': window.innerHeight * 0.95}, 200, 'linear');
 };
 
 
@@ -181,3 +188,114 @@ $(".stops__content__wrapper").on("touchmove", function (e) {
 $(".stops__time-table").on("touchmove", function (e) {
     e.stopPropagation();
 });
+
+const heart_solid = document.getElementById("stops__content__card__heart-solid");
+const heart_empty = document.getElementById("stops__content__card__heart-empty");
+
+heart_solid.addEventListener('click', () => {
+    let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
+    confirm_box(stop_id);
+});
+
+heart_empty.addEventListener('click', () => {
+    let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
+    save_favourites(stop_id);
+    toggle_heart();
+});
+
+
+export const controller = document.querySelector('ion-alert-controller');
+
+export function confirm_box(stop_id) {
+    controller.create({
+        header: 'CONFIRM!',
+        message: 'Do you want to <strong>remove</strong> this stop?',
+        buttons: [
+            {
+                text: 'Cancel',
+                role: 'cancel',
+                cssClass: 'secondary',
+            }, {
+                text: 'Okay',
+                handler: () => {
+                    remove_favourites(stop_id);
+                    toggle_heart();
+                    hide_card(stop_id);
+                }
+            }
+        ]
+    }).then(alert => {
+        alert.present();
+    });
+}
+
+
+const is_favourite = (stop_id) => {
+    stop_id = String(stop_id);
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    if (!stop_arr || stop_arr.length === 0) {
+        return false;
+    }
+    for (let i = 0; i < stop_arr.length; i++) {
+        if (stop_arr[i] === stop_id) {
+            return true;
+        }
+    }
+    return false;
+};
+
+export const toggle_heart = () => {
+    if (heart_solid.style.display === '') {
+        heart_empty.style.display = '';
+        heart_solid.style.display = 'none';
+    } else {
+        heart_empty.style.display = 'none';
+        heart_solid.style.display = '';
+    }
+};
+
+export const save_favourites = (stop_id) => {
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    if (!stop_arr) {
+        stop_arr = [];
+    }
+    stop_arr.push(stop_id);
+    stop_arr = new Set(stop_arr);
+    localStorage.setItem("stops", JSON.stringify(stop_arr));
+};
+
+export const remove_favourites = (stop_id) => {
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    let temp = [];
+    for (let i = 0; i < stop_arr.length; i++) {
+        if (stop_arr[i] !== stop_id) {
+            temp.push(stop_arr[i]);
+        }
+    }
+    localStorage.setItem("stops", JSON.stringify(temp));
+};
+
+document.getElementById("tab-button-stops").addEventListener('click', () => {
+    update_favourites_stops();
+});
+
+const update_favourites_stops = () => {
+    let stop_arr = JSON.parse(localStorage.getItem("stops"));
+    let elem = document.getElementById("favourite_stops__cards__in__stop");
+    if (elem) {
+        elem.remove();
+        $('#stops__content__wrapper').append('<div id="favourite_stops__cards__in__stop"></div>');
+    }
+    if (stop_arr && stop_arr.length !== 0) {
+        for (let id of stop_arr) {
+            create_favourite_stop_card(id, "stop");
+        }
+    }
+};
+
+const hide_card = (stop_id) => {
+    let cards = document.querySelectorAll("#stops__content__card__" + stop_id);
+    for (let card of cards) {
+        card.style.display = 'none';
+    }
+};
