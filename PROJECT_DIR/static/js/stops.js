@@ -105,18 +105,12 @@ export const detail = () => {
         container.animate({'margin-left': '0'}, 200, 'linear');
     }
 };
-document.getElementById("stops__toolbar__back-btn").addEventListener('click', detail);
 
-const add_favourite_card_listener = () => {
-    const cards = document.getElementsByClassName("stops__content__card");
-    for (let card of cards) {
-        card.addEventListener('click', function () {
-            get_bus_real_time_info(this.dataset.item);
-            window.setTimeout(detail, 800);
-        });
-    }
+document.getElementById("stops__toolbar__back-btn").addEventListener('click', () => {
+    detail();
+    update_favourites_stops();
+});
 
-};
 
 const get_stop_server_route = (stop_id) => {
     fetch('server_route?stop_id=' + stop_id, {method: 'get'})
@@ -210,12 +204,12 @@ heart_empty.addEventListener('click', () => {
 });
 
 
-const controller = document.querySelector('ion-alert-controller');
+export const controller = document.querySelector('ion-alert-controller');
 
 export function confirm_box(stop_id) {
     controller.create({
         header: 'CONFIRM!',
-        message: 'Do you want to <strong>remove</strong> your favourite stop?',
+        message: 'Do you want to <strong>remove</strong> this stop?',
         buttons: [
             {
                 text: 'Cancel',
@@ -226,6 +220,7 @@ export function confirm_box(stop_id) {
                 handler: () => {
                     remove_favourites(stop_id);
                     toggle_heart();
+                    hide_card(stop_id);
                 }
             }
         ]
@@ -278,7 +273,6 @@ export const remove_favourites = (stop_id) => {
         }
     }
     localStorage.setItem("stops", JSON.stringify(temp));
-    document.getElementById("stops__content__card__" + stop_id).style.display = 'none';
 };
 
 document.getElementById("tab-button-stops").addEventListener('click', () => {
@@ -296,5 +290,12 @@ const update_favourites_stops = () => {
         for (let id of stop_arr) {
             create_favourite_stop_card(id, "stop");
         }
+    }
+};
+
+const hide_card = (stop_id) => {
+    let cards = document.querySelectorAll("#stops__content__card__" + stop_id);
+    for (let card of cards) {
+        card.style.display = 'none';
     }
 };

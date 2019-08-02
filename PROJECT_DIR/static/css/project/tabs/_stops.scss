@@ -61,7 +61,7 @@
   &__content {
     &__wrapper {
       overflow: scroll;
-      height: 25rem;
+      height: 50rem;
     }
 
     &__wrapper::-webkit-scrollbar {
@@ -167,6 +167,7 @@
   &__time-table {
     overflow: scroll;
     height: 300px;
+    -webkit-overflow-scrolling: touch;
   }
 
   &__time-table::-webkit-scrollbar {
