@@ -174,8 +174,6 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             found = True
             # extract the relevant weather data from the JSON
             temp = item.get("main").get("temp")
-            rhum = item.get("main").get("humidity")
-            msl = item.get("main").get("pressure")
             if "rain" in item and "3h" in item["rain"]:
                 rain = item.get("rain").get("3h")
             else:
@@ -184,7 +182,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             break
     # if weather info was found, return it. Otherwise, raise an exceptions
     if (found):
-        return rain, temp, rhum, msl
+        return rain, temp
     else:
         raise Exception("Weather forecast not available for the specified timestamp.")
 
@@ -266,7 +264,7 @@ def predict_journey_time(stops, timestamp):
     actualtime_arr_stop_first, month, weekday, hour = parse_timestamp(timestamp)
     # call the OpenWeather API and parse the response
     weather_data = openweather_forecast()
-    rain, temp, rhum, msl = parse_weather_forecast(timestamp, weather_data)
+    rain, temp = parse_weather_forecast(timestamp, weather_data)
     # make a prediction based on the input and return it
     prediction = route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
         weekday, bank_holiday, rain, temp, rhum, msl)
