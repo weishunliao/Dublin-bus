@@ -270,17 +270,17 @@ class TestParseTimestamp(TestCase):
     def test_parse_timestamp_weekday(self):
         """Test that the correct values are returned for a weekday timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
-        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 7, 1, 10))
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10))
 
     def test_parse_timestamp_weekend(self):
         """Test that the correct values are returned for a weekend timestamp."""
         timestamp = datetime.utcfromtimestamp(1564830000)
-        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 8, 0, 11))
+        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11))
 
     def test_parse_timestamp_bank_holiday(self):
         """Test that the correct values are returned for a bank holiday timestamp."""
         timestamp = datetime.utcfromtimestamp(1565019000)
-        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 8, 0, 15))
+        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15))
 
 
 class TestFormatStopList(TestCase):
