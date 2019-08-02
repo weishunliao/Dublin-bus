@@ -370,9 +370,9 @@ def calculate_time_diff(trips, time):
 def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time):
     """Returns the list of stops that the bus will travel along between the user's origin and destination."""
     # format some of the input values as required for database queries
-    start_point = '%' + start_point.strip() + '%'
-    end_point = '%' + end_point.strip() + '%'
-    headsign = '%' + headsign.strip() + '%'
+    start_point = start_point.strip()
+    end_point = end_point.strip()
+    headsign = headsign.strip()
     stop_list = []
     # get the relevant service id based on the departure time
     service_id = get_current_service_id(departure_time)
@@ -392,8 +392,8 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
+                and s.stop_name = %s \
+                and st.stop_headsign = %s;"
         cursor.execute(sql, [route_id, start_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for start point: " + start_point)
@@ -415,8 +415,8 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
+                and s.stop_name = %s \
+                and st.stop_headsign = %s;"
         cursor.execute(sql, [route_id, end_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for end point: " + end_point)
@@ -465,7 +465,7 @@ def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
                 and t.service_id = %s \
                 and r.route_short_name = %s \
                 and s.stop_id = %s \
-                and st.stop_headsign like %s \
+                and st.stop_headsign = %s \
                 and (st.arrival_time - TIME(%s)) > 0 \
                 order by (st.arrival_time - TIME(%s)) \
                 limit 1) as b \
@@ -505,8 +505,8 @@ def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_
     with connection.cursor() as cursor:
         sql = "select distinct s.stop_id from stops s, stop_times st, routes r \
                 where r.route_short_name = %s \
-                and s.stop_name like %s \
-                and st.stop_headsign like %s;"
+                and s.stop_name = %s \
+                and st.stop_headsign = %s;"
         cursor.execute(sql, [route_id, stop_name, headsign])
         stop_ids = cursor.fetchall()
         for stop in stop_ids:
