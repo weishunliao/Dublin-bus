@@ -34,22 +34,6 @@ def create_hour_feature_ref():
         hour_feature_ref[i] = hour_array
     return hour_feature_ref
 
-
-def create_day_of_week_feature_ref():
-    """Builds a dictionary with weekdays (mon=0, tues=1, etc.) as key and 1D lists as values.
-
-    In each 1D list, one element will have the value 1, and all others will have the value 0."""
-    day_of_week_feature_ref = {}
-    for i in range(7):
-        day_of_week_array = [0] * 7
-        for j in range(7):
-            if i == j:
-                day_of_week_array[j] = 1
-        day_of_week_feature_ref[i] = day_of_week_array
-
-    return day_of_week_feature_ref
-
-
 def create_month_feature_ref():
     """Builds a dictionary with months (jan=1, feb=2, etc.) as key and 1D lists as values.
 
@@ -82,24 +66,19 @@ def create_segment_ref_gtfs():
         segment_mean_ref_gtfs = json.load(file)
     return segment_mean_ref_gtfs
 
-def route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, weekday, bank_holiday,  
-    rain, temp, rhum, msl):
+def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp):
     """Returns a prediction of journey length in seconds for any bus route.
 
     Takes a list of stops as input, as well as the arrival time of a bus at the first stop in the list. 
-    Also takes as input hour (0-23), day_of_week (0-6 for mon-sun), month(1-12 for jan-dec), 
-    weekday (1 for mon-fri, 0 for sat & sun) and bank holiday (1 if the journey date is a bank holiday, 0 otherwise). 
-    Also takes the following weather info as input: rain (in mm), temp (in C), rhum - relative humidity (%) and 
-    msl - mean sea level pressure (hPa)."""
+    Also takes as input hour (0-23), weekday (1 for mon-fri, 0 for sat & sun) and peak (1 for peak times, 
+    0 for off-peak). Also takes the following weather info as input: rain (in mm), temp (in C)."""
 
-    # create dictionaries for hour, day_of_week, month and bus stop features
+    # create dictionaries for hour and segment features
     hour_ref = create_hour_feature_ref()
-    day_of_week_ref = create_day_of_week_feature_ref()
     month_ref = create_month_feature_ref()
     seg_ref = create_segment_ref()
     seg_ref_gtfs = create_segment_ref_gtfs()
-    # get day of week and month from the relevant dictionaries
-    day_of_week = day_of_week_ref[day_of_week]
+    # get hour array from the relevant dictionary
     month = month_ref[month]
     hour = hour_ref[hour]
     # load the ml model
@@ -267,8 +246,7 @@ def predict_journey_time(stops, timestamp):
     weather_data = openweather_forecast()
     rain, temp = parse_weather_forecast(timestamp, weather_data)
     # make a prediction based on the input and return it
-    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
-        weekday, bank_holiday, rain, temp, rhum, msl)
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp)
     # return the prediction
     return prediction
 

@@ -45,23 +45,6 @@ class TestCreateHourFeatureRef(TestCase):
         self.assertEqual(functions.create_hour_feature_ref(), hour_ref)
 
 
-class TestCreateDayOfWeekFeatureRef(TestCase):
-    """Test cases for the create_day_of_week_feature_ref function."""
-
-    def test_create_day_of_week_feature_ref(self):
-        """Test for the ouput of the create_day_of_week_feature_ref function."""
-        day_of_week_ref = {
-            0: [1, 0, 0, 0, 0, 0, 0],
-            1: [0, 1, 0, 0, 0, 0, 0],
-            2: [0, 0, 1, 0, 0, 0, 0],
-            3: [0, 0, 0, 1, 0, 0, 0],
-            4: [0, 0, 0, 0, 1, 0, 0],
-            5: [0, 0, 0, 0, 0, 1, 0],
-            6: [0, 0, 0, 0, 0, 0, 1]
-        }
-        self.assertEqual(functions.create_day_of_week_feature_ref(), day_of_week_ref)
-
-
 class TestCreateMonthFeatureRef(TestCase):
     """Test cases for the create_month_feature_ref function."""
 
