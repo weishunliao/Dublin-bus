@@ -15,25 +15,72 @@ let resp;
 export let markers = {};
 export let map;
 export let directionsDisplay;
+export let bus_route_drawer;
 
 // const toInputContainer = document.querySelector('#to-input')
 
 
 export default function initMap() {
-    let geocoder = new google.maps.Geocoder;
-    // toInputContainer.children[0].setAttribute('id', "to");
-  // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
-  setTimeout(() => {
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 53.3471, lng: -6.26059 },
-      zoom: 13,
-      disableDefaultUI: true
-    });
+    // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
+    setTimeout(() => {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {lat: 53.3471, lng: -6.26059},
+            zoom: 13,
+            disableDefaultUI: true
+        });
+        let symbol = {
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            strokeWeight: 2,
+            scale: 3,
+            fillColor: '#FFFFFF',
+            strokeColor: '#409CE0',
+            fillOpacity: 1,
+        };
 
-    // add markers to the map for all bus stops
-    $.getJSON("/static/cache/stops.json", function(data) {
-      AddMarkers(data, map);
-    });
+
+        bus_route_drawer = new google.maps.Polyline({
+            geodesic: true,
+            strokeColor: '#409CE0',
+            strokeOpacity: 1,
+            strokeWeight: 6,
+            icons: [
+                {
+                    icon: symbol,
+                    offset: '10%'
+                }, {
+                    icon: symbol,
+                    offset: '20%'
+                },{
+                    icon: symbol,
+                    offset: '30%'
+                },{
+                    icon: symbol,
+                    offset: '40%'
+                },{
+                    icon: symbol,
+                    offset: '50%'
+                },{
+                    icon: symbol,
+                    offset: '60%'
+                },{
+                    icon: symbol,
+                    offset: '70%'
+                },{
+                    icon: symbol,
+                    offset: '80%'
+                },{
+                    icon: symbol,
+                    offset: '90%'
+                }
+            ],
+
+        });
+        bus_route_drawer.setMap(null);
+
+        // add markers to the map for all bus stops
+        $.getJSON("/static/cache/stops.json", function (data) {
+            AddMarkers(data, map);
+        });
 
     
 
@@ -386,14 +433,13 @@ function AddMarkers(data, map) {
       url: "/static/marker.png",
       height: 50,
       width: 50
-    }
-  ];
+    }];
 
-  let mcOptions = {
-    gridSize: 50,
-    styles: clusterStyles,
-    maxZoom: 16
-  };
+    let mcOptions = {
+        gridSize: 50,
+        styles: clusterStyles,
+        maxZoom: 16
+    };
 
   let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }

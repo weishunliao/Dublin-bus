@@ -1,0 +1,22 @@
+.customCard {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 2rem;
+    overflow: hidden;
+    background: white;
+    padding: 1rem; 
+    height: 16rem;
+    position: relative;
+    transition: height .2s linear;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.17);
+
+}   
+
+// .card-extended {
+//     height: 80vh;
+    
+// }
+
+#stretchCard {
+    padding-top: 0;
+}

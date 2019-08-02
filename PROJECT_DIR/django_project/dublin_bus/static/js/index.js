@@ -11,6 +11,7 @@ import "./sightseeing.js"
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";
 import "./touches.js";
+import "./favourites";
 
 
 

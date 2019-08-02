@@ -8,14 +8,14 @@
       &__col {
         text-align: center;
         color: $db_blue;
-        font-size: 3.5rem;
+        font-size: 3rem;
         font-weight: bold;
       }
     }
 
     &__content {
       &__row {
-        height: 20vh;
+        height: 17vh;
       }
 
       &__col {
@@ -23,11 +23,11 @@
       }
 
       &__icon {
-        font-size: 40px;
+        font-size: 7vw;
         color: white;
         background-color: $db_blue;
         border-radius: 50%;
-        padding: 20px;
+        padding: 3vh;
         margin-bottom: 5px;
       }
 
@@ -44,6 +44,7 @@
   &__options {
     &__head {
       background-color: $bus_yellow;
+
     }
 
     &__search__title__label {
@@ -53,12 +54,18 @@
       color: $db_blue;
       font-family: Helvetica;
     }
+
     &__back-btn {
 
     }
+
     &__cards {
-      height: 450px;
-      overflow-y: scroll;
+   
+    padding-bottom: 5rem;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 30rem;
+
       &__photo {
       }
 
@@ -81,10 +88,12 @@
           margin: 0;
           padding: 0;
           width: 9rem;
+
           &__number {
             color: $bus_orange;
             //font-size: 1.6rem;
           }
+
           &__top {
             width: 0;
             color: $bus_orange;
@@ -112,10 +121,15 @@
         }
 
         &__opening-hour {
-            color: $db_blue;
+          color: $db_blue;
         }
 
       }
+    }
+
+    &__cards::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* make scrollbar transparent */
     }
 
   }
