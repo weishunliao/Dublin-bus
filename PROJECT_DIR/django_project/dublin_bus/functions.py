@@ -253,7 +253,7 @@ def format_stop_list(stops):
     return formatted_stops
 
 
-def predict_journey_time(stops, timestamp):
+def predict_journey_time(stops, timestamp, rain, temp):
     """Takes a list of bus stops and a timestamp (unix format) as input. Returns a prediction of journey 
         time in minutes."""
 
@@ -265,9 +265,6 @@ def predict_journey_time(stops, timestamp):
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
     actualtime_arr_stop_first, weekday, hour, peak = parse_timestamp(timestamp)
-    # call the OpenWeather API and parse the response
-    weather_data = openweather_forecast()
-    rain, temp = parse_weather_forecast(timestamp, weather_data)
     # make a prediction based on the input and return it
     prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, timestamp.month)
     # return the prediction
@@ -555,3 +552,6 @@ def is_peak(hour, weekday_flag):
     if hour in peak_hours and weekday_flag == 1:
         return 1
     return 0
+
+def get_weather_defaults(timestamp):
+    pass
