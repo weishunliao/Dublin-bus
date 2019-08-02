@@ -201,10 +201,10 @@ def convert_to_seconds(hour, minute):
     return seconds
 
 
-def is_weekday(day_of_week, day, month):
-    """Returns 1 if the day of week is mon-fri (0-4), returns 0 if the day is sat, sun or a bank holiday."""
+def is_weekday(day_of_week):
+    """Returns 1 if the day of week is mon-fri (0-4), returns 0 otherwise."""
 
-    if day_of_week in [0, 1, 2, 3, 4] and not is_bank_holiday:
+    if day_of_week in [0, 1, 2, 3, 4]:
         return 1
     return 0
 
@@ -217,8 +217,8 @@ def is_bank_holiday(day, month):
 
     bank_holidays = [(5, 8), (28, 10), (25, 12), (26, 12)]
     if (day, month) in bank_holidays:
-        return True
-    return False
+        return 1
+    return 0
 
 
 def parse_timestamp(timestamp):
@@ -226,13 +226,10 @@ def parse_timestamp(timestamp):
     the hour, and month. Also returns a weekday flag (1 for Mon-Fri, 0 for Sat, Sun & Bank Holidays)."""
 
     time_in_seconds = convert_to_seconds(timestamp.hour, timestamp.minute)
-    day_of_week = timestamp.weekday()
-    day = timestamp.day
-    month = timestamp.month
-    hour = timestamp.hour
-    weekday = is_weekday(day_of_week, day, month)
-
-    return time_in_seconds, month, weekday, hour
+    weekday = is_weekday(timestamp.weekday())
+    if is_bank_holiday(timestamp.day, timestamp.month) == 1:
+        weekday = 0
+    return time_in_seconds, timestamp.month, weekday, timestamp.hour
 
 
 def format_stop_list(stops):
