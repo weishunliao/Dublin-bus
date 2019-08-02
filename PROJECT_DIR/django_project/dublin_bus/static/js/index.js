@@ -1,13 +1,18 @@
 import "../css/main.scss";
+// // import "../ionic/core/dist/ionic.js";
+// import "../ionic/core/dist/ionic/ionic.esm.js";
 import "./google_maps";
 import { drawers, search } from './nodes';
 import "./auto-complete"
 import "./stops"
 import "./routes"
 import "./journey_planner"
+import "./sightseeing.js"
 import buildWeather from "./skycons.js"
 import { nodes } from "./nodes";
 import "./touches.js";
+import "./favourites";
+
 
 
 buildWeather(icon);

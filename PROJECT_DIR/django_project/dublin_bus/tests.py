@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from datetime import datetime
 from dublin_bus import functions
+from dublin_bus.functions import get_opening_hour, clean_resp
 
 
 class TestLoadModel(TestCase):
@@ -9,9 +10,11 @@ class TestLoadModel(TestCase):
     def test_load_model_success(self):
         """Test to ensure that a model is loaded correctly."""
         try:
-            functions.load_model()
-        except Exception as e:
-            self.fail("load_model() raised an exception unexpectedly!\n Error is:" + str(e))
+            month = 8   
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
 
 class TestCreateHourFeatureRef(TestCase):
     """Test cases for the create_hour_feature_ref function."""
@@ -42,79 +45,53 @@ class TestCreateHourFeatureRef(TestCase):
                     23: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
         self.assertEqual(functions.create_hour_feature_ref(), hour_ref)
 
-class TestCreateDayOfWeekFeatureRef(TestCase):
-    """Test cases for the create_day_of_week_feature_ref function."""
-
-    def test_create_day_of_week_feature_ref(self):
-        """Test for the ouput of the create_day_of_week_feature_ref function."""
-        day_of_week_ref = {
-            0: [1, 0, 0, 0, 0, 0, 0],
-            1: [0, 1, 0, 0, 0, 0, 0],
-            2: [0, 0, 1, 0, 0, 0, 0],
-            3: [0, 0, 0, 1, 0, 0, 0],
-            4: [0, 0, 0, 0, 1, 0, 0],
-            5: [0, 0, 0, 0, 0, 1, 0],
-            6: [0, 0, 0, 0, 0, 0, 1]
-        }
-        self.assertEqual(functions.create_day_of_week_feature_ref(), day_of_week_ref)
-
-
-class TestCreateMonthFeatureRef(TestCase):
-    """Test cases for the create_month_feature_ref function."""
-
-    def test_create_month_feature_ref(self):
-        """Test for the ouput of the create_month_feature_ref function."""
-        month_ref = {
-            1: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            2: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            3: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            4: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            5: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-            6: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-            7: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            8: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            9: [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            10: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            11: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            12: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-        }
-        self.assertEqual(functions.create_month_feature_ref(), month_ref)
-
 class TestCreateSegmentRef(TestCase):
     """Test cases for the create_segment_ref function."""
 
-    def test_create_segment_ref(self):
+    def test_create_segment_ref_mean(self):
         """Test for the ouput of the create_segment_ref function."""
-        segment_ref = functions.create_segment_ref()
-        self.assertEqual(segment_ref["946_1131"], 69)
+        segment_ref = functions.create_segment_ref(8)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 151.0)
+
+    def test_create_segment_ref_std(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(8)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 54.0)
+
 
 class TestCreateSegmentRefGtfs(TestCase):
     """Test cases for the create_segment_ref_gtfs function."""
 
-    def test_create_segment_ref_gtfs(self):
+    def test_create_segment_ref_gtfs_mean(self):
         """Test for the ouput of the create_segment_ref_gtfs function."""
         segment_ref = functions.create_segment_ref_gtfs()
-        self.assertEqual(segment_ref["1154_946"], 81)
+        self.assertEqual(segment_ref["1154_946"]["mean"], 80)
+
+    def test_create_segment_ref_gtfs_std(self):
+        """Test for the ouput of the create_segment_ref_gtfs function."""
+        segment_ref = functions.create_segment_ref_gtfs()
+        self.assertEqual(segment_ref["1154_946"]["std"], 14)
+
 
 class TestRoutePrediction(TestCase):
     """Test cases for the route_prediction function."""
 
     def test_route_prediction(self):
         """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
-        stops = [395,396,397,398,399,400,7581,1283,7579,1285,1016,1017,1018,1019,1020,1076,1077,1078,1079,1080,\
-            1081,1082,1083,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1101,1102,1103,1104]
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
         rain = 0.1
         temp = 15
-        rhum = 75
-        msl = 1000
-        actualtime_arr_stop_first = 32400 # 9:00
+        actualtime_arr_stop_first = 32400  # 9:00
         hour = 9
-        day_of_week = 4 # monday
-        month = 7 # july
+        peak = 1
+        month = 8  # august
         weekday = 1
-        bank_holiday = 0
-        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, day_of_week, month, \
-        weekday, bank_holiday, rain, temp, rhum, msl), 2485)
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
+               rain, temp, month), 2527)
+
 
 class TesParseWeatherForecast(TestCase):
     """Test cases for the parse_weather_forecast function."""
@@ -154,7 +131,7 @@ class TesParseWeatherForecast(TestCase):
                         "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
                                  "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 5 2019  2:30PM', '%b %d %Y %I:%M%p')
-        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125, 18.82, 81, 1019.31))
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.041666666666666664, 18.82))
 
     def test_parse_weather_forecast_not_found(self):
         """Test that parse_weather_forecast raises an exception when weather info not found for the timestamp."""
@@ -191,8 +168,7 @@ class TesParseWeatherForecast(TestCase):
                         "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
                                  "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 4 2019  2:30PM', '%b %d %Y %I:%M%p')
-        with self.assertRaises(Exception):
-            functions.parse_weather_forecast(timestamp, weather_data)
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0, 17.0))
 
 
 class TestConvertToSeconds(TestCase):
@@ -247,21 +223,31 @@ class TestIsBankHoliday(TestCase):
     """Test cases for the is_bank_holiday function."""
 
     def test_is_bank_holiday(self):
-        """Test that the value 1 is returned for a bank holiday"""
+        """Test that the value True is returned for a bank holiday"""
         self.assertEqual(functions.is_bank_holiday(5, 8), 1)
 
     def test_not_bank_holiday(self):
-        """Test that the value 0 is returned for a normal day"""
+        """Test that the value False is returned for a normal day"""
         self.assertEqual(functions.is_bank_holiday(4, 8), 0)
 
 
 class TestParseTimestamp(TestCase):
     """Test cases for the parse_timestamp function."""
 
-    def test_parse_timestamp(self):
-        """Test that the correct values are returned for a given timestamp."""
+    def test_parse_timestamp_weekday(self):
+        """Test that the correct values are returned for a weekday timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
-        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 0, 7, 1, 0, 10))
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10, 0))
+
+    def test_parse_timestamp_weekend(self):
+        """Test that the correct values are returned for a weekend timestamp."""
+        timestamp = datetime.utcfromtimestamp(1564830000)
+        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11, 0))
+
+    def test_parse_timestamp_bank_holiday(self):
+        """Test that the correct values are returned for a bank holiday timestamp."""
+        timestamp = datetime.utcfromtimestamp(1565019000)
+        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15, 0))
 
 
 class TestFormatStopList(TestCase):
@@ -273,15 +259,16 @@ class TestFormatStopList(TestCase):
                      ('8220DB004528', 26), ('8220DB001072', 27), ('8220DB007577', 28), ('8220DB001353', 29), \
                      ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
         self.assertEqual(functions.format_stop_list(stop_list), [1170, 1069, 1070, 1071, 4528, 1072, 7577, \
-            1353, 1354, 7578, 7582, 340])
-    
+                                                                 1353, 1354, 7578, 7582, 340])
+
     def test_format_stop_list_gen(self):
         """Test that a list is formatted correctly when some stops have the "gen" format."""
         stop_list = (('gen:57102:7731:0:1', 22), ('8220DB001069', 23), ('8220DB001070', 24), ('8220DB001071', 25), \
-            ('8220DB004528', 26), ('8220DB001072', 27), ('gen:57102:7948:0:1', 28), ('8220DB001353', 29), \
-                ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
+                     ('8220DB004528', 26), ('8220DB001072', 27), ('gen:57102:7948:0:1', 28), ('8220DB001353', 29), \
+                     ('8220DB001354', 30), ('8220DB007578', 31), ('8220DB007582', 32), ('8220DB000340', 33))
         self.assertEqual(functions.format_stop_list(stop_list), [7675, 1069, 1070, 1071, 4528, 1072, 7701, \
-            1353, 1354, 7578, 7582, 340])
+                                                                 1353, 1354, 7578, 7582, 340])
+
 
 class GetServiceId(TestCase):
 
@@ -617,3 +604,151 @@ class TestGetServerRoute(TestCase):
         client = Client()
         resp = client.get('/server_route?stop_id=1123').json()['server_route']
         self.assertEqual(set(resp), set(['15', '65b', '49', '65']))
+
+
+class TestGetCurrentServiceId(TestCase):
+    """Test cases for the get_current_service_id function."""
+
+    def test_get_current_service_id_bank_holiday(self):
+        """Test to ensure that the correct value is returned for a bank holiday."""
+        timestamp = datetime.strptime('Aug 5 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.get_current_service_id(timestamp), 'y101d')
+
+    def test_get_current_service_id_sun(self):
+        """Test to ensure that the correct value is returned for a Sunday."""
+        timestamp = datetime.strptime('Aug 4 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.get_current_service_id(timestamp), 'y101d')
+
+    def test_get_current_service_id_sat(self):
+        """Test to ensure that the correct value is returned for a Saturday."""
+        timestamp = datetime.strptime('Aug 3 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.get_current_service_id(timestamp), 'y101e')
+
+    def test_get_current_service_id_weekday(self):
+        """Test to ensure that the correct value is returned for a Weekday."""
+        timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.get_current_service_id(timestamp), 'y101c')
+
+
+class TestPredictJourneyTime(TestCase):
+    """Test cases for the predict_journey_time function."""
+
+    def test_predict_journey_time_invalid_list(self):
+        """Test that the function returns -1 when an empty list is entered."""
+        timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.predict_journey_time((('8350DB007574',)), timestamp, 0.1, 15), -1)
+
+    def test_predict_journey_time_invalid_list2(self):
+        """Test that the function returns -1 when a list with length 1 is entered."""
+        timestamp = datetime.strptime('Aug 2 2019  2:30PM', '%b %d %Y %I:%M%p')
+        self.assertEqual(functions.predict_journey_time([], timestamp, 0.1, 15), -1)
+
+
+class TestGetStopListStartPoint(TestCase):
+    """Test cases for the get_stop_list_start_point function."""
+
+    def test_get_stop_list_start_point(self):
+        """Test that the function returns a valid stop list."""
+        all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',),
+                     ('8350DB002994',), ('8350DB004180',), ('8350DB004181',), ('8350DB004182',), ('8350DB004151',),
+                     ('8350DB002997',), ('8350DB004153',), ('8350DB004154',), ('8350DB004416',), ('8350DB004201',),
+                     ('8250DB004202',), ('8250DB004203',), ('8250DB005090',), ('8250DB004204',), ('8250DB004205',),
+                     ('8250DB004206',), ('8250DB003140',), ('8250DB003141',), ('8250DB003142',), ('8250DB003143',),
+                     ('8250DB003144',), ('8250DB003145',), ('8250DB003146',), ('8250DB003147',), ('8250DB003148',),
+                     ('8250DB005127',), ('8250DB005128',), ('8250DB002996',), ('8250DB003258',), ('8250DB002060',),
+                     ('8250DB002061',), ('8250DB002062',), ('8250DB002063',), ('8250DB002064',), ('8250DB002065',),
+                     ('8250DB004727',), ('8250DB004728',), ('8250DB000461',), ('8250DB002068',), ('8250DB002069',),
+                     ('8250DB002070',), ('8250DB002084',), ('8250DB000768',), ('8220DB000769',), ('8220DB000770',),
+                     ('8220DB000771',), ('8220DB000772',), ('8220DB000773',), ('8220DB000774',), ('8220DB000775',),
+                     ('8220DB000776',), ('8220DB000777',), ('8220DB000906',), ('8220DB000907',), ('8220DB000908',),
+                     ('8220DB000909',), ('8220DB000786',), ('8220DB000792',), ('8220DB007586',), ('8220DB007587',),
+                     ('8220DB007588',), ('8220DB000325',), ('8220DB001443',), ('8220DB001444',), ('8220DB001445',),
+                     ('8220DB004407',), ('8220DB004320',))
+        start_point_id = '8250DB000768'
+        num_stops = 4
+        output = (('8250DB000768',), ('8220DB000769',), ('8220DB000770',), ('8220DB000771',))
+        self.assertEqual(functions.get_stop_list_start_point(all_stops, start_point_id, num_stops), output)
+
+    def test_get_stop_list_start_point_invalid(self):
+        """Test that the function returns an empty list when there are issues with indices."""
+        all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',))
+        start_point_id = '8350DB004177'
+        num_stops = 5
+        self.assertEqual(functions.get_stop_list_start_point(all_stops, start_point_id, num_stops), [])
+
+
+class TestGetStartPointIdFromEndPointId(TestCase):
+    """Test cases for the get_start_point_id__from_end_point_id function."""
+
+    def test_get_start_point_id__from_end_point_id(self):
+        """Test that the function returns the correct start point for a given end point."""
+        all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',), ('8350DB002993',),
+                     ('8350DB002994',), ('8350DB004180',), ('8350DB004181',), ('8350DB004182',), ('8350DB004151',),
+                     ('8350DB002997',), ('8350DB004153',), ('8350DB004154',), ('8350DB004416',), ('8350DB004201',),
+                     ('8250DB004202',), ('8250DB004203',), ('8250DB005090',), ('8250DB004204',), ('8250DB004205',),
+                     ('8250DB004206',), ('8250DB003140',), ('8250DB003141',), ('8250DB003142',), ('8250DB003143',),
+                     ('8250DB003144',), ('8250DB003145',), ('8250DB003146',), ('8250DB003147',), ('8250DB003148',),
+                     ('8250DB005127',), ('8250DB005128',), ('8250DB002996',), ('8250DB003258',), ('8250DB002060',),
+                     ('8250DB002061',), ('8250DB002062',), ('8250DB002063',), ('8250DB002064',), ('8250DB002065',),
+                     ('8250DB004727',), ('8250DB004728',), ('8250DB000461',), ('8250DB002068',), ('8250DB002069',),
+                     ('8250DB002070',), ('8250DB002084',), ('8250DB000768',), ('8220DB000769',), ('8220DB000770',),
+                     ('8220DB000771',), ('8220DB000772',), ('8220DB000773',), ('8220DB000774',), ('8220DB000775',),
+                     ('8220DB000776',), ('8220DB000777',), ('8220DB000906',), ('8220DB000907',), ('8220DB000908',),
+                     ('8220DB000909',), ('8220DB000786',), ('8220DB000792',), ('8220DB007586',), ('8220DB007587',),
+                     ('8220DB007588',), ('8220DB000325',), ('8220DB001443',), ('8220DB001444',), ('8220DB001445',),
+                     ('8220DB004407',), ('8220DB004320',))
+        end_point_id = '8350DB002993'
+        num_stops = 4
+        output = '8350DB004177'
+        self.assertEqual(functions.get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops), output)
+
+    def test_get_start_point_id__from_end_point_id_invalid(self):
+        """Test that the function returns -1 when there are issues with indices."""
+        all_stops = (('8350DB007574',), ('8350DB004177',), ('8350DB004178',), ('8350DB004179',))
+        end_point_id = '8350DB004177'
+        num_stops = 3
+        self.assertEqual(functions.get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops), -1)
+
+
+class TestGetSightInfo(TestCase):
+
+    def test_get_opening_hour(self):
+        resp = dict({'formatted_address': 'Phoenix Park, Dublin 8, Ireland',
+                    'geometry': {'location': {'lat': 53.3558823, 'lng': -6.3298133},
+                                 'viewport': {'northeast': {'lat': 53.38175795000001, 'lng': -6.267720949999999},
+                                              'southwest': {'lat': 53.33734375, 'lng': -6.385781949999999}}},
+                    'name': 'Phoenix Park',
+                    'opening_hours': {'open_now': True, 'periods': [{'open': {'day': 0, 'time': '0000'}}],
+                                      'weekday_text': ['Monday: Open 24 hours', 'Tuesday: Open 24 hours',
+                                                       'Wednesday: Open 24 hours', 'Thursday: Open 24 hours',
+                                                       'Friday: Open 24 hours', 'Saturday: Open 24 hours',
+                                                       'Sunday: Open 24 hours']}, 'photos': [{'height': 1836,
+                                                                                              'html_attributions': [
+                                                                                                  '<a href="https://maps.google.com/maps/contrib/111946051963376917597/photos">Tituh</a>'],
+                                                                                              'photo_reference': 'CmRaAAAAHe0_vkFjkR81wjGNSP',
+                                                                                              'width': 3264}, ],
+                    'rating': 4.7})
+        self.assertEqual(get_opening_hour(resp), [' Open 24 hours'])
+
+class TestIsPeak(TestCase):
+    """Test cases for the is_peak function."""
+
+    def test_is_peak_weekday(self):
+        """Test that the correct values are returned for a weekday peak time."""
+        self.assertEqual(functions.is_peak(17, 1), 1)
+
+    def test_not_peak_weekday(self):
+        """Test that the correct values are returned for a weekday off peak time."""
+        self.assertEqual(functions.is_peak(15, 1), 0)
+
+    def test_not_peak_weekend(self):
+        """Test that the correct values are returned for a weekend."""
+        self.assertEqual(functions.is_peak(17, 0), 0)
+
+class TestGetWeatherDefaults(TestCase):
+    """Test cases for the get_weather_defaults function."""
+
+    def test_get_weather_defaults(self):
+        """Test that the correct values are returned for a given month."""
+
+        self.assertEqual(functions.get_weather_defaults(8), (0, 16.0))

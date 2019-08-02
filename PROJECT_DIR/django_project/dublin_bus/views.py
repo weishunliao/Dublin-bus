@@ -3,14 +3,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from dublin_bus.functions import is_weekday, is_bank_holiday, get_service_id, get_real_time_data, get_trip_id, \
-    get_trip_info, calculate_time_diff
+    get_trip_info, calculate_time_diff, get_opening_hour, clean_resp
 from .forms import JourneyPlannerForm
 
 from dublin_bus import functions
 import json
 import os
 from django_project.settings import BASE_DIR
-from django.db import connection
+import requests
 from datetime import datetime
 from django_project.settings import MAP_KEY
 
@@ -22,7 +22,7 @@ class HomeView(TemplateView):
     def get(self, request):
 
         return render(request, self.template_name,
-                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY})
+                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY })
 
     def post(self, request):
         if request.method == "POST":
@@ -42,50 +42,29 @@ def test_routing(request):
 
 @csrf_exempt
 def get_travel_time(request):
-    route_id = request.POST['route_id']
-    start_point = request.POST['start_point']
-    end_point = request.POST['end_point']
-    departure_time_value = request.POST['departure_time_value']
-    num = int(request.POST['num_stops'])
+    body = json.loads(request.body)
+
+    print("body of the request", body)
+
+    route_id = body['route_id']
+    start_point = body['start_point']
+    num_stops = int(body['num_stops'])
+    end_point = body['end_point']
+    departure_time_value = body['departure_time_value']
+    route_id = body['route_id']
+    headsign = body['head_sign']
     departure_time = datetime.fromtimestamp(int(departure_time_value))
-    start_point_id = 0
-    end_point_id = 0
-    stop_list = []
-
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM stops WHERE stops.stop_name = %s", [start_point])
-        if cursor.rowcount == 0:
-            raise Exception("No bus stops found for " + start_point + "!")
-        else:
-            start_point_id = cursor.fetchone()[2]
-        # cursor.execute("SELECT * FROM stops WHERE stops.stop_name = %s", [end_point])
-        # end_point_id = cursor.fetchone()[2]
-
-    service_id = 3
-    if departure_time.day == 7:
-        service_id = 2
-    elif departure_time.day == 6:
-        service_id = 1
-
-    with connection.cursor() as cursor:
-        sql = "SELECT trip_id FROM stop_times WHERE stop_times.trip_id IN (SELECT trip_id FROM routes,trips WHERE " \
-              "routes.route_short_name = %s AND routes.route_id=trips.route_id AND trips.service_id = %s) AND" \
-              " stop_id= %s ORDER BY abs(TIME(%s) - stop_times.departure_time) LIMIT 1"
-        cursor.execute(sql, [route_id, service_id, start_point_id, departure_time])
-        trip_id = cursor.fetchone()
-    with connection.cursor() as cursor:
-        sql = "SELECT stop_id,stop_sequence FROM stop_times WHERE stop_times.trip_id = %s"
-        cursor.execute(sql, [trip_id])
-        all_stops = cursor.fetchall()
-        index = 0
-        for i in all_stops:
-            if i[0] == start_point_id:
-                index = int(i[1] - 1)
-        stop_list = all_stops[index:index + num + 1]
-    
-    # call the machine learning model to get a prediction for journey length
-    journey_time = functions.predict_journey_time(stop_list, departure_time_value)
-
+    # call the OpenWeather API and parse the response
+    weather_data = functions.openweather_forecast()
+    if weather_data == -1:
+        rain, temp = functions.get_weather_defaults(departure_time.month)
+    else:
+        rain, temp = functions.parse_weather_forecast(departure_time, weather_data)
+    # get the list of stops that the bus will pass along
+    stop_list = functions.get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time)
+    # call the machine learning model to get a prediction for journey time
+    journey_time = functions.predict_journey_time(stop_list, departure_time_value, rain, temp)
+    print("Journey Time:", journey_time)
     return JsonResponse({"journey_time": journey_time})
 
 
@@ -109,7 +88,7 @@ def get_bus_stop_list(request):
 
 def real_time_info_for_bus_stop(request):
     stop_id = request.GET['stop_id']
-    path = os.path.join(BASE_DIR, '../static/cache/stops_new.json')
+    path = os.path.join(BASE_DIR, '../static/cache/stops.json')
     with open(path, 'r') as json_file:
         stop_name = json.load(json_file)[str(stop_id)][2]
     current = datetime.now()
@@ -162,3 +141,76 @@ def get_server_route(request):
         for route in data:
             server_route.add(route[0])
     return JsonResponse({'server_route': list(server_route)})
+
+
+def get_sights_info(request):
+    category = request.GET['category']
+    url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + MAP_KEY + "&query="
+    if category == "Sightseeing":
+        url += "Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z/data=!3m1!4b1"
+    elif category == "Restaurant":
+        url += "restaurant+Dublin/@53.3559966,-6.3761839,12z/data=!4m4!2m3!5m1!4e9!6e5"
+    elif category == "Nightlife":
+        url += "bar%2BDublin/@53.3211591,-6.3004305,12z/data=!4m4!2m3!5m1!4e3!6e5"
+    elif category == "Coffee":
+        url += "/coffee+dublin/@53.3454515,-6.2690574,16z/data=!3m1!4b1"
+    elif category == "Hotel":
+        url += "hotel+dublin/@53.3454768,-6.2690574,16z/data=!3m1!4b1"
+    elif category == "Shopping":
+        url += "shopping+dublin/@53.3455021,-6.2690574,16z/data=!3m1!4b1"
+    infos = requests.get(url=url).json()['results']
+    points = []
+    count = 1
+    for i in infos:
+        if count > 10:
+            break
+        try:
+            info = clean_resp(i)
+            points.append(info)
+        except KeyError as e:
+            print(e)
+        count += 1
+
+    return JsonResponse({"points": points})
+
+
+def get_sights_info_by_place_id(request):
+    place_id = request.GET['place_id']
+    point = []
+    resp = requests.get(
+        "https://maps.googleapis.com/maps/api/place/details/json?fields=photos,formatted_address,name,rating,"
+        "opening_hours,geometry&key=" + MAP_KEY + "&placeid=" + place_id).json()['result']
+    try:
+        point.append(resp['name'])
+        point.append(resp['formatted_address'][:resp['formatted_address'].find('Dublin') - 2])
+        point.append(resp['rating'])
+        photo_ref = resp['photos'][0]['photo_reference']
+        photo = requests.get(
+            "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
+            allow_redirects=True).url
+        point.append(photo)
+        opening_hour = get_opening_hour(resp)
+        point.append(opening_hour)
+    except KeyError as e:
+        print(e)
+    return JsonResponse({"point": point})
+
+
+@csrf_exempt
+def snap_to_road(request):
+    stop_list = json.loads(request.body)['stop_list']
+    filepath = os.path.join(BASE_DIR, '../static/cache/stops.json')
+    path = ""
+    with open(filepath, 'r') as json_file:
+        data = json.load(json_file)
+        for i in stop_list:
+            lat = data[str(i)][0]
+            lng = data[str(i)][1]
+            path += str(lat) + "," + str(lng) + "|"
+    path = path[:-1]
+    resp = requests.get(
+        "https://roads.googleapis.com/v1/snapToRoads?path=" + path + "&interpolate=true&key=" + MAP_KEY).json()
+    road = []
+    for i in resp['snappedPoints']:
+        road.append({'lat': i['location']['latitude'], 'lng': i['location']['longitude']})
+    return JsonResponse({'road': road})

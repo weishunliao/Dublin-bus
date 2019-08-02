@@ -1,0 +1,91 @@
+<ion-tab tab="favourites">
+    <div id="favourites-container" class="favourites__container">
+        <div class="favourites__head">
+            <ion-grid>
+                <ion-row class="favourites__head__title">
+                    <ion-col class="favourites__head__title__col" size="12" align-self-center>
+                        <div>My Favourites</div>
+                    </ion-col>
+                </ion-row>
+                <ion-row class="favourites__head__subtitle">
+                    <ion-col size="4" align-self-end class="favourites__head__subtitle__col1" id="_stops">
+                        <span> Stops</span>
+                    </ion-col>
+                    <ion-col size="4" align-self-end class="favourites__head__subtitle__col2" id="_routes">
+                        <span> Routes</span>
+                    </ion-col>
+                    <ion-col size="4" align-self-end class="favourites__head__subtitle__col3" id="_journeys">
+                        <span> Journeys</span>
+                    </ion-col>
+                </ion-row>
+
+            </ion-grid>
+        </div>
+        <div class="favourites__content">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <ion-item lines="none" class="stops__depart_label">
+                            <ion-label>
+                                Your Favorite Bus Stops
+                            </ion-label>
+                        </ion-item>
+                        <div class="stops__content__wrapper" id="favourite_stops__content__wrapper">
+                            <ion-alert-controller></ion-alert-controller>
+                            <div id="favourite_stops__cards__in__favo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <ion-item lines="none" class="routes__favorite_label">
+                            <ion-label>
+                                Your Favorite Bus Routes
+                            </ion-label>
+                        </ion-item>
+                        <div class="routes__content__wrapper" id="favourite_routes__content__wrapper">
+                            <div id="favourite_routes__cards__in__favo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <ion-item lines="none" class="stops__depart_label">
+                            <ion-label>
+                                Your Favorite Bus Journeys
+                            </ion-label>
+                        </ion-item>
+                        <ion-card class="journey__content__card">
+                            <ion-grid no-padding>
+                                <ion-row class="journey__content__card__row">
+                                    <ion-col size="2" class="journey__content__card__icon1" align-self-center>
+                                        <div><i class="fas fa-circle"></i></div>
+                                    </ion-col>
+                                    <ion-col size="8" class="journey__content__card__start" align-self-center>
+                                        <span>University College Dublin, Belfield</span>
+                                    </ion-col>
+                                    <ion-col size="2" class="journey__content__card__icon2" align-self-center>
+                                        <ion-icon name="heart"></ion-icon>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col size="2" class="ion-no-padding">
+                                        <div class="journey__content__card__to">.<br>.<br>.<br>.<br>.<br>.<br>.<br>
+                                        </div>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col size="2" align-self-center>
+                                        <div class="journey__content__card__icon3"><i
+                                                class="fas fa-map-marker-alt"></i></div>
+                                    </ion-col>
+                                    <ion-col size="9" class="journey__content__card__end">
+                                        <span>St Stephen's Green, Saint Stephen's Green, Dublin 2</span>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ion-tab>

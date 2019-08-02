@@ -12,7 +12,7 @@
                         <ion-row>
                             <ion-col size="12">
                                 <div id="search-container-stops">
-                                    <input class="typeahead" id="typeahead_stop" type="text"
+                                    <input class="typeahead" id="typeahead_stop" type="tel"
                                            placeholder="Search for a bus stop..">
                                 </div>
                             </ion-col>
@@ -26,99 +26,8 @@
                 </ion-label>
             </ion-item>
             <div class="stops__content__wrapper" id="stops__content__wrapper">
-                <ion-card class="stops__content__card" id="stops__content__card" data-item="2">
-                    <ion-grid no-padding>
-                        <ion-row>
-                            <ion-col size="9">
-                                <div class="stops__content__card__stop-name">
-                                    <span>Parnell Square, Parnell Street</span>
-                                </div>
-                            </ion-col>
-                            <ion-col align-self-end size="3">
-                                <div class="stops__content__card__heart">
-                                    <ion-icon name="heart" class="stops__content__card__heart"
-                                              slot="end"></ion-icon>
-                                </div>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="4" align-self-baseline>
-                                <ion-item lines="none" class="stops__content__card__stop-id">
-                                    <span>2</span>
-                                </ion-item>
-                            </ion-col>
-                            <ion-col size="8">
-                                <ion-item lines="none">
-                                    <ion-icon name="md-bus"
-                                              class="stops__content__card__service-bus"></ion-icon>
-                                    <span class="stops__content__card__service-bus-id">15a</span>
-                                </ion-item>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-card>
-                <ion-card class="stops__content__card" id="stops__content__card" data-item="333">
-                    <ion-grid no-padding>
-                        <ion-row>
-                            <ion-col size="9">
-                                <div class="stops__content__card__stop-name">
-                                    <span>D'Olier Street, O'Connell Bridge</span>
-                                </div>
-                            </ion-col>
-                            <ion-col align-self-end size="3">
-                                <div class="stops__content__card__heart">
-                                    <ion-icon name="heart" class="stops__content__card__heart"
-                                              slot="end"></ion-icon>
-                                </div>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="4" align-self-baseline>
-                                <ion-item lines="none" class="stops__content__card__stop-id">
-                                    <span>333</span>
-                                </ion-item>
-                            </ion-col>
-                            <ion-col size="8">
-                                <ion-item lines="none">
-                                    <ion-icon name="md-bus"
-                                              class="stops__content__card__service-bus"></ion-icon>
-                                    <span class="stops__content__card__service-bus-id">15a</span>
-                                </ion-item>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-card>
-                <ion-card class="stops__content__card" id="stops__content__card" data-item="1091">
-                    <ion-grid no-padding>
-                        <ion-row>
-                            <ion-col size="9">
-                                <div class="stops__content__card__stop-name">
-                                    <span>Kimmage, Whitehall Road (Kimmage Road West)</span>
-                                </div>
-                            </ion-col>
-                            <ion-col align-self-end size="3">
-                                <div class="stops__content__card__heart">
-                                    <ion-icon name="heart" class="stops__content__card__heart"
-                                              slot="end"></ion-icon>
-                                </div>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="4" align-self-baseline>
-                                <ion-item lines="none" class="stops__content__card__stop-id">
-                                    <span>1091</span>
-                                </ion-item>
-                            </ion-col>
-                            <ion-col size="8">
-                                <ion-item lines="none">
-                                    <ion-icon name="md-bus"
-                                              class="stops__content__card__service-bus"></ion-icon>
-                                    <span class="stops__content__card__service-bus-id">15a</span>
-                                </ion-item>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-card>
+                <div id="favourite_stops__cards__in__stop">
+                </div>
             </div>
         </div>
         <div id="stop_div2" class="stops__div2">
@@ -133,8 +42,8 @@
                                 Back
                             </ion-button>
                         </ion-buttons>
-                        <ion-buttons slot="end">
-                            <ion-button>
+                        <ion-buttons slot="end" id="stops__show-on-map-btn" data-id="">
+                            <ion-button id="stops__show-on-map-btn__name">
                                 <ion-icon name="md-map"></ion-icon>
                                 Show on map
                             </ion-button>
@@ -151,17 +60,18 @@
                             </ion-col>
                             <ion-col align-self-end size="3">
                                 <div class="stops__content__card__heart">
-                                    <ion-icon name="heart" class="stops__content__card__heart"
-                                              slot="end"></ion-icon>
+                                    <ion-icon name="heart" id="stops__content__card__heart-solid" style=""></ion-icon>
+                                    <ion-icon name="heart-empty" id="stops__content__card__heart-empty" style="display: none"></ion-icon>
                                 </div>
+                                <ion-alert-controller></ion-alert-controller>
                             </ion-col>
                         </ion-row>
                         <ion-row>
                             <ion-col size="4" align-self-baseline>
-                                <ion-item lines="none">
+                                <div class="stops__content__card__stop-id__container">
                                     <span id="stops__content__card__stop-id"
                                           class="stops__content__card__stop-id"></span>
-                                </ion-item>
+                                </div>
                             </ion-col>
                             <ion-col size="3">
                                 <ion-item lines="none" style="--padding-end:0">
@@ -179,50 +89,89 @@
                     </ion-grid>
                 </ion-item>
             </div>
-            <div id="drawer_container_stops" style="">
-                {#            <ion-item lines="none" class="stops__chips">#}
-                {#                <ion-grid id="stops_chips_grid">#}
-                {#                    <ion-row id="stops_chips_row">#}
-                {#                    </ion-row>#}
-                {#                </ion-grid>#}
-                {#            </ion-item>#}
+            <div id="stops__time-table" class="stops__time-table">
+                <ion-list class="stops__time-table-list" id="stops__time-table-list">
+                    <ion-grid>
+                        <ion-row class="stops__time-table-list__header">
+                            <ion-col size="3">
+                                <ion-item lines="none">
+                                    <ion-label
+                                            class="stops__time-table-list__header__label__bus stops__time-table-list__header__label">
+                                        Bus
+                                    </ion-label>
+                                </ion-item>
+                            </ion-col>
+
+                            <ion-col size="6">
+                                <ion-item lines="none">
+                                    <ion-label
+                                            class="stops__time-table-list__header__label__des stops__time-table-list__header__label">
+                                        Destination
+                                    </ion-label>
+                                </ion-item>
+                            </ion-col>
+
+                            <ion-col size="3">
+                                <ion-item lines="none">
+                                    <ion-label
+                                            class="stops__time-table-list__header__label__time stops__time-table-list__header__label">
+                                        Time
+                                    </ion-label>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <div id="slots">
+                        </div>
+                    </ion-grid>
+                </ion-list>
             </div>
-                <ion-content overflow-scroll="true" id="time-table">
-                    <ion-list class="stops__time-table-list" id="stops__time-table-list">
-                        <ion-grid>
-                            <ion-row class="stops__time-table-list__header">
-                                <ion-col size="3">
-                                    <ion-item lines="none">
-                                        <ion-label
-                                                class="stops__time-table-list__header__label__bus stops__time-table-list__header__label">
-                                            Bus
-                                        </ion-label>
-                                    </ion-item>
-                                </ion-col>
-
-                                <ion-col size="6">
-                                    <ion-item lines="none">
-                                        <ion-label
-                                                class="stops__time-table-list__header__label__des stops__time-table-list__header__label">
-                                            Destination
-                                        </ion-label>
-                                    </ion-item>
-                                </ion-col>
-
-                                <ion-col size="3">
-                                    <ion-item lines="none">
-                                        <ion-label
-                                                class="stops__time-table-list__header__label__time stops__time-table-list__header__label">
-                                            Time
-                                        </ion-label>
-                                    </ion-item>
-                                </ion-col>
-                            </ion-row>
-                            <div id="slots">
-                            </div>
-                        </ion-grid>
-                    </ion-list>
-                </ion-content>
         </div>
     </div>
 </ion-tab>
+
+
+
+
+
+{#            <div id="drawer_container_stops" style="">#}
+{#            <ion-item lines="none" class="stops__chips">#}
+{#                <ion-grid id="stops_chips_grid">#}
+{#                    <ion-row id="stops_chips_row">#}
+{#                    </ion-row>#}
+{#                </ion-grid>#}
+{#            </ion-item>#}
+{#            </div>#}
+
+
+
+{#<ion-card class="stops__content__card" id="stops__content__card" data-item="2">#}
+{#                    <ion-grid no-padding>#}
+{#                        <ion-row>#}
+{#                            <ion-col size="9">#}
+{#                                <div class="stops__content__card__stop-name">#}
+{#                                    <span>Parnell Square, Parnell Street</span>#}
+{#                                </div>#}
+{#                            </ion-col>#}
+{#                            <ion-col align-self-end size="3">#}
+{#                                <div class="stops__content__card__heart">#}
+{#                                    <ion-icon name="heart" class="stops__content__card__heart"#}
+{#                                              slot="end"></ion-icon>#}
+{#                                </div>#}
+{#                            </ion-col>#}
+{#                        </ion-row>#}
+{#                        <ion-row>#}
+{#                            <ion-col size="4" align-self-baseline>#}
+{#                                <ion-item lines="none" class="stops__content__card__stop-id">#}
+{#                                    <span>2</span>#}
+{#                                </ion-item>#}
+{#                            </ion-col>#}
+{#                            <ion-col size="8">#}
+{#                                <ion-item lines="none">#}
+{#                                    <ion-icon name="md-bus"#}
+{#                                              class="stops__content__card__service-bus"></ion-icon>#}
+{#                                    <span class="stops__content__card__service-bus-id">15a</span>#}
+{#                                </ion-item>#}
+{#                            </ion-col>#}
+{#                        </ion-row>#}
+{#                    </ion-grid>#}
+{#                </ion-card>#}

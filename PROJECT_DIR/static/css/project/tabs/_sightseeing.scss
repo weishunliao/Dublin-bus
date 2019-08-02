@@ -1,0 +1,137 @@
+.sightseeing {
+  &__category {
+
+    &__head {
+
+      height: 15vh;
+
+      &__col {
+        text-align: center;
+        color: $db_blue;
+        font-size: 3rem;
+        font-weight: bold;
+      }
+    }
+
+    &__content {
+      &__row {
+        height: 17vh;
+      }
+
+      &__col {
+        text-align: center;
+      }
+
+      &__icon {
+        font-size: 7vw;
+        color: white;
+        background-color: $db_blue;
+        border-radius: 50%;
+        padding: 3vh;
+        margin-bottom: 5px;
+      }
+
+      &__label {
+        margin-top: 0;
+        color: $db_blue;
+        font-size: 3.5vw;
+        font-weight: bold;
+      }
+    }
+
+  }
+
+  &__options {
+    &__head {
+      background-color: $bus_yellow;
+
+    }
+
+    &__search__title__label {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: bold;
+      color: $db_blue;
+      font-family: Helvetica;
+    }
+
+    &__back-btn {
+
+    }
+
+    &__cards {
+   
+    padding-bottom: 5rem;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 30rem;
+
+      &__photo {
+      }
+
+      &__info {
+        &__name {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: $db_blue;
+        }
+
+        &__addr {
+          color: $db_blue;
+        }
+
+        &__ratting {
+          unicode-bidi: bidi-override;
+          color: #ccc;
+          font-size: 1.8rem;
+          position: relative;
+          margin: 0;
+          padding: 0;
+          width: 9rem;
+
+          &__number {
+            color: $bus_orange;
+            //font-size: 1.6rem;
+          }
+
+          &__top {
+            width: 0;
+            color: $bus_orange;
+            //color: #e7711b;
+            padding: 0;
+            position: absolute;
+            z-index: 1;
+            display: block;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+
+            span {
+              display: inline-block;
+            }
+          }
+
+          &__bottom {
+            padding: 0;
+            display: block;
+            z-index: 0;
+            width: 110%;
+          }
+
+        }
+
+        &__opening-hour {
+          color: $db_blue;
+        }
+
+      }
+    }
+
+    &__cards::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* make scrollbar transparent */
+    }
+
+  }
+
+}

@@ -1,5 +1,8 @@
 import unittest
 import convert_timestamp
+import transform_data
+import pandas as pd
+import pandas.testing as pd_testing
 
 class TestTimestampToMonthWeather(unittest.TestCase):
     """Unit tests for the timestamp_to_month_weather function."""
@@ -55,55 +58,6 @@ class TestTimestampToHourBus(unittest.TestCase):
     def test_after_midnight2(self):
         """Test to check the value returned more than an hour after midnight."""
         self.assertEqual(convert_timestamp.timestamp_to_hour_bus(91000), 1) 
-
-
-class TestTimestampToDayBus(unittest.TestCase):
-    """Unit tests for the timestamp_to_day_bus function."""
-
-    def test_same_day(self):
-        """Test to check the value returned for a value less than 86400 seconds (24*60*60)."""
-        self.assertEqual(convert_timestamp.timestamp_to_day_bus('2018-01-31 00:00:00', 37000), 31) 
-
-    def test_after_midnight_mid_month(self):
-        """Test to check the value returned for a day that is mid-month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_day_bus('2018-01-05 00:00:00', 86500), 6) 
-
-    def test_after_midnight_end_31(self):
-        """Test to check the value returned for a day at the end of a 31 day month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_day_bus('2018-01-31 00:00:00', 86400), 1) 
-
-    def test_after_midnight_end_30(self):
-        """Test to check the value returned for a day at the end of a 31 day month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_day_bus('2018-11-30 00:00:00', 86450), 1)
-
-    def test_after_midnight_end_feb(self):
-        """Test to check the value returned for a day at the end of feb (non leap year) when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_day_bus('2018-02-28 00:00:00', 86450), 1)
-
-
-class TestTimestampToMonthBus(unittest.TestCase):
-    """Unit tests for the timestamp_to_month_bus function."""
-
-    def test_same_day(self):
-        """Test to check the value returned for a value less than 86400 seconds (24*60*60)."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-01-31 00:00:00', 37000), 1)
-
-    def test_after_midnight_mid_month(self):
-        """Test to check the value returned for a day that is mid-month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-01-05 00:00:00', 86500), 1) 
-
-    def test_after_midnight_end_31(self):
-        """Test to check the value returned for a day at the end of a 31 day month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-01-31 00:00:00', 86400), 2) 
-
-    def test_after_midnight_end_30(self):
-        """Test to check the value returned for a day at the end of a 31 day month when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-11-30 00:00:00', 86450), 12)
-
-    def test_after_midnight_end_feb(self):
-        """Test to check the value returned for a day at the end of feb (non leap year) when seconds are >= 86400."""
-        self.assertEqual(convert_timestamp.timestamp_to_month_bus('2018-02-28 00:00:00', 86450), 3)
-
 
 class TestTimestampToDayOfWeek(unittest.TestCase):
     """Unit tests for the timestamp_to_day_of_week function."""
@@ -181,6 +135,95 @@ class TestTimestampToBankHoliday(unittest.TestCase):
         """Test to check the value returned for a timestamp that isn't a bank holiday."""
         holiday_list=['2018-01-01 00:00:00']
         self.assertEqual(convert_timestamp.timestamp_to_bank_holiday('2018-01-02 00:00:00', holiday_list), 0)
+
+
+class TestTransformData(unittest.TestCase):
+    """Unit tests for the transform_data function."""
+
+    def test_transform_data(self):
+        """Test for a straightforward success scenario for the transform_data function."""
+        data_in = [['2018-08-01 00:00:00','7315261','120','1','6004','25849'],\
+            ['2018-08-01 00:00:00','7315261','120','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','3','192','26210'],\
+            ['2018-08-01 00:00:00','7315261','120','4','795','26236'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','3','7028','29073'],\
+            ['2018-08-01 00:00:00','7315262','120','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','1','4495','22498'],\
+            ['2018-08-01 00:00:00','7315336','69','2','4720','22647'],\
+            ['2018-08-01 00:00:00','7315336','69','3','1443','22738']]
+        data_out = [['2018-08-01 00:00:00','7315261','120','1','6004','25849','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','2','3','25957','3','192','26210'],\
+            ['2018-08-01 00:00:00','7315261','120','3','192','26210','4','795','26236'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920','3','7028','29073'],\
+            ['2018-08-01 00:00:00','7315262','120','3','7028','29073','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','1','4495','22498','2','4720','22647'],\
+            ['2018-08-01 00:00:00','7315336','69','2','4720','22647','3','1443','22738']]
+        df_in = pd.DataFrame(data_in, columns=['dayofservice','tripid','lineid','progrnumber','stoppointid','actualtime_arr_stop'])
+        df_out = pd.DataFrame(data_out, columns=['dayofservice','tripid','lineid','progrnumber_first','stoppointid_first','actualtime_arr_stop_first','progrnumber_next','stoppointid_next','actualtime_arr_stop_next'])
+        pd_testing.assert_frame_equal(transform_data.transform_data(df_in), df_out)
+
+    def test_transform_data_missing_start(self):
+        """Test for the transform_data function where data is missing at the start of a trip."""
+        data_in = [['2018-08-01 00:00:00','7315261','120','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','3','192','26210'],\
+            ['2018-08-01 00:00:00','7315261','120','4','795','26236'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','3','7028','29073'],\
+            ['2018-08-01 00:00:00','7315262','120','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','2','4720','22647'],\
+            ['2018-08-01 00:00:00','7315336','69','3','1443','22738']]
+        data_out = [['2018-08-01 00:00:00','7315261','120','2','3','25957','3','192','26210'],\
+            ['2018-08-01 00:00:00','7315261','120','3','192','26210','4','795','26236'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920','3','7028','29073'],\
+            ['2018-08-01 00:00:00','7315262','120','3','7028','29073','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','2','4720','22647','3','1443','22738']]
+        df_in = pd.DataFrame(data_in, columns=['dayofservice','tripid','lineid','progrnumber','stoppointid','actualtime_arr_stop'])
+        df_out = pd.DataFrame(data_out, columns=['dayofservice','tripid','lineid','progrnumber_first','stoppointid_first','actualtime_arr_stop_first','progrnumber_next','stoppointid_next','actualtime_arr_stop_next'])
+        pd_testing.assert_frame_equal(transform_data.transform_data(df_in), df_out)
+
+    def test_transform_data_missing_mid(self):
+        """Test for the transform_data function where data is missing in the middle of a trip."""
+        data_in = [['2018-08-01 00:00:00','7315261','120','1','6004','25849'],\
+            ['2018-08-01 00:00:00','7315261','120','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','4','795','26236'],\
+            ['2018-08-01 00:00:00','7315261','120','5','796','26242'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','1','4495','22498'],\
+            ['2018-08-01 00:00:00','7315336','69','3','1443','22738']]
+        data_out = [['2018-08-01 00:00:00','7315261','120','1','6004','25849','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','4','795','26236','5','796','26242'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813','2','4504','28920']]
+        df_in = pd.DataFrame(data_in, columns=['dayofservice','tripid','lineid','progrnumber','stoppointid','actualtime_arr_stop'])
+        df_out = pd.DataFrame(data_out, columns=['dayofservice','tripid','lineid','progrnumber_first','stoppointid_first','actualtime_arr_stop_first','progrnumber_next','stoppointid_next','actualtime_arr_stop_next'])
+        pd_testing.assert_frame_equal(transform_data.transform_data(df_in), df_out)
+    
+    def test_transform_data_missing_end(self):
+        """Test for the transform_data function where data is missing at the end of a trip."""
+        data_in = [['2018-08-01 00:00:00','7315261','120','1','6004','25849'],\
+            ['2018-08-01 00:00:00','7315261','120','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','3','192','26210'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','3','7028','29073'],\
+            ['2018-08-01 00:00:00','7315262','120','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','1','4495','22498'],\
+            ['2018-08-01 00:00:00','7315336','69','2','4720','22647']]
+        data_out = [['2018-08-01 00:00:00','7315261','120','1','6004','25849','2','3','25957'],\
+            ['2018-08-01 00:00:00','7315261','120','2','3','25957','3','192','26210'],\
+            ['2018-08-01 00:00:00','7315262','120','1','284','28813','2','4504','28920'],\
+            ['2018-08-01 00:00:00','7315262','120','2','4504','28920','3','7028','29073'],\
+            ['2018-08-01 00:00:00','7315262','120','3','7028','29073','4','5147','29198'],\
+            ['2018-08-01 00:00:00','7315336','69','1','4495','22498','2','4720','22647']]
+        df_in = pd.DataFrame(data_in, columns=['dayofservice','tripid','lineid','progrnumber','stoppointid','actualtime_arr_stop'])
+        df_out = pd.DataFrame(data_out, columns=['dayofservice','tripid','lineid','progrnumber_first','stoppointid_first','actualtime_arr_stop_first','progrnumber_next','stoppointid_next','actualtime_arr_stop_next'])
+        pd_testing.assert_frame_equal(transform_data.transform_data(df_in), df_out)
 
 
 if __name__ == '__main__':

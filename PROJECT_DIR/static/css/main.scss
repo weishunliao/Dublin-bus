@@ -4,13 +4,21 @@
 @import 'project/Variables/mixins';
 @import 'project/Drawer/drawer';
 @import 'project/tabs/journey_planner';
+@import 'project/tabs/journey_show';
 @import 'project/Map/map';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
+@import 'project/Components/card';
 @import 'project/Timeline/timeline';
 @import 'project/Timeline/switch';
 @import 'project/AutoComplete/auto-complete';
 @import 'project/tabs/stops';
+@import 'project/tabs/routes';
+@import 'project/tabs/sightseeing';
+@import 'project/Components/loader';
+@import 'project/tabs/favourites';
+
+
 
 
 
@@ -69,5 +77,14 @@ ion-tabs {
 ion-fab-button {
     margin-top: 1rem;
     margin-right: 1rem;
-    
 }
+
+ion-card-content {
+    padding: 0 !important;
+    z-index: 3;
+}
+
+ion-card {
+    border-radius: 1.5rem !important;
+}
+

@@ -10,16 +10,95 @@
   <div class="map__container">
     <div id="map"></div>
   </div>
+  <div class="journey_show__container" id="show-container">
+    <!-- Dummy data to build the card -->
+    <div
+      class="journey-planner__routes__card routeCard showCard"
+      id="route-${id}"
+    >
+      <div class="customCard" id="stretchCard">
+
+            <div class="showCard__toggleButtonsContainer">
+                    <div class="showCard__backToRoutesContainer" id="backToRoutes">
+                      <ion-icon
+                        name="md-arrow-back"
+                        class="showCard__backArrow"
+                      ></ion-icon>
+                      <h2 class="showCard__routeText showText">Choose another route</h2>
+                    </div>
+                    <div class="showCard__moreInfoContainer" id="moreInfo-click">
+                      <ion-icon
+                        name="arrow-dropup-circle"
+                        class="showCard__moreInfoButton"
+                      ></ion-icon>
+                      <h2 class="showCard__infoText showText" id="infoText">More Info</h2>
+                    </div>
+                  </div>
+        <!-- dummy data starts here -->
+
+        <div class="journey-planner__card__container">
+          
+          
+            <div class="journey-planner__card__left">
+              <div class="journey-planner__card__left__depTitle">
+                <h2
+                  class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                >
+                  Departing in:
+                </h2>
+              </div>
+              <div class="journey-planner__card__left__minsTitle">
+                <span class="journey-planner__card__minuteSpan">5</span>
+                <h1 class="journey-planner__card__timeTitle">mins</h1>
+              </div>
+            </div>
+            <div class="journey-planner__card__right">
+              <div class="journey-planner__card__right__travelTime">
+                <h2
+                  class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                >
+                  Travel time:
+                  <span
+                    class="journey-planner__card__timeNumber"
+                    id="jp-travel-time"
+                    >33</span
+                  >
+                  minutes
+                </h2>
+              </div>
+              <div
+                class="journey-planner__card__right__descriptionContainer"
+                id="route-descriptions"
+              ></div>
+            </div>
+          
+        </div>
+       <div class="more-route-info">
+           <div class="more-route-info__locationDiv">
+               <div class="more-route-info__icon">
+                <ion-icon class="more-route-info__icon__internal" name="walk"></ion-icon>
+               </div>
+               <div class="more-route-info__distanceText">
+                   <h2><span class="type-span">Walk</span> 250 metres</h2>
+               </div>
+               
+           </div>
+           
+       </div>
+      </div>
+    </div>
+    `
+  </div>
   <ion-tabs class="tabs">
-    {% include "./drawers/bottom_drawer.html" %}
-     {% include "./components/tabs.html" %}
+    {% include "./drawers/bottom_drawer.html" %} 
+    {% include "./components/tabs.html" %}
   </ion-tabs>
 </div>
 
 <!-- <img src="{% static 'images/forest.jpg' %}" alt=""> -->
 <script>
   var icon = "{{icon}}";
-  var temperature = "{{temperature}}"
+  var temperature = "{{temperature}}";
 </script>
 
 {% include "./partials/footer.html" %}
