@@ -104,8 +104,6 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
     hour = hour_ref[hour]
     # load the ml model & scaler
     model, scaler = load_model(month)
-    # initialise an array to store all predictions
-    predictions = []
     # initialise an array to store arrival times at various stops
     arrival_time_at_stop = actualtime_arr_stop_first
     arrival_times = []
@@ -128,12 +126,13 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
         # specify the input for the prediction
         input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, rain, temp] + hour]
         input_scaled = scaler.transform(input)
-        # get a prediction and append to the prediction list
+        # get a prediction and append updated arrival_time to the list
         prediction = (model.predict(input_scaled))
-        predictions.append(prediction[0])
-        # update arrival_time_at_stop and append it to the arrival_times list
-        arrival_time_at_stop = arrival_time_at_stop + prediction[0]
-        arrival_times.append(arrival_time_at_stop)
+        if prediction[0] <= 0:
+            arrival_times.append(arrival_time_at_stop)
+        else:
+            arrival_time_at_stop = arrival_time_at_stop + prediction[0]
+            arrival_times.append(arrival_time_at_stop)
     # calculate the time for the full trip
     full_trip = arrival_times[len(arrival_times)-1] - arrival_times[0]
     return int(full_trip)
