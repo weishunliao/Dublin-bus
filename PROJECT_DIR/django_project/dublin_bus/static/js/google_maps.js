@@ -285,8 +285,9 @@ export default function initMap() {
                       return response.json();
                     })
                     .then(data => {
+                        console.log("DATA", data)
                       full_travel_time += data.journey_time;
-                      routeDescription.push(["bus", route_id, distance, departureStop, arrivalStop, start, end, duration]);
+                      routeDescription.push(["bus", route_id, distance, departureStop, arrivalStop, start, end, Math.round(data.journey_time / 60)]);
                     });
                 }
                 step++;
