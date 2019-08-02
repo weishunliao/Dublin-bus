@@ -16,9 +16,12 @@ export let markers = {};
 export let map;
 export let directionsDisplay;
 
+// const toInputContainer = document.querySelector('#to-input')
+
+
 export default function initMap() {
     let geocoder = new google.maps.Geocoder;
-
+    // toInputContainer.children[0].setAttribute('id', "to");
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
   setTimeout(() => {
     map = new google.maps.Map(document.getElementById("map"), {
@@ -31,6 +34,8 @@ export default function initMap() {
     $.getJSON("/static/cache/stops.json", function(data) {
       AddMarkers(data, map);
     });
+
+    
 
     let directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
@@ -57,10 +62,14 @@ export default function initMap() {
       fromInput,
       options
     );
-    const toAutocomplete = new google.maps.places.Autocomplete(
-      toInput,
-      options
-    );
+
+    
+        const toAutocomplete = new google.maps.places.Autocomplete(
+            toInput,
+            options
+          );
+
+    
 
     const sightAutocomplete = new google.maps.places.Autocomplete(
       sightInput,
@@ -122,6 +131,8 @@ export default function initMap() {
             };
 
             mainPosition = pos;
+            map.setCenter(mainPosition);
+            map.setZoom(17);
 
             var marker = new google.maps.Marker({
               position: pos,
@@ -311,8 +322,7 @@ export default function initMap() {
       );
     });
     getLocation();
-    map.setCenter(mainPosition);
-    map.setZoom(17);
+    
 
     const centerOfDublin = new google.maps.LatLng(53.350287, -6.260574);
     map.setCenter(centerOfDublin);

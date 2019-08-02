@@ -69,6 +69,7 @@ window.addEventListener("load", function() {
   setTimeout(() => {
     bottomSwiper = new Swiper(bottomDrawer, grabber);
     tabs.addEventListener("ionTabsWillChange", handleOut);
+    
   }, 200);
 
   const tab_buttons = document.querySelectorAll("ion-tab-button");

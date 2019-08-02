@@ -7,9 +7,9 @@ const searchButton = document.querySelector(".search-button");
 const searchContainer = document.querySelector(".search-container");
 const searchInput = document.querySelector(".search-input");
 export const sightInput = document.querySelector("#search-sightseeing");
-export const dateInput = document.querySelector('ion-datetime')
-export const dateContainer = document.querySelector('#departing-container');
-export const submitButton = document.querySelector('#sub-button');
+export const dateInput = document.querySelector("ion-datetime");
+export const dateContainer = document.querySelector("#departing-container");
+export const submitButton = document.querySelector("#sub-button");
 
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
@@ -17,27 +17,43 @@ export const fromInput = document.querySelector("#from");
 export const fromContainer = document.querySelector("#from-container");
 export const toInput = document.querySelector("#to");
 
+const allInputs = document.querySelectorAll("input");
+
+allInputs.forEach(input => input.addEventListener('click', (e => e.target.select())))
+
+
+let body = document.body, 
+html = document.documentElement;
+export let height = Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    html.clientHeight,
+    html.scrollHeight,
+    html.offsetHeight
+  );
+
+export let tabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
 export const drawers = {
   top: topDrawer,
   bottom: bottomDrawer
 };
 
-export function switchUpText(){
-    let selection = [
-        'Take me for a ride!',
-        'Bus me!',
-        'Vroom vroom!',
-        'The wheels on the bus...',
-        "Let's go!",
-        "Trip me!",
-        "Go public transport!",
-        "Let's bus!",
-        "RT_Trips gave my CPU a stroke"
-    ];
+export function switchUpText() {
+  let selection = [
+    "Take me for a ride!",
+    "Bus me!",
+    "Vroom vroom!",
+    "The wheels on the bus...",
+    "Let's go!",
+    "Trip me!",
+    "Go public transport!",
+    "Let's bus!",
+    "RT_Trips gave my CPU a stroke"
+  ];
 
-    let num = Math.floor(Math.random() * selection.length);
-    let relText = selection[num];
-    submitButton.innerHTML = relText;
+  let num = Math.floor(Math.random() * selection.length);
+  let relText = selection[num];
+  submitButton.innerHTML = relText;
 }
 
 export class Route {
@@ -58,10 +74,8 @@ export class Route {
 
   static addClick(route) {
     route.domNode.addEventListener("click", () => {
-
-
       route.showContainer.innerHTML = Route.journeyShowCard(
-          route.routeData.routeDescription,
+        route.routeData.routeDescription,
         route.nodeHTML,
         route.routeData.id
       );
@@ -74,16 +88,28 @@ export class Route {
       const mic = document.querySelector("#moreInfo-click");
       const showContainer = document.querySelector("#show-container");
       const card = document.querySelector("#stretchCard");
-    //   const clickMe = document.querySelector('#clickMe');
+      //   const clickMe = document.querySelector('#clickMe');
 
-    //   clickMe.addEventListener('click', () => {
-    //       console.log('lol')
-    //   })
+      //   clickMe.addEventListener('click', () => {
+      //       console.log('lol')
+      //   })
 
       const backToRoutes = document.querySelector("#backToRoutes");
       mic.addEventListener("click", () => {
+        
         showContainer.classList.toggle("moreInfoToggled");
         card.classList.toggle("card-extended");
+        
+
+        
+        
+        if (showContainer.classList.contains('moreInfoToggled')){
+            document.querySelector('#stretchCard').style.height = (height - tabsHeight - (height * 0.03)) + "px";
+        } else {
+            document.querySelector('#stretchCard').style.height = "160px";
+        }
+       
+        
         if (!showCardOpen) {
           showCardOpen = true;
           infoText.innerHTML = "Show Less";
@@ -195,73 +221,78 @@ export class Route {
     return finString;
   }
 
-  static moreInfoBuilder(routeDescription){
-      console.log("ROUTE DESCRIPTION!! ", routeDescription)
-      let icon;
-      
-      let finString = "";
-      let travelText;
-      let destinationText;
-      let four = 'DESTINATION'
-      let whereWeAre;
-      let whereWeAreGoing;
-      routeDescription.forEach((routeSection, index) => {
-            
+  static moreInfoBuilder(routeDescription) {
+    console.log("ROUTE DESCRIPTION!! ", routeDescription);
+    let icon;
 
-        // if (index === 0) {
-        //     whereWeAre = routeSection[4]
-        // } else if (index === routeDescription.length - 1) {
-        //     whereWeAreGoing = routeSection[5]
-        // } else {
-        //     whereWeAre = routeSection[4]
-        //     whereWeAreGoing = routeDescription[index + 1][4]
-        // }
+    let finString = "";
+    let travelText;
+    let destinationText;
+    let four = "DESTINATION";
+    let whereWeAre;
+    let whereWeAreGoing;
+    routeDescription.forEach((routeSection, index) => {
+      // if (index === 0) {
+      //     whereWeAre = routeSection[4]
+      // } else if (index === routeDescription.length - 1) {
+      //     whereWeAreGoing = routeSection[5]
+      // } else {
+      //     whereWeAre = routeSection[4]
+      //     whereWeAreGoing = routeDescription[index + 1][4]
+      // }
 
-        if (index === 0) {
-            whereWeAre = routeSection[4]
-        }
-            
-        destinationText = routeSection[2];
-    
+      if (index === 0) {
+        whereWeAre = routeSection[4];
+      }
 
-          finString += `
+      destinationText = routeSection[2];
+
+      finString += `
           <div class="more-route-info__locationDiv">
           <div class="more-route-info__icon">
 
           
-          `
-          if (routeSection[0] == "walking") {
-            
-            icon =`<ion-icon class="more-route-info__icon__internal" name="walk"></ion-icon>`;
-            travelText = 'Walk'
-        
-           
-          } else{
-              icon = `<ion-icon class="more-route-info__icon__internal" name="bus"></ion-icon>`
-              travelText = `Take the ${routeSection[1]}`
-          }
-          
-          finString += icon;
-          
-          finString += `
+          `;
+      if (routeSection[0] == "walking") {
+        icon = `<ion-icon class="more-route-info__icon__internal" name="walk"></ion-icon>`;
+        travelText = "Walk";
+      } else {
+        icon = `<ion-icon class="more-route-info__icon__internal" name="bus"></ion-icon>`;
+        travelText = `Take the ${routeSection[1]}`;
+      }
+
+      finString += icon;
+
+      finString += `
          </div>
          <div class="more-route-info__locationText">
-          ${index === 0 ? (`<h2>${routeSection[5]}</h2>`) : ((routeSection[0] === "bus" ? `<h2>${routeSection[3]}</h2>`: `<h2>${routeDescription[index -1][4]}`))}
+          ${
+            index === 0
+              ? `<h2>${routeSection[5]}</h2>`
+              : routeSection[0] === "bus"
+              ? `<h2>${routeSection[3]}</h2>`
+              : `<h2>${routeDescription[index - 1][4]}`
+          }
          </div>
          <div class="more-route-info__distanceText">
-             <h2><span class="type-span">${travelText}</span> ${destinationText} (${routeSection[7]})</h2>
+             <h2><span class="type-span">${travelText}</span> ${destinationText} (${
+        routeSection[7]
+      })</h2>
          </div>
-         ${index === (routeDescription.length - 1) ?  
-            `<div class='more-route-info__finalCircle'></div>
-            <div class="more-route-info__finalText"><h2>${routeSection[6]}</h2></div>
+         ${
+           index === routeDescription.length - 1
+             ? `<div class='more-route-info__finalCircle'></div>
+            <div class="more-route-info__finalText"><h2>${
+              routeSection[6]
+            }</h2></div>
             `
-            : ``}
+             : ``
+         }
           </div>
-          `
-         
-      })
-      
-      return finString;
+          `;
+    });
+
+    return finString;
   }
 
   static jpDisplayCard(innerText, id) {
@@ -273,7 +304,7 @@ export class Route {
   }
 
   static journeyShowCard(routeDescription, innerText, id) {
-      console.log(routeDescription)
+    console.log(routeDescription);
     return `<div class="journey-planner__routes__card routeCard showCard" id="route-${id}">
     <div class="customCard" id="stretchCard">
     <div class="showCard__toggleButtonsContainer">
@@ -308,4 +339,3 @@ export const search = {
   searchContainer,
   searchInput
 };
-

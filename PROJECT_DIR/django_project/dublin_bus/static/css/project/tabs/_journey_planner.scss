@@ -1,3 +1,10 @@
+input::selection {
+    color: $db_blue;
+    background: $bus_yellow;
+}
+
+
+
 .journey-planner {
   overflow: hidden;
   height: 100%;
@@ -516,7 +523,7 @@ ion-tab-button {
 
   &__backToRoutesContainer {
     @include relative;
-    width: 40%;
+    width: 50%;
     float: left;
   }
 
@@ -558,8 +565,8 @@ ion-tab-button {
   overflow: scroll;
   height: 40rem;
   margin: 0 auto;
-  margin-top: 1rem;
-  padding-top: 1rem;
+
+  padding-top: 2rem;
 
   &__locationDiv {
     width: 100%;
