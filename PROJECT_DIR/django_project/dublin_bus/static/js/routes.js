@@ -1,10 +1,10 @@
 import {markers, map, bus_route_drawer} from "./google_maps";
 import {create_favourite_route_card} from "./favourites";
 import {controller} from "./stops";
-// import {window_height} from "./stops";
-//
-// document.getElementById("routes__content__wrapper").style.height = window_height * 0.5 + "px";
+import {window_height} from "./stops";
+document.getElementById("routes__content__wrapper").style.height = window_height * 0.5 + "px";
 // document.querySelector(".timeline-wrapper__content__box").style.height = window_height * 0.52 + "px";
+
 let route_id;
 export let stop_list = [];
 let realtime_bus_marker = [];

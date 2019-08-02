@@ -1,9 +1,9 @@
 
-import { selectedTab } from "./nodes";
-import Swiper from './Swiper'
+import { selectedTab, dateInput, switchUpText} from "./nodes";
+import Swiper from "./Swiper";
+
 
 export let bottomSwiper;
-
 
 // Main window load
 
@@ -14,7 +14,6 @@ var h = Math.max(
 $(".drawer__container").css("height", h * 0.95);
 
 window.addEventListener("load", function() {
-
   //   assigns the height of the drawer depending on how large the screen is.
 
   const main = document.querySelector(".main");
@@ -45,7 +44,13 @@ window.addEventListener("load", function() {
   }
 
   function tabClick(e) {
-    if (e.target.id == "tab-button-journey") {
+    if (e.target.id == "tab-button-journey" && bottomSwiper.currentState === bottomSwiper.IN_STATE &&  !(document.querySelector('.journey-planner').classList.contains('converted'))) {
+        switchUpText();
+      const dateobj = new Date();
+      const dateString = dateobj.toISOString();
+      console.log(dateInput.value);
+      dateInput.value = dateString;
+  
     }
 
     if (e.target.id === currentTab) {
@@ -64,6 +69,7 @@ window.addEventListener("load", function() {
   setTimeout(() => {
     bottomSwiper = new Swiper(bottomDrawer, grabber);
     tabs.addEventListener("ionTabsWillChange", handleOut);
+    
   }, 200);
 
   const tab_buttons = document.querySelectorAll("ion-tab-button");
@@ -87,8 +93,6 @@ window.addEventListener("load", function() {
   });
 
   $(".drawer__container").css("display", "block");
-
-  
 });
 
 // function preventPullToRefresh(element) {
@@ -120,4 +124,3 @@ window.addEventListener("load", function() {
 //     }
 //   });
 // }
-

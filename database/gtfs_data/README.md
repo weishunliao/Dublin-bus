@@ -36,3 +36,6 @@ It also outlines steps for loading data into the tables.
         nohup mysqlimport -u USER -pPASSWORD -f --fields-terminated-by=',' --fields-enclosed-by='"' --lines-terminated-by='\n' db_route_info /var/lib/mysql-files/stop_times.txt
 
 9. Remove the files once they have been processed.
+10. Navigate back to the gtfs_data directory and run the following script:
+
+        mysql -u USER -pPASSWORD db_route_info < trim_leading_spaces.sql
