@@ -162,7 +162,7 @@ input::selection {
       padding: 0;
       color: #409ce0;
       font-size: 5.6rem !important;
-
+        font-weight: bold;
       @media screen and (max-width: 600px) {
         font-size: 3rem !important;
         transform: translateY(9px);
@@ -173,7 +173,7 @@ input::selection {
 
     &__minuteSpan {
       font-size: 7.2rem !important;
-
+        font-weight: bold;
       @media screen and (max-width: 600px) {
         font-size: 4.6rem !important;
       }

@@ -178,7 +178,7 @@ export default function initMap() {
         submitButton.innerHTML = 'Go!'
       document.querySelector("#routesHere").innerHTML = `
       
-      <div class="loader__wrapper" id="bus_loader" style="display: none">
+      <div class="loader__wrapper loader-jp" id="bus_loader">
       <h3>Please wait...</h3><br>
       <div>
           <img src="/static/images/bus.jpg" alt="" class="loader__bus">
@@ -324,11 +324,12 @@ export default function initMap() {
                   id: i
                 });
                 
-                document.querySelector("#routesHere").innerHTML = "";
+                
                 Route.appendToDom(newRoute);
                 
               }
             }
+            document.getElementById("bus_loader").style.display = "none";
             // directionsDisplay.setDirections(response);
             console.log("directionsDisplay", directionsDisplay);
           } else {
