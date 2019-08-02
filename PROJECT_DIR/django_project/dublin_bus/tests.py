@@ -163,7 +163,7 @@ class TesParseWeatherForecast(TestCase):
                         "city": {"id": 7778677, "name": "Dublin City", "coord": {"lat": 53.3551, "lon": -6.2493},
                                  "country": "IE", "timezone": 3600}}
         timestamp = datetime.strptime('Jul 5 2019  2:30PM', '%b %d %Y %I:%M%p')
-        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125, 18.82, 81, 1019.31))
+        self.assertEqual(functions.parse_weather_forecast(timestamp, weather_data), (0.125, 18.82))
 
     def test_parse_weather_forecast_not_found(self):
         """Test that parse_weather_forecast raises an exception when weather info not found for the timestamp."""
