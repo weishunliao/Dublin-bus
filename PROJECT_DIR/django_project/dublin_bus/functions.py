@@ -8,12 +8,34 @@ import json
 from django_project.settings import BASE_DIR, MAP_KEY
 from django.db import connection
 
-def load_model():
-    """Loads and returns a machine learning model for all routes."""
-    path = os.path.join(settings.ML_MODEL_ROOT, 'all_routes_aug_linreg_model.sav')
-    with open(path, 'rb') as file:
+def load_model(month):
+    """Loads and returns a machine learning model & scaler depending on the month."""
+    months = {
+        1: "jan",
+        2: "feb",
+        3: "mar",
+        4: "apr",
+        5: "may",
+        6: "jun",
+        7: "jul",
+        8: "aug",
+        9: "sep",
+        10: "oct",
+        11: "nov",
+        12: "dec"
+    }
+    month_val = months[month]
+    # load the ml model
+    model_file = "model_" + month_val + ".sav"
+    model_path = os.path.join(settings.ML_MODEL_ROOT, model_file)
+    with open(model_path, 'rb') as file:
         model = pickle.load(file)
-    return model
+    # load the scaler
+    scaler_file = "scaler_" + month_val + ".sav"
+    scaler_path = os.path.join(settings.ML_MODEL_ROOT, scaler_file)
+    with open(scaler_path, 'rb') as file:
+        scaler = pickle.load(file)
+    return model, scaler
 
 def create_hour_feature_ref():
     """Builds a dictionary with hours (0 and 1 and 4-23) as key and 1D lists as values.
@@ -80,8 +102,8 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
     seg_ref_gtfs = create_segment_ref_gtfs()
     # get hour array from the relevant dictionary
     hour = hour_ref[hour]
-    # load the ml model
-    linreg = load_model()
+    # load the ml model & scaler
+    model, scaler = load_model(month)
     # initialise an array to store all predictions
     predictions = []
     # initialise an array to store arrival times at various stops
@@ -107,7 +129,7 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
         input = [[arrival_time_at_stop, segment_mean, rain, temp, rhum, msl, weekday, bank_holiday] + \
         day_of_week + hour]
         # get a prediction and append to the prediction list
-        prediction = (linreg.predict(input))
+        prediction = (model.predict(input))
         predictions.append(prediction[0])
         # update arrival_time_at_stop and append it to the arrival_times list
         arrival_time_at_stop = arrival_time_at_stop + prediction[0]

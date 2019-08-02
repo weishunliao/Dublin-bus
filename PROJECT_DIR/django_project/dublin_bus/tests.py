@@ -10,9 +10,10 @@ class TestLoadModel(TestCase):
     def test_load_model_success(self):
         """Test to ensure that a model is loaded correctly."""
         try:
-            functions.load_model()
-        except Exception as e:
-            self.fail("load_model() raised an exception unexpectedly!\n Error is:" + str(e))
+            month = 8   
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
 
 
 class TestCreateHourFeatureRef(TestCase):
