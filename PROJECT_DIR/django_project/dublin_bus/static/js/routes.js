@@ -9,6 +9,7 @@ let route_id;
 export let stop_list = [];
 let realtime_bus_marker = [];
 let realtime_bus_marker_on_map = [];
+let head_sign;
 
 $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
@@ -22,6 +23,7 @@ $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
 
 export const get_bus_stop_list = (id, direction) => {
     route_id = id;
+    head_sign = direction;
     fetch('bus_stop_list_by_route?route_id=' + route_id + "&direction=" + direction + "&t=", {method: 'get'})
         .then(function (response) {
             if (response.status >= 200 && response.status < 300) {
@@ -77,12 +79,15 @@ const display_stops = (stops, route_id) => {
 
 
 const direction_switch = document.getElementById("direction_switch");
-direction_switch.addEventListener("change", () => {
-    if (direction_switch.checked === true) {
+direction_switch.addEventListener('click', () => {
+    if (head_sign === 'in') {
         get_bus_stop_list(route_id, "out");
     } else {
         get_bus_stop_list(route_id, "in");
     }
+});
+document.getElementById("refresh_btn").addEventListener('click', () => {
+    get_bus_stop_list(route_id, head_sign);
 });
 
 const update_real_time = (num, stop_id, route_id) => {
@@ -181,8 +186,9 @@ const draw_bus_markers_on_route = () => {
             id: route_id
         });
         realtime_bus_marker_on_map.push(busMarker);
+        busMarker.setMap(map);
     }
-    setInterval(blinker, 800);
+    // setInterval(blinker, 800);
 };
 const blinker = () => {
     for (let busMarker of realtime_bus_marker_on_map) {

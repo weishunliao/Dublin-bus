@@ -82,11 +82,24 @@
 
             <div id="drawer_container_timeline">
                 <div id="timeline-wrapper" class="timeline-wrapper">
-                    <span>Change direction</span>
-                    <label class="timeline-wrapper_switch">
-                        <input type="checkbox" id="direction_switch">
-                        <span class="slider round"></span>
-                    </label>
+                    <ion-toolbar>
+                        <ion-buttons slot="start">
+                            <ion-button id="direction_switch" color="primary">
+                                <ion-icon slot="start" name="swap"></ion-icon>
+                                Change Direction
+                            </ion-button>
+                        </ion-buttons>
+                        <ion-buttons slot="end">
+                            <ion-button id="refresh_btn">
+                                <ion-icon slot="icon-only" name="refresh" color="primary"></ion-icon>
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+{#                    <span>Change direction</span>#}
+{#                    <label class="timeline-wrapper_switch">#}
+{#                        <input type="checkbox" id="direction_switch">#}
+{#                        <span class="slider round"></span>#}
+{#                    </label>#}
                     {#        <span>Outbound</span>#}
                     <div class="timeline-wrapper__content__box">
                         <ul class="timeline-wrapper__content" id="timeline__content">

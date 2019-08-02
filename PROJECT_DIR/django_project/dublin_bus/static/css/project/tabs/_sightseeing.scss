@@ -61,6 +61,7 @@
     &__cards {
       height: 450px;
       overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
 
       &__photo {
       }
