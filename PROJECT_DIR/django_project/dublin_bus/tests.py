@@ -270,17 +270,17 @@ class TestParseTimestamp(TestCase):
     def test_parse_timestamp_weekday(self):
         """Test that the correct values are returned for a weekday timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
-        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10))
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10, 0))
 
     def test_parse_timestamp_weekend(self):
         """Test that the correct values are returned for a weekend timestamp."""
         timestamp = datetime.utcfromtimestamp(1564830000)
-        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11))
+        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11, 0))
 
     def test_parse_timestamp_bank_holiday(self):
         """Test that the correct values are returned for a bank holiday timestamp."""
         timestamp = datetime.utcfromtimestamp(1565019000)
-        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15))
+        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15, 0))
 
 
 class TestFormatStopList(TestCase):
@@ -762,3 +762,18 @@ class TestGetSightInfo(TestCase):
                                                                                               'width': 3264}, ],
                     'rating': 4.7})
         self.assertEqual(get_opening_hour(resp), [' Open 24 hours'])
+
+class TestIsPeak(TestCase):
+    """Test cases for the is_peak function."""
+
+    def test_is_peak_weekday(self):
+        """Test that the correct values are returned for a weekday peak time."""
+        self.assertEqual(functions.is_peak(17, 1), 1)
+
+    def test_not_peak_weekday(self):
+        """Test that the correct values are returned for a weekday off peak time."""
+        self.assertEqual(functions.is_peak(15, 1), 0)
+
+    def test_not_peak_weekend(self):
+        """Test that the correct values are returned for a weekend."""
+        self.assertEqual(functions.is_peak(17, 0), 0)
