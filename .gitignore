@@ -1,6 +1,5 @@
 node_modules
 
-webpack-stats.json
 
 secret.py
 dev_environment
@@ -29,7 +28,6 @@ __pycache__
 
 rt*
 hly*
-webpack-stats.json
 # PROJECT_DIR/static/admin/
 # PROJECT_DIR/static/css/
 # PROJECT_DIR/static/images/
