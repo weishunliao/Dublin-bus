@@ -59,7 +59,8 @@ def get_travel_time(request):
     weather_data = functions.openweather_forecast()
     if weather_data == -1:
         rain, temp = functions.get_weather_defaults(departure_time.month)
-    rain, temp = functions.parse_weather_forecast(departure_time, weather_data)
+    else:
+        rain, temp = functions.parse_weather_forecast(departure_time, weather_data)
     # get the list of stops that the bus will pass along
     stop_list = functions.get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time)
     # call the machine learning model to get a prediction for journey time

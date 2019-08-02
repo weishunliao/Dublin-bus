@@ -151,6 +151,9 @@ def openweather_forecast():
         # retrieve weather forecast from the OpenWeather API and convert to JSON object
         r = requests.get(url=api_endpoint)
         data = r.json()
+        if data["cod"] != 200:
+            print("There was an issue retrieving data from the OpenWeather API, using default values.")
+            return -1
         return data
     except:
         print("There was an issue retrieving data from the OpenWeather API, using default values.")
