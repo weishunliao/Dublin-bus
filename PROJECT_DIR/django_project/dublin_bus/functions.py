@@ -227,7 +227,8 @@ def parse_timestamp(timestamp):
     weekday = is_weekday(timestamp.weekday())
     if is_bank_holiday(timestamp.day, timestamp.month) == 1:
         weekday = 0
-    return time_in_seconds, weekday, timestamp.hour
+    peak = is_peak(timestamp.hour, weekday)
+    return time_in_seconds, weekday, timestamp.hour, peak
 
 
 def format_stop_list(stops):
@@ -261,7 +262,7 @@ def predict_journey_time(stops, timestamp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, weekday, hour = parse_timestamp(timestamp)
+    actualtime_arr_stop_first, weekday, hour, peak = parse_timestamp(timestamp)
     # call the OpenWeather API and parse the response
     weather_data = openweather_forecast()
     rain, temp = parse_weather_forecast(timestamp, weather_data)
@@ -546,3 +547,10 @@ def clean_resp(resp):
     opening_hour = get_opening_hour(resp)
     point.append(opening_hour)
     return point
+
+def is_peak(hour, weekday_flag):
+    """Takes an hour and weekday flag as input, and returns 1 for peak time and 0 for off-peak."""
+    peak_hours = [7,8,9,16,17,18]
+    if hour in peak_hours and weekday_flag == 1:
+        return 1
+    return 0
