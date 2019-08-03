@@ -7,10 +7,18 @@ from dublin_bus.functions import get_opening_hour, clean_resp
 class TestLoadModel(TestCase):
     """Test cases for the load_model function."""
 
-    def test_load_model_success(self):
+    def test_load_model_success_aug(self):
         """Test to ensure that a model is loaded correctly."""
         try:
             month = 8   
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_sep(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 9
             functions.load_model(month)
         except Exception:
             self.fail("load_model() raised an exception unexpectedly!")
@@ -48,15 +56,25 @@ class TestCreateHourFeatureRef(TestCase):
 class TestCreateSegmentRef(TestCase):
     """Test cases for the create_segment_ref function."""
 
-    def test_create_segment_ref_mean(self):
+    def test_create_segment_ref_mean_aug(self):
         """Test for the ouput of the create_segment_ref function."""
         segment_ref = functions.create_segment_ref(8)
         self.assertEqual(segment_ref["1279_1282"]["mean"], 151.0)
 
-    def test_create_segment_ref_std(self):
+    def test_create_segment_ref_std_aug(self):
         """Test for the ouput of the create_segment_ref function."""
         segment_ref = functions.create_segment_ref(8)
         self.assertEqual(segment_ref["1279_1282"]["std"], 54.0)
+        
+    def test_create_segment_ref_mean_sep(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(9)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 147.0)
+
+    def test_create_segment_ref_std_sep(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(9)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 42.0)
 
 
 class TestCreateSegmentRefGtfs(TestCase):
@@ -76,7 +94,7 @@ class TestCreateSegmentRefGtfs(TestCase):
 class TestRoutePrediction(TestCase):
     """Test cases for the route_prediction function."""
 
-    def test_route_prediction(self):
+    def test_route_prediction_aug(self):
         """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
         stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
                  1079, 1080, \
@@ -91,6 +109,22 @@ class TestRoutePrediction(TestCase):
         weekday = 1
         self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
                rain, temp, month), 2527)
+
+    def test_route_prediction_sep(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 9 # september
+        weekday = 1
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
+               rain, temp, month), 2738)
 
 
 class TesParseWeatherForecast(TestCase):
