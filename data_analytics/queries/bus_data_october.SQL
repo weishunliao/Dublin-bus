@@ -5,7 +5,7 @@ from rt_trips t, rt_leavetimes l
 where t.dayofservice = l.dayofservice 
 and t.tripid = l.tripid
 and t.dayofservice BETWEEN CAST('2018-10-01' AS DATE) AND CAST('2018-10-31' AS DATE)
-INTO OUTFILE '/var/lib/mysql-files/september_bus_data.csv'
+INTO OUTFILE '/var/lib/mysql-files/october_bus_data.csv'
 FIELDS TERMINATED BY ';'
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
