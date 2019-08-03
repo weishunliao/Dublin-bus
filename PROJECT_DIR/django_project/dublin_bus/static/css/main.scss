@@ -8,6 +8,7 @@
 @import 'project/Map/map';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
+@import 'project/Components/load-screen';
 @import 'project/Components/card';
 @import 'project/Timeline/timeline';
 @import 'project/Timeline/switch';
@@ -33,6 +34,7 @@
     --ion-color-primary: #3D5F7E;
     --ion-font-family: Actor, sans-serif;
     --ion-color-busyellow: #ffd700;
+    --ion-color-secondary: #ffd700;
 }
 
 input:focus,
@@ -86,5 +88,13 @@ ion-card-content {
 
 ion-card {
     border-radius: 1.5rem !important;
+}
+
+ion-progress-bar {
+    --buffer-background: $db_blue;
+}
+
+ion-toast-controller {
+    --color: $bus_yellow;
 }
 

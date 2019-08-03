@@ -10,6 +10,9 @@ export const sightInput = document.querySelector("#search-sightseeing");
 export const dateInput = document.querySelector("ion-datetime");
 export const dateContainer = document.querySelector("#departing-container");
 export const submitButton = document.querySelector("#sub-button");
+export const controller = document.querySelector('ion-toast-controller');
+
+
 
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
@@ -32,7 +35,7 @@ export let height = Math.max(
     html.offsetHeight
   );
 
-export let tabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+
 export const drawers = {
   top: topDrawer,
   bottom: bottomDrawer
@@ -63,7 +66,8 @@ export class Route {
       routeData.routeDescription,
       routeData.departureTime,
       routeData.id,
-      routeData.full_travel_time
+      routeData.full_travel_time,
+      routeData.leavingIn
     );
 
     this.domNode = null;
@@ -100,7 +104,10 @@ export class Route {
         showContainer.classList.toggle("moreInfoToggled");
         card.classList.toggle("card-extended");
         
+        let tabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+        console.log(tabsHeight)
 
+        console.log("our height", (height - tabsHeight - (height * 0.06)) + "px")
         
         
         if (showContainer.classList.contains('moreInfoToggled')){
@@ -140,7 +147,12 @@ export class Route {
     Route.addClick(route);
   }
 
-  static cardBuilder(routeDescription, departureTime, id, full_travel_time) {
+  static cardBuilder(routeDescription, departureTime, id, full_travel_time, leavingIn) {
+
+    let timeNow = Date.now() / 1000
+        console.log((leavingIn - timeNow) / 60)
+    
+      console.log(leavingIn)
     const card = `
             <div class="journey-planner__card__container">
             

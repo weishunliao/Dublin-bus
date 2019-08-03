@@ -2,7 +2,7 @@
 
 
 
-import { search, fromInput, toInput, selectedTab, Route, sightInput, fromContainer, submitButton } from "./nodes";
+import { search, fromInput, toInput, selectedTab, Route, sightInput, fromContainer, submitButton, controller } from "./nodes";
 import { searchToggle } from "./index";
 import MarkerClusterer from "./markerclusterer";
 import { get_bus_real_time_info, detail, drawer_default_height } from "./stops";
@@ -21,6 +21,8 @@ export let bus_route_drawer;
 
 
 export default function initMap() {
+
+    let initialLocation;
     // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
     setTimeout(() => {
         map = new google.maps.Map(document.getElementById("map"), {
@@ -82,7 +84,7 @@ export default function initMap() {
             AddMarkers(data, map);
         });
 
-    
+    let geocoder = new google.maps.Geocoder;
 
     let directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
@@ -168,31 +170,59 @@ export default function initMap() {
 
     let mainPosition;
 
+    let locationMarkers = [];
+
     function getLocation() {
+
+       
+
+   
       if (navigator.geolocation) {
+
         navigator.geolocation.getCurrentPosition(
           function(position) {
+
+            if (locationMarkers.length > 0){
+                locationMarkers[0].setMap(null)
+                locationMarkers = []
+            }
+
             var pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
 
+            
+            
+
+           
             mainPosition = pos;
             map.setCenter(mainPosition);
             map.setZoom(17);
+            $('.load-screen').fadeOut();
 
-            var marker = new google.maps.Marker({
+           let marker = new google.maps.Marker({
               position: pos,
               map: map,
               icon: "./static/images/location32.png"
             });
 
+            if (toInput.value === ""){
+                console.log("yes it's empty")
+            }
+
+            locationMarkers.push(marker)
+            marker.setAnimation(google.maps.Animation.DROP);
+
             geocoder.geocode({'location': pos}, function(results, status) {
                 console.log("GETTING")
                 if (status === 'OK') {
                   if (results[0]) {
+                      initialLocation = results[0]
                       let res = results[0].formatted_address.slice(0, 30) + "..."
-                    fromInput.value = res;
+                    
+                    fromInput.value = "Current location";
+                    fromInput.style.color = "green";
                     fromContainer.classList.add('focussed');
                   } else {
                     console.log('No results found');
@@ -200,11 +230,14 @@ export default function initMap() {
                 } else {
                   console.log("The whole thing failed")
                 }
+
+           
               });
           },
           function() {
             handleLocationError(true, map.getCenter());
           }
+         
         );
       } else {
         // Browser doesn't support Geolocation
@@ -212,11 +245,15 @@ export default function initMap() {
       }
 
       function handleLocationError(browserHasGeolocation, pos) {
-        alert(
-          browserHasGeolocation
-            ? "Error: The Geolocation service failed."
-            : "Error: Your browser doesn't support geolocation."
-        );
+        $('.load-screen').fadeOut();
+        controller.create({
+            color: 'primary',
+            position: 'top',
+            message: 'Enable location services to make best use of the app :)',
+            showCloseButton: true
+          }).then(toast => {
+            toast.present();
+          });
       }
     }
 
@@ -228,7 +265,7 @@ export default function initMap() {
       <div class="loader__wrapper loader-jp" id="bus_loader">
       <h3>Please wait...</h3><br>
       <div>
-          <img src="/static/images/bus.jpg" alt="" class="loader__bus">
+          <img src="/static/images/bus.png" alt="" class="loader__bus">
       </div>
       <div class="loader__wrapper2">
           <img src="/static/images/road.png" alt="" class="loader__road"/>
@@ -239,10 +276,19 @@ export default function initMap() {
       `;
 
       document.querySelector('.journey-planner').classList.add('converted');
+        let fromLocation;
+      if (fromInput.value === 'Current location'){    
+        fromLocation = initialLocation;
+        fromInput.value = fromLocation.formatted_address;
+        fromInput.style.color = '#3D5F7E'
+      } else {
+          fromLocation = fromInput.value;
+      }
+      
       directionsService.route(
         {
-          origin: document.getElementById("from").value,
-          destination: document.getElementById("to").value,
+          origin: fromLocation.formatted_address,
+          destination: toInput.value,
           travelMode: "TRANSIT",
           provideRouteAlternatives: true
         },
@@ -287,6 +333,7 @@ export default function initMap() {
               let route_id = "Walking";
               let head_sign = "";
               let departure_time = "";
+              let leavingIn;
               
               while (step < length) {
                 let duration =  response.routes[i].legs[0].steps[step].duration.text;
@@ -298,12 +345,17 @@ export default function initMap() {
                     response.routes[i].legs[0].steps[step].duration.value;
                   full_travel_time += walkTime;
                   let departurePoint = 
-                  routeDescription.push(["walking", walkTime, distance, null, null, start, end, duration]);
+                  routeDescription.push(["walking", walkTime, distance, null, null, start, end, duration, null]);
                 } else {
+                    
                     // clear this when the server is back
                     let departureStop = response.routes[i].legs[0].steps[step].transit.departure_stop.name;
                     let arrivalStop = response.routes[i].legs[0].steps[step].transit.arrival_stop.name;
-                    
+                    if (step < 2) {
+                        leavingIn = response.routes[i].legs[0].steps[
+                            step
+                          ].transit.departure_time.value.getTime() / 1000
+                    }
                   let num_stops =
                     response.routes[i].legs[0].steps[step].transit.num_stops;
                   departure_stop =
@@ -348,7 +400,7 @@ export default function initMap() {
                     .then(data => {
                         console.log("DATA", data)
                       full_travel_time += data.journey_time;
-                      routeDescription.push(["bus", route_id, distance, departureStop, arrivalStop, start, end, Math.round(data.journey_time / 60)]);
+                      routeDescription.push(["bus", route_id, distance, departureStop, arrivalStop, start, end, Math.round(data.journey_time / 60)], leavingIn);
                     });
                 }
                 step++;
@@ -368,7 +420,8 @@ export default function initMap() {
                   directions,
                   routeDescription,
                   departure_time,
-                  id: i
+                  id: i,
+                  leavingIn
                 });
                 
                 
@@ -397,6 +450,7 @@ export default function initMap() {
       map.setCenter(mainPosition);
       map.setZoom(17);
     });
+
   }, 200);
 }
 
@@ -408,7 +462,10 @@ function change_route(route_index) {
   directionsDisplay.setRouteIndex(route_index);
 }
 
+
+
 window.initMap = initMap;
+
 
 // function for adding markers to a map based on input
 function AddMarkers(data, map) {

@@ -99,7 +99,7 @@ export class Route {
         
         showContainer.classList.toggle("moreInfoToggled");
         card.classList.toggle("card-extended");
-        
+        console.log("clicked!!")
 
         
         

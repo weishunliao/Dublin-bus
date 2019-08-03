@@ -1,5 +1,6 @@
 
-import { selectedTab, dateInput, switchUpText} from "./nodes";
+import { selectedTab, dateInput, switchUpText, controller} from "./nodes";
+
 import Swiper from "./Swiper";
 
 
@@ -9,9 +10,12 @@ export let bottomSwiper;
 
 
 
+
+
 window.addEventListener("load", function() {
   //   assigns the height of the drawer depending on how large the screen is.
 
+  
   var h = Math.max(
     document.documentElement.clientHeight,
     window.innerHeight || 0

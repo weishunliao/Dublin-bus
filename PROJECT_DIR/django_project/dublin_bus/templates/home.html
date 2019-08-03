@@ -3,10 +3,26 @@
 <!-- This is the main body - every thing will go in here! -->
 
 <div class="main">
-  <!-- <div class="main-cover"></div> -->
+
+
+   <div class="load-screen">
+
+    <div class="load-screen__inner">
+        <div class="load-screen__logo-container">
+                <img src="/static/images/db_logo.png" alt="" class="load-screen__logo"/>
+        </div>
+       
+    </div>
+    <h2>Setting everything up...</h2>
+    <div class="load-screen__progress-container">
+            <ion-progress-bar type="indeterminate" color="secondary"></ion-progress-bar><br>
+            <ion-progress-bar type="indeterminate" color="secondary" reversed></ion-progress-bar>
+       </div>
+
+  </div>  
 
   {% include "./components/action_buttons.html" %}
-
+  <ion-toast-controller></ion-toast-controller>
   <div class="map__container">
     <div id="map"></div>
   </div>
