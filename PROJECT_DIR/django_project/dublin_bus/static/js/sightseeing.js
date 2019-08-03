@@ -1,6 +1,8 @@
-import {window_height} from "./stops";
+import { height, tabsHeight} from './nodes'
 
-document.querySelector(".sightseeing__options__cards").style.height = window_height * 0.53 + "px";
+
+
+document.querySelector(".sightseeing__options__cards").style.height = (height - tabsHeight - (height * 0.03) -175) + "px";
 const get_sights_info = (category) => {
     return new Promise((resolve, reject) => {
         fetch('sights_info?category=' + category, {method: 'get'})
@@ -8,13 +10,6 @@ const get_sights_info = (category) => {
                 return response.json();
             })
             .then(function (data) {
-                // if (document.getElementById("sightseeing__options__cards") !== null) {
-                //     document.getElementById('sightseeing__options__cards').remove();
-                //     $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
-                // } else {
-                //     $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
-                // }
-
                 let points = data['points'];
                 for (let point of points) {
                     create_card(point);
@@ -26,9 +21,10 @@ const get_sights_info = (category) => {
     });
 };
 const cards = document.getElementsByClassName("sightseeing__category__content__icon");
+
 for (let card of cards) {
+   
     card.addEventListener('click', function () {
-        // get_sights_info(this.id);
         category_btn(this.id);
     });
 }
@@ -58,34 +54,20 @@ const page_switch = () => {
         $('.sightseeing__options__cards').append('<div id="sightseeing__options__cards"></div>');
     }
     if (document.getElementById('sightseeing__category').style.display === 'none') {
-        $("#sightseeing__category").fadeIn();
-        $("#sightseeing__options").fadeOut();
+        document.getElementById('sightseeing__category').style.display = "";
+        document.getElementById('sightseeing__options').style.display = "none";
     } else {
-        $("#sightseeing__category").fadeOut();
-        $("#sightseeing__options").fadeIn();
+        document.getElementById('sightseeing__options').style.display = "";
+        document.getElementById('sightseeing__category').style.display = "none";
     }
 };
 document.getElementById("sightseeing__options__back-btn").addEventListener('click', page_switch);
 
-$(".sightseeing__options__cards").on("touchmove", function (e) {
+$(".sightseeing__options__cards").on("touchmove", (e) => {
     e.stopPropagation();
 });
 
 
-// const controller = document.querySelector('ion-loading-controller');
-// function category_btn(category) {
-//     // controller.componentOnReady();
-//     controller.create({
-//         message: 'Please wait...',
-//         spinner: 'bubbles',
-//     }).then((loading) => {
-//         loading.present();
-//         get_sights_info(category).then(() => {
-//             loading.dismiss();
-//             page_switch();
-//         });
-//     });
-// }
 function category_btn(category) {
     page_switch();
     document.getElementById("bus_loader").style.display = "";

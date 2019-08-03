@@ -18,5 +18,6 @@ urlpatterns = [
     path('server_route', views.get_server_route),
     path('sights_info', views.get_sights_info),
     path('place_detail', views.get_sights_info_by_place_id),
+    path('snap_to_road', views.snap_to_road),
 ]
 
