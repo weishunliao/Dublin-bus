@@ -228,7 +228,7 @@ export default function initMap() {
       <div class="loader__wrapper loader-jp" id="bus_loader">
       <h3>Please wait...</h3><br>
       <div>
-          <img src="/static/images/bus.jpg" alt="" class="loader__bus">
+          <img src="/static/images/bus.png" alt="" class="loader__bus">
       </div>
       <div class="loader__wrapper2">
           <img src="/static/images/road.png" alt="" class="loader__road"/>

@@ -7,15 +7,17 @@ export let bottomSwiper;
 
 // Main window load
 
-var h = Math.max(
-  document.documentElement.clientHeight,
-  window.innerHeight || 0
-);
-$(".drawer__container").css("height", h * 0.95);
+
 
 window.addEventListener("load", function() {
   //   assigns the height of the drawer depending on how large the screen is.
 
+  var h = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight || 0
+  );
+  $(".drawer__container").css("height", h * 0.95);
+  
   const main = document.querySelector(".main");
 
   window.onresize = function() {
@@ -95,32 +97,3 @@ window.addEventListener("load", function() {
   $(".drawer__container").css("display", "block");
 });
 
-// function preventPullToRefresh(element) {
-//   var prevent = false;
-
-//   document.querySelector(element).addEventListener("touchstart", function(e) {
-//     if (e.touches.length !== 1) {
-//       return;
-//     }
-
-//     var scrollY =
-//       window.pageYOffset ||
-//       document.body.scrollTop ||
-//       document.documentElement.scrollTop;
-//     prevent = scrollY === 0;
-//   });
-
-//   document.querySelector(element).addEventListener("touchmove", function(e) {
-//     if (prevent) {
-//       prevent = false;
-//     }
-//   });
-// }
-
-// function cancelTouch(element) {
-//   document.querySelector(element).addEventListener("touchstart", function(e) {
-//     if (e.touches.length !== 1) {
-//       return;
-//     }
-//   });
-// }
