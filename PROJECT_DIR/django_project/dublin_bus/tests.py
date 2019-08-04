@@ -108,7 +108,7 @@ class TestRoutePrediction(TestCase):
         month = 8  # august
         weekday = 1
         self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
-               rain, temp, month), 2527)
+               rain, temp, month), 2494)
 
     def test_route_prediction_sep(self):
         """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
@@ -124,7 +124,7 @@ class TestRoutePrediction(TestCase):
         month = 9 # september
         weekday = 1
         self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
-               rain, temp, month), 2738)
+               rain, temp, month), 2691)
 
 
 class TesParseWeatherForecast(TestCase):
