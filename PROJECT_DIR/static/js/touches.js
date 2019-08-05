@@ -1,21 +1,42 @@
 
-import { selectedTab, dateInput, switchUpText} from "./nodes";
+import { selectedTab, dateInput, switchUpText, showContainer, changeCardShowing } from "./nodes";
+
+import { checkFavouriteJourneys } from './favourites'
 import Swiper from "./Swiper";
+
+
 
 
 export let bottomSwiper;
 
+
 // Main window load
 
-var h = Math.max(
-  document.documentElement.clientHeight,
-  window.innerHeight || 0
-);
-$(".drawer__container").css("height", h * 0.95);
+// const ionicScripts = [
+//     "https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js",
+//     "https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.js",
+// ]
+// // const ionicCss = "https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css"
+
+// ionicScripts.forEach(src => {
+//     let sc = document.createElement('script')
+//     sc.setAttribute("src", src)
+//     sc.setAttribute('type', "module");
+//     sc.setAttribute('nomodule', "");
+//     document.querySelector('head').appendChild(sc)
+// })
 
 window.addEventListener("load", function() {
   //   assigns the height of the drawer depending on how large the screen is.
-
+   
+//   showContainer = document.querySelector("#show-container")
+//   console.log(showContainer)
+  var h = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight || 0
+  );
+  $(".drawer__container").css("height", h * 0.95);
+  
   const main = document.querySelector(".main");
 
   window.onresize = function() {
@@ -44,6 +65,7 @@ window.addEventListener("load", function() {
   }
 
   function tabClick(e) {
+    checkFavouriteJourneys();
     if (e.target.id == "tab-button-journey" && bottomSwiper.currentState === bottomSwiper.IN_STATE &&  !(document.querySelector('.journey-planner').classList.contains('converted'))) {
         switchUpText();
       const dateobj = new Date();
@@ -52,6 +74,14 @@ window.addEventListener("load", function() {
       dateInput.value = dateString;
   
     }
+
+    
+
+    if (e.target.id !== "tab-button-journey"){
+        changeCardShowing();
+    } 
+
+  
 
     if (e.target.id === currentTab) {
       if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {
@@ -67,13 +97,23 @@ window.addEventListener("load", function() {
   }
 
   setTimeout(() => {
+    //   SWIPER IS DEFINED
+    let bdHeight = Math.max(
+        document.body.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.clientHeight,
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+    
+    let bdTabs = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+    bottomDrawer.style.height = (bdHeight * 0.95) + "px";
     bottomSwiper = new Swiper(bottomDrawer, grabber);
     tabs.addEventListener("ionTabsWillChange", handleOut);
     
-  }, 200);
+  }, 1000);
 
   const tab_buttons = document.querySelectorAll("ion-tab-button");
-  //   console.log(tab_buttons)
   tab_buttons.forEach(tab => {
     tab.addEventListener("click", tabClick, true);
   });
@@ -91,36 +131,11 @@ window.addEventListener("load", function() {
   $("#route-descriptions").on("touchmove", function(e) {
     e.stopPropagation();
   });
+  $(".favourite-journeys-container").on("touchmove", function(e) {
+    e.stopPropagation();
+  });
+  
 
   $(".drawer__container").css("display", "block");
 });
 
-// function preventPullToRefresh(element) {
-//   var prevent = false;
-
-//   document.querySelector(element).addEventListener("touchstart", function(e) {
-//     if (e.touches.length !== 1) {
-//       return;
-//     }
-
-//     var scrollY =
-//       window.pageYOffset ||
-//       document.body.scrollTop ||
-//       document.documentElement.scrollTop;
-//     prevent = scrollY === 0;
-//   });
-
-//   document.querySelector(element).addEventListener("touchmove", function(e) {
-//     if (prevent) {
-//       prevent = false;
-//     }
-//   });
-// }
-
-// function cancelTouch(element) {
-//   document.querySelector(element).addEventListener("touchstart", function(e) {
-//     if (e.touches.length !== 1) {
-//       return;
-//     }
-//   });
-// }
