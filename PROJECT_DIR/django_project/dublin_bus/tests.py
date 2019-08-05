@@ -31,6 +31,14 @@ class TestLoadModel(TestCase):
         except Exception:
             self.fail("load_model() raised an exception unexpectedly!")
 
+    def test_load_model_success_nov(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 11
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
 
 class TestCreateHourFeatureRef(TestCase):
     """Test cases for the create_hour_feature_ref function."""
@@ -94,6 +102,15 @@ class TestCreateSegmentRef(TestCase):
         segment_ref = functions.create_segment_ref(10)
         self.assertEqual(segment_ref["1279_1282"]["std"], 39.0)
 
+    def test_create_segment_ref_mean_nov(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(11)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 148.0)
+
+    def test_create_segment_ref_std_nov(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(11)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 42.0)
 
 class TestCreateSegmentRefGtfs(TestCase):
     """Test cases for the create_segment_ref_gtfs function."""
@@ -162,6 +179,23 @@ class TestRoutePrediction(TestCase):
         school_hol = 1
         self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
                school_hol, weekday, rain, temp, month), 2596)
+
+    def test_route_prediction_nov(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 11 # november
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2835)
 
 class TesParseWeatherForecast(TestCase):
     """Test cases for the parse_weather_forecast function."""
