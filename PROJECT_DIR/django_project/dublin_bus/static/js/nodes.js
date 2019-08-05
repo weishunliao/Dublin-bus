@@ -1,5 +1,6 @@
 import { bottomSwiper } from "./touches";
 import { directionsDisplay } from "./google_maps";
+import { checkFavouriteJourneys } from './favourites';
 
 const topDrawer = document.querySelector(".drawer__container--top");
 const bottomDrawer = document.querySelector(".drawer__container--bottom");
@@ -19,8 +20,8 @@ export function changeCardShowing() {
     cardShowing = false;
     showContainer.style.display = "none";
     directionsDisplay.set('directions', null);
-
 }
+
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
 export const fromInput = document.querySelector("#from");
@@ -31,6 +32,15 @@ const allInputs = document.querySelectorAll("input");
 
 allInputs.forEach(input => input.addEventListener('click', (e => e.target.select())))
 
+let jpInputs = [fromInput, toInput];
+
+// jpInputs.forEach(input => {
+//     input.addEventListener('change', () => {
+//         if (document.querySelector('.journey-planner').classList.contains('converted')){
+//             checkFavouriteJourneys();
+//         }
+//     })
+// })
 
 let body = document.body, 
 html = document.documentElement;
