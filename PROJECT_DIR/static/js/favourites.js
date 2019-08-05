@@ -114,7 +114,6 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
                 });
                 const elem = document.getElementById("card_bottom_" + tab_name + "_" + stop_id);
                 elem.addEventListener('click', () => {
-                    elem.style.border = "red solid";
                     markerListener(stop_id);
                 });
             }

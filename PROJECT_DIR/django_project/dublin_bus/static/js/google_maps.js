@@ -546,7 +546,7 @@ function AddMarkers(data, map) {
   let clusterStyles = [
     {
       textColor: "rgba(0,0,0,0)",
-      url: "/static/marker.png",
+      url: "/static/images/marker.png",
       height: 50,
       width: 50
     }
@@ -561,7 +561,7 @@ function AddMarkers(data, map) {
   let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
 
-const markerListener = stopID => {
+export const markerListener = stopID => {
   document
     .querySelector("ion-tabs")
     .getSelected()
