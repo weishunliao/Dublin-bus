@@ -11,6 +11,10 @@ export const dateInput = document.querySelector("ion-datetime");
 export const dateContainer = document.querySelector("#departing-container");
 export const submitButton = document.querySelector("#sub-button");
 
+export let showContainer = document.querySelector("#show-container");
+
+
+
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
 export const fromInput = document.querySelector("#from");
@@ -67,7 +71,7 @@ export class Route {
     );
 
     this.domNode = null;
-    this.showContainer = document.querySelector("#show-container");
+    this.showContainer = showContainer;
     this.routeInfo = routeData.route;
     this.directions = routeData.directions;
   }
@@ -86,7 +90,7 @@ export class Route {
       let showCardOpen = false;
       const infoText = document.querySelector("#infoText");
       const mic = document.querySelector("#moreInfo-click");
-      const showContainer = document.querySelector("#show-container");
+    //   const showContainer = document.querySelector("#show-container");
       const card = document.querySelector("#stretchCard");
       //   const clickMe = document.querySelector('#clickMe');
 
@@ -106,7 +110,7 @@ export class Route {
         if (showContainer.classList.contains('moreInfoToggled')){
             document.querySelector('#stretchCard').style.height = (height - tabsHeight - (height * 0.03)) + "px";
         } else {
-            document.querySelector('#stretchCard').style.height = "160px";
+            document.querySelector('#stretchCard').style.height = "170px";
         }
        
         

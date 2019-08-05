@@ -1,3 +1,5 @@
+import { cardShowing } from './nodes';
+
 window.requestAnimFrame = (function() {
     return (
       window.requestAnimationFrame ||
@@ -143,15 +145,18 @@ window.requestAnimFrame = (function() {
     }
   
     changeState(newState, selectedTab) {
-      if (selectedTab !== null) {
-      } else {
-      }
+
+    //   if (selectedTab !== null) {
+    //   } else {
+    //   }
       let transformStyle;
       switch (newState) {
         case this.IN_STATE:
           this.startTransform = this.inTransformVal;
-      
-          this.tabs.addClass("color-add");
+        if (!cardShowing) {
+            this.tabs.addClass("color-add");
+        }
+          
           this.map.removeClass("drawer-open");
   
           break;

@@ -124,7 +124,7 @@ input::selection {
 
         overflow-y: auto;
         overflow-x: hidden;
-        margin-top: 1.2rem;
+        // margin-top: 1.2rem;
 
         &::after {
           content: "";
@@ -203,7 +203,7 @@ input::selection {
           font-size: 3rem;
       }
       position: absolute;
-      top: 35%;
+      top: 50%;
       transform: translate(-50%, -50%);
       color: #3d5f7e;
 
@@ -238,6 +238,7 @@ input::selection {
       color: #3d5f7e;
       left: 50%;
       text-align: center;
+
     }
   }
 
@@ -502,6 +503,10 @@ ion-tab-button {
     margin-left: 2rem;
   }
 
+  & .journey-planner__card__numberbox {
+      margin-top: .5rem;
+  }
+
   & .journey-planner__card__left__minsTitle {
     left: 2rem;
     top: 55%;
@@ -535,6 +540,7 @@ ion-tab-button {
 
   &__moreInfoButton {
     position: absolute;
+    transition: all .3s;
     top: 50%;
     right: 1rem;
     transform: translateY(-50%);
@@ -565,7 +571,7 @@ ion-tab-button {
   overflow: scroll;
   height: 40rem;
   margin: 0 auto;
-
+  margin-top: 1.5rem;
   padding-top: 2rem;
 
   &__locationDiv {

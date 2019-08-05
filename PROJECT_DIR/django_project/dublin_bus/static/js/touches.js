@@ -1,20 +1,37 @@
 
-import { selectedTab, dateInput, switchUpText, controller} from "./nodes";
+import { selectedTab, dateInput, switchUpText, showContainer, changeCardShowing } from "./nodes";
+
 
 import Swiper from "./Swiper";
 
 
+
+
 export let bottomSwiper;
+
+
 
 // Main window load
 
+// const ionicScripts = [
+//     "https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js",
+//     "https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.js",
+// ]
+// // const ionicCss = "https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css"
 
-
-
+// ionicScripts.forEach(src => {
+//     let sc = document.createElement('script')
+//     sc.setAttribute("src", src)
+//     sc.setAttribute('type', "module");
+//     sc.setAttribute('nomodule', "");
+//     document.querySelector('head').appendChild(sc)
+// })
 
 window.addEventListener("load", function() {
   //   assigns the height of the drawer depending on how large the screen is.
-
+   
+//   showContainer = document.querySelector("#show-container")
+//   console.log(showContainer)
   
   var h = Math.max(
     document.documentElement.clientHeight,
@@ -59,6 +76,14 @@ window.addEventListener("load", function() {
   
     }
 
+  
+ 
+
+    if (e.target.id !== "tab-button-journey"){
+        changeCardShowing();
+        
+    } 
+
     if (e.target.id === currentTab) {
       if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {
         bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
@@ -79,7 +104,6 @@ window.addEventListener("load", function() {
   }, 200);
 
   const tab_buttons = document.querySelectorAll("ion-tab-button");
-  //   console.log(tab_buttons)
   tab_buttons.forEach(tab => {
     tab.addEventListener("click", tabClick, true);
   });
