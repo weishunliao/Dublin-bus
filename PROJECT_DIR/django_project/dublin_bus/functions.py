@@ -88,7 +88,7 @@ def create_segment_ref_gtfs():
         segment_mean_ref_gtfs = json.load(file)
     return segment_mean_ref_gtfs
 
-def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, month):
+def route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, weekday, rain, temp, month):
     """Returns a prediction of journey length in seconds for any bus route.
 
     Takes a list of stops as input, as well as the arrival time of a bus at the first stop in the list. 
@@ -124,7 +124,10 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain
             segment_std = 57
             print("Unexpected segment encountered! Using default values for mean and standard deviation...")
         # specify the input for the prediction
-        input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, rain, temp] + hour]
+        if month in [5,6,7,8,9]:
+            input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, rain, temp] + hour]
+        else:
+            input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, school_hol, rain, temp] + hour]
         input_scaled = scaler.transform(input)
         # get a prediction and append updated arrival_time to the list
         prediction = (model.predict(input_scaled))
@@ -235,8 +238,9 @@ def parse_timestamp(timestamp):
     weekday = is_weekday(timestamp.weekday())
     if is_bank_holiday(timestamp.day, timestamp.month) == 1:
         weekday = 0
+    school_hol = is_school_holiday(timestamp.day, timestamp.month)
     peak = is_peak(timestamp.hour, weekday)
-    return time_in_seconds, weekday, timestamp.hour, peak
+    return time_in_seconds, weekday, timestamp.hour, peak, school_hol
 
 
 def format_stop_list(stops):
@@ -270,9 +274,9 @@ def predict_journey_time(stops, timestamp, rain, temp):
     stops = format_stop_list(stops)
     # convert and parse the timestamp
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    actualtime_arr_stop_first, weekday, hour, peak = parse_timestamp(timestamp)
+    actualtime_arr_stop_first, weekday, hour, peak, school_hol = parse_timestamp(timestamp)
     # make a prediction based on the input and return it
-    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, rain, temp, timestamp.month)
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, weekday, rain, temp, timestamp.month)
     # return the prediction
     return prediction
 
@@ -566,3 +570,14 @@ def get_weather_defaults(month):
     temp = temp_means[str(month)]
     rain = 0
     return rain, temp
+
+def is_school_holiday(day, month):
+    """Returns 1 if the day and month entered is a school holiday, returns 0 otherwise.
+    
+    List of school holidays will need to be updated periodically. Currently has remaining school
+    holidays in 2019 only."""
+
+    school_holidays = [(29, 10), (30, 10), (31, 10), (1,11), (23,12), (24,12), (27,12), (30,12), (31,12)]
+    if (day, month) in school_holidays:
+        return 1
+    return 0
