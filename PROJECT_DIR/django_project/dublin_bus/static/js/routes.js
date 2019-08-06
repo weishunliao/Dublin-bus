@@ -33,8 +33,10 @@ export const get_bus_stop_list = (id, direction) => {
             }
         })
         .then(function (data) {
+            document.getElementById("routes__content__card__route-id").innerText = route_id;
             return display_stops(data['stops_list'], route_id);
         }).then(function (stops) {
+        console.log(stops);
         stop_list = [];
         realtime_bus_marker = [];
         for (let i = 0; i < stops.length; i++) {
@@ -51,20 +53,27 @@ const display_stops = (stops, route_id) => {
     for (let i of document.querySelectorAll("li")) {
         i.remove();
     }
-
-    for (let value of stops) {
-        let li = document.createElement("li");
-        let h3 = document.createElement("h3");
-        h3.innerHTML = "<h6 class='stop_id'>" + value[0] + "<span class='stop_id__span'>" + value[2] + " min</span></h6>" + value[1];
-        h3.className = "timeline-wrapper__content__h3";
-        li.append(h3);
-        li.className = "timeline-wrapper__content__event";
-        li.id = "timeline-wrapper__content-li";
-        timeline__content.appendChild(li);
+    if (document.getElementById("empty_stop_list")) {
+        document.getElementById("empty_stop_list").remove();
     }
-    let split_index = stops[0][3].indexOf("-");
-    document.getElementById("routes__content__card__direction").innerText = "Towards" + stops[0][3].substring(split_index + 1);
-    document.getElementById("routes__content__card__route-id").innerText = route_id;
+
+    if (stops.length === 0) {
+        $("#timeline__content").append("<h1 id='empty_stop_list'>This route is currently out of service.</h1>");
+        document.getElementById("routes__content__card__direction").innerText = "Towards";
+    } else {
+        for (let value of stops) {
+            let li = document.createElement("li");
+            let h3 = document.createElement("h3");
+            h3.innerHTML = "<h6 class='stop_id'>" + value[0] + "<span class='stop_id__span'>" + value[2] + " min</span></h6>" + value[1];
+            h3.className = "timeline-wrapper__content__h3";
+            li.append(h3);
+            li.className = "timeline-wrapper__content__event";
+            li.id = "timeline-wrapper__content-li";
+            timeline__content.appendChild(li);
+        }
+        let split_index = stops[0][3].indexOf("-");
+        document.getElementById("routes__content__card__direction").innerText = "Towards" + stops[0][3].substring(split_index + 1);
+    }
     if (is_favourite(route_id)) {
         route_heart_empty.style.display = 'none';
         route_heart_solid.style.display = '';
