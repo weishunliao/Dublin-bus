@@ -2,6 +2,7 @@ import {
   search,
   fromInput,
   toInput,
+  dateInput,
   selectedTab,
   Route,
   sightInput,
@@ -279,6 +280,14 @@ export default function initMap() {
         e.preventDefault();
         document.querySelector("#routesHere").innerHTML = "";
         submitButton.innerHTML = "Go!";
+
+        // check date input
+        console.log(dateInput.value);
+        
+
+        
+
+
         document.querySelector("#routesHere").innerHTML = `
       
       <div class="loader__wrapper loader-jp" id="bus_loader-jp">
@@ -310,6 +319,11 @@ export default function initMap() {
             origin: fromInput.value,
             destination: toInput.value,
             travelMode: "TRANSIT",
+            transitOptions: {
+                departureTime: new Date(dateInput.value),
+                // modes: ['BUS'],
+                // routingPreference: 'FEWER_TRANSFERS'
+            },
             provideRouteAlternatives: true
           },
           async function(response, status) {

@@ -22,6 +22,10 @@ export function changeCardShowing() {
     directionsDisplay.set('directions', null);
 }
 
+
+document.querySelector('ion-datetime').setAttribute('min', new Date().toISOString());
+document.querySelector('ion-datetime').setAttribute('max', '2021');
+
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
 export const fromInput = document.querySelector("#from");
