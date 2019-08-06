@@ -1,6 +1,7 @@
 import {map, markers} from "./google_maps";
 import {create_favourite_stop_card} from "./favourites";
 import {height} from './nodes'
+import {toast_route_add, toast_route_remove} from "./routes";
 
 
 export const set_height = () => {
@@ -202,18 +203,19 @@ heart_solid.addEventListener('click', () => {
 });
 
 heart_empty.addEventListener('click', () => {
+    toast_route_add();
     let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
     save_favourites(stop_id);
     toggle_heart();
 });
 
 
-export const controller = document.querySelector('ion-alert-controller');
+export const controller_confirm = document.querySelector('ion-alert-controller');
 
 export function confirm_box(stop_id) {
-    controller.create({
-        header: 'CONFIRM!',
-        message: 'Do you want to <strong>remove</strong> this stop?',
+    controller_confirm.create({
+        header: 'DELETE STOP?',
+        message: 'Do you want to <strong>remove</strong> this stop from your favourite?',
         buttons: [
             {
                 text: 'Cancel',
@@ -225,6 +227,7 @@ export function confirm_box(stop_id) {
                     remove_favourites(stop_id);
                     toggle_heart();
                     hide_card(stop_id);
+                    toast_route_remove();
                 }
             }
         ]

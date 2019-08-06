@@ -1,6 +1,7 @@
 import {markers, map, bus_route_drawer} from "./google_maps";
 import {create_favourite_route_card} from "./favourites";
-import {controller} from "./stops";
+import {controller_confirm} from "./stops";
+import {controller} from "./nodes";
 
 
 let route_id;
@@ -36,7 +37,7 @@ export const get_bus_stop_list = (id, direction) => {
             document.getElementById("routes__content__card__route-id").innerText = route_id;
             return display_stops(data['stops_list'], route_id);
         }).then(function (stops) {
-        console.log(stops);
+
         stop_list = [];
         realtime_bus_marker = [];
         for (let i = 0; i < stops.length; i++) {
@@ -253,6 +254,7 @@ route_heart_solid.addEventListener('click', () => {
 });
 
 route_heart_empty.addEventListener('click', () => {
+    toast_route_add();
     let route_id = document.getElementById("routes__content__card__route-id").innerText;
     route_save_favourites(route_id);
     route_toggle_heart();
@@ -260,9 +262,9 @@ route_heart_empty.addEventListener('click', () => {
 
 
 export function route_confirm_box(route_id) {
-    controller.create({
-        header: 'CONFIRM!',
-        message: 'Do you want to <strong>remove</strong> this route?',
+    controller_confirm.create({
+        header: 'DELETE ROUTE?',
+        message: 'Do you want to <strong>remove</strong> this route from your favourite?',
         buttons: [
             {
                 text: 'Cancel',
@@ -274,6 +276,7 @@ export function route_confirm_box(route_id) {
                     route_remove_favourites(route_id);
                     route_toggle_heart();
                     update_hide_card(route_id);
+                    toast_route_remove();
                 }
             }
         ]
@@ -351,4 +354,28 @@ const update_hide_card = (route_id) => {
     for (let card of cards) {
         card.style.display = 'none';
     }
+};
+
+export const toast_route_add = () => {
+    controller.create({
+        color: 'primary',
+        duration: 1500,
+        message: 'Adding to favourite!',
+        showCloseButton: true,
+        position: 'top',
+    }).then(toast => {
+        toast.present();
+    });
+};
+
+export const toast_route_remove = () => {
+    controller.create({
+        color: 'primary',
+        duration: 1500,
+        message: 'Removed from favourite.',
+        showCloseButton: true,
+        position: 'top',
+    }).then(toast => {
+        toast.present();
+    });
 };
