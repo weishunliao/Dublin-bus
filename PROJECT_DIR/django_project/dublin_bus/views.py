@@ -199,7 +199,6 @@ def get_sights_info_by_place_id(request):
 @csrf_exempt
 def snap_to_road(request):
     stop_list = json.loads(request.body)['stop_list']
-    print(stop_list)
     filepath = os.path.join(BASE_DIR, '../static/cache/stops.json')
     path = ""
     with open(filepath, 'r') as json_file:
@@ -212,7 +211,6 @@ def snap_to_road(request):
     resp = requests.get(
         "https://roads.googleapis.com/v1/snapToRoads?path=" + path + "&interpolate=true&key=" + MAP_KEY).json()
     road = []
-    print(resp)
     for i in resp['snappedPoints']:
         road.append({'lat': i['location']['latitude'], 'lng': i['location']['longitude']})
     return JsonResponse({'road': road})
