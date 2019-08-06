@@ -1,12 +1,17 @@
 import {map, markers} from "./google_maps";
 import {create_favourite_stop_card} from "./favourites";
+import {height} from './nodes'
+import {toast_route_add, toast_route_remove} from "./routes";
 
-// export const window_height = Math.max(
-//     document.documentElement.clientHeight,
-//     window.innerHeight || 0
-// );
-// document.getElementById("stops__time-table").style.height = window_height * 0.53 + "px";
-// document.getElementById("stops__content__wrapper").style.height = window_height * 0.40 + "px";
+
+export const set_height = () => {
+    let ourTabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+    document.querySelector("#stops__content__wrapper").style.height = (height - ourTabsHeight - (height * 0.1) - 175) + "px";
+    document.querySelector("#stops__time-table").style.height = (height - ourTabsHeight - (height * 0.03) - 175) + "px";
+    document.querySelector("#routes__content__wrapper").style.height = (height - ourTabsHeight - (height * 0.1) - 175) + "px";
+    document.querySelector("#timeline-wrapper__content__box").style.height = (height - ourTabsHeight - (height * 0.1) - 175) + "px";
+};
+
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
     // console.log(type, suggestion);
@@ -198,18 +203,19 @@ heart_solid.addEventListener('click', () => {
 });
 
 heart_empty.addEventListener('click', () => {
+    toast_route_add();
     let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
     save_favourites(stop_id);
     toggle_heart();
 });
 
 
-export const controller = document.querySelector('ion-alert-controller');
+export const controller_confirm = document.querySelector('ion-alert-controller');
 
 export function confirm_box(stop_id) {
-    controller.create({
-        header: 'CONFIRM!',
-        message: 'Do you want to <strong>remove</strong> this stop?',
+    controller_confirm.create({
+        header: 'DELETE STOP?',
+        message: 'Do you want to <strong>remove</strong> this stop from your favourite?',
         buttons: [
             {
                 text: 'Cancel',
@@ -221,6 +227,7 @@ export function confirm_box(stop_id) {
                     remove_favourites(stop_id);
                     toggle_heart();
                     hide_card(stop_id);
+                    toast_route_remove();
                 }
             }
         ]

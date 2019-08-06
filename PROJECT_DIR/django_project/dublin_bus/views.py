@@ -80,7 +80,7 @@ def get_bus_stop_list(request):
     bank_holiday = is_bank_holiday(time.day, time.month)
     service_id = get_service_id(weekday, bank_holiday)
     trip_id_list = get_trip_id(direction, service_id, current, route_id)
-    print(trip_id_list)
+
     trip_info = get_trip_info(trip_id_list, service_id, direction, route_id)
     stops_list = calculate_time_diff(trip_info, current)
     return JsonResponse({"stops_list": stops_list})
