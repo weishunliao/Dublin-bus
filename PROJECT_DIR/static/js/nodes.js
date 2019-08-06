@@ -1,5 +1,6 @@
 import { bottomSwiper } from "./touches";
 import { directionsDisplay } from "./google_maps";
+import { checkFavouriteJourneys } from './favourites';
 
 const topDrawer = document.querySelector(".drawer__container--top");
 const bottomDrawer = document.querySelector(".drawer__container--bottom");
@@ -10,10 +11,16 @@ export const sightInput = document.querySelector("#search-sightseeing");
 export const dateInput = document.querySelector("ion-datetime");
 export const dateContainer = document.querySelector("#departing-container");
 export const submitButton = document.querySelector("#sub-button");
+export const controller = document.querySelector('ion-toast-controller');
 
-export let showContainer = document.querySelector("#show-container");
+export let showContainer= document.querySelector("#show-container") ;
+export let cardShowing = false;
 
-
+export function changeCardShowing() {
+    cardShowing = false;
+    showContainer.style.display = "none";
+    directionsDisplay.set('directions', null);
+}
 
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
@@ -25,6 +32,15 @@ const allInputs = document.querySelectorAll("input");
 
 allInputs.forEach(input => input.addEventListener('click', (e => e.target.select())))
 
+let jpInputs = [fromInput, toInput];
+
+// jpInputs.forEach(input => {
+//     input.addEventListener('change', () => {
+//         if (document.querySelector('.journey-planner').classList.contains('converted')){
+//             checkFavouriteJourneys();
+//         }
+//     })
+// })
 
 let body = document.body, 
 html = document.documentElement;
@@ -36,7 +52,7 @@ export let height = Math.max(
     html.offsetHeight
   );
 
-export let tabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+
 export const drawers = {
   top: topDrawer,
   bottom: bottomDrawer
@@ -60,6 +76,8 @@ export function switchUpText() {
   submitButton.innerHTML = relText;
 }
 
+let collectionOfRoutes = []
+
 export class Route {
   constructor(routeData) {
     this.routeData = routeData;
@@ -67,14 +85,24 @@ export class Route {
       routeData.routeDescription,
       routeData.departureTime,
       routeData.id,
-      routeData.full_travel_time
+      routeData.full_travel_time,
+      routeData.leavingIn,
+      routeData.leavingInValue
     );
 
+    
     this.domNode = null;
-    this.showContainer = showContainer;
+    this.showContainer = document.querySelector("#show-container");
     this.routeInfo = routeData.route;
     this.directions = routeData.directions;
+    this.routeDescription = routeData.routeDescription; 
+    this.leavingIn = routeData.leavingIn;
+    this.leavingInValue = routeData.leavingInValue
+
+
   }
+
+  
 
   static addClick(route) {
     route.domNode.addEventListener("click", () => {
@@ -85,32 +113,30 @@ export class Route {
       );
       route.showContainer.style.display = "block";
       bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
+    //   remove color add to show journey planner is still in use
       bottomSwiper.tabs.removeClass("color-add");
+      cardShowing = true;
       directionsDisplay.setDirections(route.directions.directions);
       let showCardOpen = false;
       const infoText = document.querySelector("#infoText");
       const mic = document.querySelector("#moreInfo-click");
-    //   const showContainer = document.querySelector("#show-container");
+      const showContainer = document.querySelector("#show-container");
       const card = document.querySelector("#stretchCard");
-      //   const clickMe = document.querySelector('#clickMe');
 
-      //   clickMe.addEventListener('click', () => {
-      //       console.log('lol')
-      //   })
 
       const backToRoutes = document.querySelector("#backToRoutes");
       mic.addEventListener("click", () => {
         
         showContainer.classList.toggle("moreInfoToggled");
         card.classList.toggle("card-extended");
-        console.log("clicked!!")
-
         
+        let tabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+
         
         if (showContainer.classList.contains('moreInfoToggled')){
             document.querySelector('#stretchCard').style.height = (height - tabsHeight - (height * 0.03)) + "px";
         } else {
-            document.querySelector('#stretchCard').style.height = "170px";
+            document.querySelector('#stretchCard').style.height = "160px";
         }
        
         
@@ -137,17 +163,32 @@ export class Route {
   }
 
   static appendToDom(route) {
-    $("#routesHere").prepend(
-      Route.jpDisplayCard(route.nodeHTML, route.routeData.id)
-    );
-    route.domNode = document.querySelector(`#route-${route.routeData.id}`);
-    Route.addClick(route);
+    collectionOfRoutes.push(route)
   }
 
-  static cardBuilder(routeDescription, departureTime, id, full_travel_time) {
+  static signalAppend() {
+
+        collectionOfRoutes.sort((a,b) => {
+            return a.leavingIn > b.leavingIn
+        })
+
+      collectionOfRoutes.forEach(route => {
+        $("#routesHere").append(
+            Route.jpDisplayCard(route.nodeHTML, route.routeData.id)
+          );
+          route.domNode = document.querySelector(`#route-${route.routeData.id}`);
+          Route.addClick(route);
+      })
+
+      collectionOfRoutes = []
+  }
+
+  static cardBuilder(routeDescription, departureTime, id, full_travel_time, leavingIn, leavingInValue) {
+
+        // <p>${leavingInValue}</p>
     const card = `
             <div class="journey-planner__card__container">
-            
+       
               <div class="journey-planner__card__left">
                 <div class="journey-planner__card__left__depTitle">
                   <h2
@@ -158,8 +199,8 @@ export class Route {
                 </div>
                 <div class="journey-planner__card__left__minsTitle">
                  
-                  <span class="journey-planner__card__minuteSpan">5</span>
-                  <h1 class="journey-planner__card__timeTitle">mins</h1>
+                 
+                  <h1 class="journey-planner__card__timeTitle">${leavingIn === "N/A" ? "N/A" : `${leavingIn} mins`}</h1>
                 </div>
               </div>
               <div class="journey-planner__card__right">
@@ -226,7 +267,7 @@ export class Route {
   }
 
   static moreInfoBuilder(routeDescription) {
-    console.log("ROUTE DESCRIPTION!! ", routeDescription);
+
     let icon;
 
     let finString = "";
@@ -308,7 +349,7 @@ export class Route {
   }
 
   static journeyShowCard(routeDescription, innerText, id) {
-    console.log(routeDescription);
+
     return `<div class="journey-planner__routes__card routeCard showCard" id="route-${id}">
     <div class="customCard" id="stretchCard">
     <div class="showCard__toggleButtonsContainer">

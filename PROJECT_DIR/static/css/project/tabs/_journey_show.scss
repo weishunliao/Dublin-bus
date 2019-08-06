@@ -5,7 +5,7 @@
         bottom: 8.5rem;
         left: 0;
         width: 100%;
-        height: 14rem;
+        height: 15rem;
         background: transparent;
         display: none;
         z-index: 1;
@@ -48,10 +48,10 @@
 //    & .moreInfoSection {
 //       opacity: 1;
 //    }
-}
 
-//    & .showCard .journey-planner__card__container {
-//        height: 68rem;
-//        transition: all 1s linear;
-//    }
-   
+
+   & .showCard__moreInfoButton {
+    transform: translateY(-50%) rotate(180deg);
+   }
+
+}

@@ -15,6 +15,8 @@ import { get_bus_real_time_info, detail, drawer_default_height } from "./stops";
 import { get_sights_info_search } from "./sightseeing";
 import { bottomSwiper } from "./touches";
 
+import { checkFavouriteJourneys } from './favourites';
+
 const { searchInput } = search;
 let resp;
 
@@ -122,10 +124,21 @@ export default function initMap() {
       options
     );
 
+    
+
     const toAutocomplete = new google.maps.places.Autocomplete(
       toInput,
       options
     );
+    const autocompletes = [toAutocomplete, fromAutocomplete]
+
+    autocompletes.forEach(autocomplete => {
+        autocomplete.addListener('place_changed', () => {
+            if (document.querySelector('.journey-planner').classList.contains('converted')){
+                checkFavouriteJourneys();
+        }
+        })
+    })
 
     const sightAutocomplete = new google.maps.places.Autocomplete(
       sightInput,
@@ -197,9 +210,9 @@ export default function initMap() {
             map.setCenter(mainPosition);
             map.setZoom(17);
 
-            setTimeout(() => {
+            // setTimeout(() => {
                 $(".load-screen").fadeOut();
-            }, 1000)
+            // }, 1000)
             
 
             let marker = new google.maps.Marker({
@@ -268,7 +281,7 @@ export default function initMap() {
         submitButton.innerHTML = "Go!";
         document.querySelector("#routesHere").innerHTML = `
       
-      <div class="loader__wrapper loader-jp" id="bus_loader">
+      <div class="loader__wrapper loader-jp" id="bus_loader-jp">
       <h3>Please wait...</h3><br>
       <div>
           <img src="/static/images/bus.png" alt="" class="loader__bus">
@@ -289,9 +302,8 @@ export default function initMap() {
         } else {
           fromLocation = fromInput.value;
         }
+        checkFavouriteJourneys();
 
-        // console.log("FROM LOCATION", fromLocation)
-        // console.log("TO LOCATION", toInput.value)
 
         directionsService.route(
           {
@@ -475,7 +487,7 @@ export default function initMap() {
                 }
                 
               }
-              document.getElementById("bus_loader").style.display = "none";
+              document.getElementById("bus_loader-jp").style.display = "none";
             Route.signalAppend()
               
               // directionsDisplay.setDirections(response);

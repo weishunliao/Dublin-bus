@@ -1,8 +1,9 @@
-import { height, tabsHeight} from './nodes'
+import { height} from './nodes'
 
 
+let ourTabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+document.querySelector(".sightseeing__options__cards").style.height = (height - ourTabsHeight - (height * 0.03) -175) + "px";
 
-document.querySelector(".sightseeing__options__cards").style.height = (height - tabsHeight - (height * 0.03) -175) + "px";
 const get_sights_info = (category) => {
     return new Promise((resolve, reject) => {
         fetch('sights_info?category=' + category, {method: 'get'})
@@ -70,7 +71,7 @@ $(".sightseeing__options__cards").on("touchmove", (e) => {
 
 function category_btn(category) {
     page_switch();
-    document.getElementById("bus_loader").style.display = "";
+    document.getElementById("bus_loader").style.display = "block";
     get_sights_info(category).then(() => {
         document.getElementById("bus_loader").style.display = "none";
     });

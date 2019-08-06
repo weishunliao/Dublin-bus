@@ -1,5 +1,4 @@
-import { cardShowing } from './nodes'
-
+import { cardShowing } from './nodes';
 
 window.requestAnimFrame = (function() {
     return (
@@ -24,7 +23,7 @@ window.requestAnimFrame = (function() {
     pointerMoveName = "MSPointerMove";
   }
   
-  // Simple way to check if some form of pointerevents is enabled or not
+
   window.PointerEventsSupport = false;
   
   export default class Swiper {
@@ -33,6 +32,7 @@ window.requestAnimFrame = (function() {
       this.element = element;
       this.IN_STATE = 1;
       this.OUT_STATE = 2;
+      this.MID_STATE = 3;
       this.differenceInY = 0;
       this.rafPending = false;
       //   * where the touch happens
@@ -45,7 +45,8 @@ window.requestAnimFrame = (function() {
       this.tabs = $("ion-tab-button");
       this.map = $("#map");
       this.inTransformVal = element.offsetHeight;
-      this.outTransformVal = element.offsetHeight * 0.002;
+      this.outTransformVal = element.offsetHeight * 0;
+      this.midVal = element.offsetHeight * 0.09;
       this.startTransform = this.inTransformVal;
   
       //   * where the bottom of the div is currently located
@@ -146,16 +147,18 @@ window.requestAnimFrame = (function() {
     }
   
     changeState(newState, selectedTab) {
-    
+
+    //   if (selectedTab !== null) {
+    //   } else {
+    //   }
       let transformStyle;
       switch (newState) {
         case this.IN_STATE:
-      
           this.startTransform = this.inTransformVal;
-         if (!cardShowing){
+        if (!cardShowing) {
             this.tabs.addClass("color-add");
-         }
-         
+        }
+          
           this.map.removeClass("drawer-open");
   
           break;
@@ -164,6 +167,9 @@ window.requestAnimFrame = (function() {
           this.tabs.removeClass("color-add");
           this.map.addClass("drawer-open");
           break;
+        case this.MID_STATE:
+            this.startTransform = this.midVal;
+
       }
   
       this.transformStyle =
