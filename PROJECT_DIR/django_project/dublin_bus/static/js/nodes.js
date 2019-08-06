@@ -91,7 +91,8 @@ export class Route {
       routeData.id,
       routeData.full_travel_time,
       routeData.leavingIn,
-      routeData.leavingInValue
+      routeData.leavingInValue,
+      routeData.formattedDate
     );
 
     
@@ -110,14 +111,50 @@ export class Route {
 
   static addClick(route) {
     route.domNode.addEventListener("click", () => {
-      route.showContainer.innerHTML = Route.journeyShowCard(
-        route.routeData.routeDescription,
-        route.nodeHTML,
-        route.routeData.id
-      );
-      route.showContainer.style.display = "block";
-      bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
+    //   route.showContainer.innerHTML = Route.journeyShowCard(
+    //     route.routeData.routeDescription,
+    //     route.nodeHTML,
+    //     route.routeData.id
+    //   );
+    //   route.showContainer.style.display = "block";
+    //   go to lowered state
+    //   bottomSwiper.changeState(bottomSwiper.LOWERED_STATE, null);
+      
+
+
     //   remove color add to show journey planner is still in use
+        bottomSwiper.jp_active = true;
+    // remove the journey_planner form
+    document.querySelector('.journey-planner__form').style.display = 'none';
+    // remove the journeys being shown
+    document.querySelector('#routesHere').style.display = 'none';
+    document.querySelector('.journey-planner__form-container').classList.add('journeyFocus');
+
+    let el = document.createElement('div');
+    el.setAttribute('class', 'journey-planner__showscreen')
+
+    el.innerHTML = `
+    <div class="journey-planner__showscreen__buttons">
+        <div class="left-button general-button">
+            <ion-icon class="button-icon button-icon--left" name="arrow-back"></ion-icon>
+            <h3 class="button-text button-text--left">Go back</h3>
+        </div>
+        <div class="right-button general-button">
+        <ion-icon class="button-icon button-icon--right" name="arrow-dropup-circle"></ion-icon>
+        <h3 class="button-text button-text--right">Go forward</h3>
+       
+        </div>
+    </div>
+
+    <div class="journey-planner__showscreen__journeyInfo">
+        ${route.nodeHTML}
+    </div>
+    `
+
+    document.querySelector('.journey-planner__form-container').prepend(el);
+    
+    document.querySelector('.journey-planner__moreInfoContainer').style.display = 'block';
+
       bottomSwiper.tabs.removeClass("color-add");
       cardShowing = true;
       directionsDisplay.setDirections(route.directions.directions);
@@ -129,40 +166,46 @@ export class Route {
 
 
       const backToRoutes = document.querySelector("#backToRoutes");
-      mic.addEventListener("click", () => {
+
+    //   the div that the route sections are going in is:
+        const journeyDetails = document.querySelector('.journey-planner__moreInfoContainer');
+
+        journeyDetails.innerHTML = Route.moreInfoBuilder(route.routeDescription)
+
+    //   mic.addEventListener("click", () => {
         
-        showContainer.classList.toggle("moreInfoToggled");
-        card.classList.toggle("card-extended");
+    //     showContainer.classList.toggle("moreInfoToggled");
+    //     card.classList.toggle("card-extended");
         
-        let tabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+    //     
 
         
-        if (showContainer.classList.contains('moreInfoToggled')){
-            document.querySelector('#stretchCard').style.height = (height - tabsHeight - (height * 0.03)) + "px";
-        } else {
-            document.querySelector('#stretchCard').style.height = "160px";
-        }
+    //     if (showContainer.classList.contains('moreInfoToggled')){
+    //         document.querySelector('#stretchCard').style.height = (height - tabsHeight - (height * 0.03)) + "px";
+    //     } else {
+    //         document.querySelector('#stretchCard').style.height = "160px";
+    //     }
        
         
-        if (!showCardOpen) {
-          showCardOpen = true;
-          infoText.innerHTML = "Show Less";
-        } else {
-          showCardOpen = false;
-          infoText.innerHTML = "More Info";
-        }
-      });
+    //     if (!showCardOpen) {
+    //       showCardOpen = true;
+    //       infoText.innerHTML = "Show Less";
+    //     } else {
+    //       showCardOpen = false;
+    //       infoText.innerHTML = "More Info";
+    //     }
+    //   });
 
-      backToRoutes.addEventListener("click", () => {
-        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
-        if (showCardOpen) {
-          showCardOpen = false;
-          infoText.innerHTML = "More Info";
-          showContainer.classList.toggle("moreInfoToggled");
-          card.classList.toggle("card-extended");
-        }
-        document.querySelector("#show-container").style.display = "none";
-      });
+    //   backToRoutes.addEventListener("click", () => {
+    //     bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+    //     if (showCardOpen) {
+    //       showCardOpen = false;
+    //       infoText.innerHTML = "More Info";
+    //       showContainer.classList.toggle("moreInfoToggled");
+    //       card.classList.toggle("card-extended");
+    //     }
+    //     document.querySelector("#show-container").style.display = "none";
+    //   });
     });
   }
 
@@ -187,7 +230,35 @@ export class Route {
       collectionOfRoutes = []
   }
 
-  static cardBuilder(routeDescription, departureTime, id, full_travel_time, leavingIn, leavingInValue) {
+  static leavingInStringBuilder(leavingIn, leavingInValue) {
+      console.log(leavingInValue)
+      let buildString;
+      let inOrAt;
+      let future = false;
+      let mins;
+      if (leavingIn < 60) {
+          buildString = leavingIn;
+          inOrAt = 'in'
+          mins = "mins"
+      } else if (leavingIn === 'N/A') {
+         buildString = leavingIn;
+         inOrAt = 'in'
+         mins = "";
+      } else {
+        buildString = leavingInValue;
+        inOrAt = 'at'
+        future = true
+        mins = "";
+      }
+
+      return [buildString, inOrAt, future, mins]
+  }
+
+  static cardBuilder(routeDescription, departureTime, id, full_travel_time, leavingIn, leavingInValue, formattedDate) {
+
+    let [leavingInString, inOrAt, future, mins] = Route.leavingInStringBuilder(leavingIn, leavingInValue);
+
+    
 
         // <p>${leavingInValue}</p>
     const card = `
@@ -198,14 +269,14 @@ export class Route {
                   <h2
                     class="journey-planner__card__title journey-planner__card__title--departingTitle"
                   >
-                    Departing in: 
+                    Departing ${inOrAt}: 
                   </h2>
                 </div>
-                <div class="journey-planner__card__left__minsTitle">
-                 
-                 
-                  <h1 class="journey-planner__card__timeTitle">${leavingIn === "N/A" ? "N/A" : `${leavingIn} mins`}</h1>
-                </div>
+            
+                  <h1 class="journey-planner__card__timeTitle  ${future ? "futureTimeTitle" : ""}">
+                  ${leavingInString}<span class="journey-planner__card__timeTitle__mins">${mins}</span>
+                  </h1>
+                ${future ? `<h3 class="journey-planner__card__left__futureTitle"> ${formattedDate}</h3>` : ""}
               </div>
               <div class="journey-planner__card__right">
                 <div class="journey-planner__card__right__travelTime">
@@ -217,8 +288,7 @@ export class Route {
                       class="journey-planner__card__timeNumber"
                       id="jp-travel-time"
                       >${Math.round(full_travel_time / 60)}</span
-                    >
-                    minutes
+                    > mins
                   </h2>
                 </div>
                 <div
@@ -239,14 +309,17 @@ export class Route {
   static iconsBuilder(routeDescription) {
     let counter = 0;
     let finString = "";
+    let walking;
     routeDescription.forEach(routeSection => {
       let icon;
       let finalArr;
       let walkTimeOrBusNo;
       if (routeSection[0] == "walking") {
-        walkTimeOrBusNo = Math.round(routeSection[1] / 60) + " mins";
+          walking = true;
+        walkTimeOrBusNo = Math.round(routeSection[1] / 60);
         icon = `<ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>`;
       } else {
+          walking = false;
         walkTimeOrBusNo = routeSection[1];
         icon = `<ion-icon class="journey-planner__card__icon journey-planner__card__icon--bus" name="bus"></ion-icon>`;
       }
@@ -263,7 +336,7 @@ export class Route {
         finString +
         `<div class="journey-planner__card__right__iconContainer">
                           ${icon}
-                          <div class="journey-planner__card__numberbox journey-planner__card__numberbox">${walkTimeOrBusNo}</div>
+                          <div class="journey-planner__card__numberbox journey-planner__card__numberbox ${walking ? "walking-numberbox" : "bus-numberbox"}">${walkTimeOrBusNo}</div>
                           ${finalArr}
                     </div>`;
     });
@@ -271,6 +344,16 @@ export class Route {
   }
 
   static moreInfoBuilder(routeDescription) {
+
+    /*
+    routeDescription explained:
+    0: 'walking' or 'bus' - String
+    1: either seconds for walking (number) or the bus number if it;s the bus (string)
+    2: distance
+
+
+
+    */
 
     let icon;
 
@@ -352,10 +435,15 @@ export class Route {
         </div>`;
   }
 
+
+  static buildRouteDescription(routeDescription) {
+
+  }
+
   static journeyShowCard(routeDescription, innerText, id) {
 
     return `<div class="journey-planner__routes__card routeCard showCard" id="route-${id}">
-    <div class="customCard" id="stretchCard">
+    
     <div class="showCard__toggleButtonsContainer">
                     <div class="showCard__backToRoutesContainer" id="backToRoutes">
                       <ion-icon

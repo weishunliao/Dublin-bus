@@ -1,5 +1,6 @@
 import {
   search,
+  height,
   fromInput,
   toInput,
   dateInput,
@@ -16,10 +17,56 @@ import { get_bus_real_time_info, detail, drawer_default_height } from "./stops";
 import { get_sights_info_search } from "./sightseeing";
 import { bottomSwiper } from "./touches";
 
-import { checkFavouriteJourneys } from './favourites';
+import { checkFavouriteJourneys } from "./favourites";
 
 const { searchInput } = search;
 let resp;
+
+let months = {
+    0: 'January',
+    1: 'February',
+    2: 'March',
+    3: 'April',
+    4: 'May',
+    5: 'June',
+    6: 'July',
+    7: 'August',
+    8: 'September',
+    9: 'October',
+    10: 'November',
+    11: 'December'
+}
+
+let daySelection = {
+    0: 'Sun',
+    1: 'Mon',
+    2: 'Tue',
+    3: 'Wed',
+    4: 'Thu',
+    5: 'Fri',
+    6: 'Sat'
+}
+
+function dateBuilder(date){
+    let month = months[date.getMonth()]
+    let dayDate = date.getDate();
+    let year = date.getFullYear();
+    let dayName = daySelection[date.getDay()];
+
+    return "" + dayName + ", " + dayDate + " " + month + ", " + year;
+
+
+}
+
+function sortLeavingInMinutes(val){
+    let ls;
+    if (val < 10){
+        ls = "0" + val;
+    } else {
+        ls = val;
+    }
+    return ls;
+}
 
 export let markers = {};
 export let map;
@@ -125,21 +172,23 @@ export default function initMap() {
       options
     );
 
-    
-
     const toAutocomplete = new google.maps.places.Autocomplete(
       toInput,
       options
     );
-    const autocompletes = [toAutocomplete, fromAutocomplete]
+    const autocompletes = [toAutocomplete, fromAutocomplete];
 
     autocompletes.forEach(autocomplete => {
-        autocomplete.addListener('place_changed', () => {
-            if (document.querySelector('.journey-planner').classList.contains('converted')){
-                checkFavouriteJourneys();
+      autocomplete.addListener("place_changed", () => {
+        if (
+          document
+            .querySelector(".journey-planner")
+            .classList.contains("converted")
+        ) {
+          checkFavouriteJourneys();
         }
-        })
-    })
+      });
+    });
 
     const sightAutocomplete = new google.maps.places.Autocomplete(
       sightInput,
@@ -212,9 +261,8 @@ export default function initMap() {
             map.setZoom(17);
 
             // setTimeout(() => {
-                $(".load-screen").fadeOut();
+            $(".load-screen").fadeOut();
             // }, 1000)
-            
 
             let marker = new google.maps.Marker({
               position: pos,
@@ -257,10 +305,8 @@ export default function initMap() {
       }
 
       function handleLocationError(browserHasGeolocation, pos) {
+        $(".load-screen").fadeOut();
 
-            $(".load-screen").fadeOut();
-    
-       
         controller
           .create({
             color: "primary",
@@ -281,12 +327,17 @@ export default function initMap() {
         document.querySelector("#routesHere").innerHTML = "";
         submitButton.innerHTML = "Go!";
 
+        let theight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+
+        document.querySelector('.journey-planner__routes-container').style.height = (height - 160 - theight - (height * 0.03)) + "px";
+
+
         // check date input
-        console.log(dateInput.value);
+        // console.log(dateInput.value);
+        let date = new Date(dateInput.value);
         
-
-        
-
+        // [date.getDay()]
+            let formattedDate = dateBuilder(date)
 
         document.querySelector("#routesHere").innerHTML = `
       
@@ -313,16 +364,15 @@ export default function initMap() {
         }
         checkFavouriteJourneys();
 
-
         directionsService.route(
           {
             origin: fromInput.value,
             destination: toInput.value,
             travelMode: "TRANSIT",
             transitOptions: {
-                departureTime: new Date(dateInput.value),
-                // modes: ['BUS'],
-                // routingPreference: 'FEWER_TRANSFERS'
+              departureTime: new Date(dateInput.value)
+              // modes: ['BUS'],
+              // routingPreference: 'FEWER_TRANSFERS'
             },
             provideRouteAlternatives: true
           },
@@ -402,18 +452,28 @@ export default function initMap() {
                         .arrival_stop.name;
                     if (!leavingCounter) {
                       let ct = Date.now() / 1000;
-                    //   console.log("time now: ", ct)
-                      let busTimeStamp = response.routes[i].legs[0].steps[step].transit.departure_time.value.getTime() / 1000
-                    //   console.log("leaving in: ", busTimeStamp)
-                      leavingIn = Math.floor((busTimeStamp - ct) / 60)
-                    //   console.log("so leaving in is", leavingIn)
-                    //   console.log("the actual bus leaving time is: ", response.routes[i].legs[0].steps[step].transit.departure_time)
-                     
-                      leavingInValue = response.routes[i].legs[0].steps[step].transit.departure_time.value.getTime();
+                      //   console.log("time now: ", ct)
+                      let busTimeStamp =
+                        response.routes[i].legs[0].steps[
+                          step
+                        ].transit.departure_time.value.getTime() / 1000;
+                      //   console.log("leaving in: ", busTimeStamp)
+                      leavingIn = Math.floor((busTimeStamp - ct) / 60);
+                      //   console.log("so leaving in is", leavingIn)
+                      //   console.log("the actual bus leaving time is: ", response.routes[i].legs[0].steps[step].transit.departure_time)
+
+                      leavingInValue = response.routes[i].legs[0].steps[
+                        step
+                      ].transit.departure_time.value.getTime();
                       leavingInValue = new Date(leavingInValue);
-                      leavingInValue = leavingInValue.getHours() + ":" + leavingInValue.getMinutes()
+                      leavingInValue =
+                        leavingInValue.getHours() +
+                        ":" +
+                        sortLeavingInMinutes(leavingInValue.getMinutes());
                       leavingCounter++;
                     }
+
+                    
 
                     let num_stops =
                       response.routes[i].legs[0].steps[step].transit.num_stops;
@@ -482,8 +542,8 @@ export default function initMap() {
                   // this is so that we can associate the directions with a particular card
                   directions.directions.routes = newDirections;
 
-                  if (!leavingIn){
-                      leavingIn = "N/A";
+                  if (!leavingIn) {
+                    leavingIn = "N/A";
                   }
 
                   const newRoute = new Route({
@@ -494,16 +554,16 @@ export default function initMap() {
                     departure_time,
                     id: i,
                     leavingIn,
-                    leavingInValue
+                    leavingInValue,
+                    formattedDate
                   });
-                  
+
                   Route.appendToDom(newRoute);
                 }
-                
               }
               document.getElementById("bus_loader-jp").style.display = "none";
-            Route.signalAppend()
-              
+              Route.signalAppend();
+
               // directionsDisplay.setDirections(response);
               console.log("directionsDisplay", directionsDisplay);
             } else {
