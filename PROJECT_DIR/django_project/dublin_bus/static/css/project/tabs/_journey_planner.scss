@@ -13,7 +13,17 @@ input::selection {
   &__moreInfoContainer {
       display: none;
       height: 100%;
-    
+      width: 100%;
+      overflow-y: hidden;
+      margin: 0 auto;
+      padding-top: 2rem;
+      overflow: scroll;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding-top: 7rem;
+      padding-bottom: 8rem;
   }
 
 
@@ -127,6 +137,7 @@ input::selection {
     width: 100%;
     display: none;
     background: white;
+    position: relative;
   }
 
   &__routes {
@@ -483,6 +494,11 @@ ion-datetime {
     }
   }
 
+  & .journey-planner__card__left__depTitle {
+      text-align: left;
+      margin-left: 2rem;
+  }
+
   & .journey-planner__routes-container {
     display: block;
   }
@@ -674,6 +690,7 @@ ion-tab-button {
 
   & .journey-planner__card__left__depTitle {
     margin-left: 2rem;
+    text-align: left;
   }
 
   & .journey-planner__card__numberbox {
@@ -747,6 +764,24 @@ ion-tab-button {
   margin-top: 1.5rem;
   padding-top: 2rem;
 
+  &__individualTime {
+    position: absolute;
+    min-width: 4rem;
+    top: -.5px;
+    transform: translateY(-50%);
+    display: inline-block;
+    left: 10%;
+    & h2 {
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+    &.finalTime {
+        top: 100%; 
+
+    }
+  }
+
   &__locationDiv {
     width: 100%;
     height: 14rem;
@@ -758,35 +793,33 @@ ion-tab-button {
     &::before {
       content: "";
       position: absolute;
-      left: 1.5rem;
+      left: 25%;
       top: 0;
       transform: translateY(-50%);
-      height: 1rem;
-      width: 1rem;
+      height: 1.5rem;
+      width: 1.5rem;
       border-radius: 50%;
-      border: 2px solid #3d5f7e;
-      background: white;
+    //   border: 2px solid #3d5f7e;
+      background: $bus_blue;
       z-index: 3;
     }
     &::after {
       content: "";
       position: absolute;
-      left: 1.5rem;
+      left: 25%;
       top: 0;
       transform: translateX(5.5px);
       z-index: 2;
       height: 100%;
       width: 5px;
       background: white;
-
-      border-left: 3px #3d5f7e dashed;
+      border-left: 3px $bus_blue dashed;
     }
   }
 
   &__icon {
     position: relative;
-    min-width: 4rem;
-    margin-left: 4rem;
+    min-width: 100%;
     height: 100%;
     display: inline-block;
 
@@ -794,8 +827,9 @@ ion-tab-button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 2.5rem;
+      font-size: 3.5rem;
       color: #3d5f7e;
+      left: 35%;
     }
   }
 
@@ -803,16 +837,18 @@ ion-tab-button {
     position: absolute;
     top: 0;
     transform: translateY(-50%);
-    left: 5rem;
+    left: 35%;
 
     & h2 {
-      color: green;
-      font-size: 1.8rem !important;
+      color: #3D5F7E;
+      font-size: 1.6rem !important;
       margin: 0 !important;
     }
   }
   &__distanceText {
-    left: 5rem;
+      color: $bus_orange;
+      font-weight: 800;
+      left: 40%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -826,27 +862,26 @@ ion-tab-button {
 
   &__finalCircle {
     position: absolute;
-    left: 1.5rem;
+    left: 25%;
     top: 100%;
     transform: translateY(-50%);
     height: 1.5rem;
     width: 1.5rem;
     border-radius: 50%;
-    border: 2px solid #3d5f7e;
-    background: white;
+    background: $bus_blue;
     z-index: 3;
   }
 
   &__finalText {
     position: absolute;
     top: 100%;
-    left: 5rem;
+    left: 35%;
     transform: translateY(-50%);
 
     & h2 {
-        color: green;
-      font-size: 1.8rem !important;
-      margin: 0 !important;
+        color: #3D5F7E;
+        font-size: 1.6rem !important;
+        margin: 0 !important;
     }
   }
 }
@@ -875,4 +910,10 @@ ion-tab-button {
 
 .journeyFocus {
     height: 16rem !important;
+}
+
+.busLocationDiv {
+    &::after {
+        border-left: 3px $bus_blue solid;
+    }
 }
