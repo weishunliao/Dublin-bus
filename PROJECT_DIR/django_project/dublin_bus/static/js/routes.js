@@ -17,9 +17,9 @@ $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     document.getElementById("direction_switch").checked = false;
     get_bus_stop_list(route_id, "in");
     // document.getElementById("").innerText = suggestion;
-    window.setTimeout(detail2, 800);
+    detail2();
 });
-
+const timeline__content = document.getElementById("timeline__content");
 export const get_bus_stop_list = (id, direction) => {
     route_id = id;
     head_sign = direction;
@@ -49,7 +49,7 @@ export const get_bus_stop_list = (id, direction) => {
     })
 };
 
-const timeline__content = document.getElementById("timeline__content");
+
 const display_stops = (stops, route_id) => {
     for (let i of document.querySelectorAll("li")) {
         i.remove();
@@ -147,7 +147,7 @@ for (let card of cards) {
     card.addEventListener('click', function () {
         route_id = this.dataset.id;
         get_bus_stop_list(this.dataset.id, this.dataset.direction);
-        window.setTimeout(detail2, 800);
+        detail2();
     });
 }
 

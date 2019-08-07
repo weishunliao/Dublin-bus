@@ -331,21 +331,39 @@ async function removeFavourite(id) {
 
 }
 
-savedJourneysContainer.addEventListener('click', e => {
-    removeFavourite(e.target.id)
-})
+// savedJourneysContainer.addEventListener('click', e => {
+//     console.log(e.target.id);
+//     removeFavourite(e.target.id)
+// })
+
 
 const update_journey_list = () => {
     journeyList = JSON.parse(localStorage.getItem("journeys"));
 
 
     if (journeyList) {
-        console.log(journeyList);
+
         savedJourneysContainer.innerHTML = "";
         let journeys = Object.keys(journeyList)
         journeys.forEach(journey => {
             savedJourneysContainer.innerHTML += journeyList[journey].nodeHTML;
         });
+        let addrs = document.querySelectorAll("#journey__content__card__address");
+        for (let addr of addrs) {
+            addr.addEventListener('click', () => {
+                fromInput.value = addr.offsetParent.dataset.from;
+                toInput.value = addr.offsetParent.dataset.to;
+                document.querySelector("ion-tabs").select("journey");
+            })
+        }
+        const heart_icons = document.querySelectorAll('.journey__content__card__icon2');
+        for (let heartIcon of heart_icons) {
+            let id = heartIcon.children[0].id;
+            heartIcon.addEventListener('click', () => {
+                removeFavourite(id);
+            });
+        }
+
     }
 };
 
@@ -385,13 +403,13 @@ class SavedJourney {
     constructor(from, to) {
         this.from = from;
         this.to = to;
-        this.nodeHTML = `<ion-card class="journey__content__ card">
+        this.nodeHTML = `<ion-card class="journey__content__card" data-from = "${from}" data-to="${to}">
         <ion-grid no-padding>
             <ion-row class="journey__content__card__row">
                 <ion-col size="2" class="journey__content__card__icon1" align-self-center>
                     <div><i class="fas fa-circle"></i></div>
                 </ion-col>
-                <ion-col size="8" class="journey__content__card__start" align-self-center>
+                <ion-col size="8" class="journey__content__card__start" id="journey__content__card__address" align-self-center>
                     <span>${from}</span>
                 </ion-col>
                 <ion-col size="2" class="journey__content__card__icon2" align-self-center>
@@ -399,7 +417,7 @@ class SavedJourney {
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col size="2" class="ion-no-padding">
+                <ion-col size="2" class="ion-no-padding" id="journey__content__card__address">
                     <div class="journey__content__card__to">.<br>.<br>.<br>.<br>.<br>.<br>.<br>
                     </div>
                 </ion-col>
@@ -409,7 +427,7 @@ class SavedJourney {
                     <div class="journey__content__card__icon3"><i
                             class="fas fa-map-marker-alt"></i></div>
                 </ion-col>
-                <ion-col size="9" class="journey__content__card__end">
+                <ion-col size="9" class="journey__content__card__end" id="journey__content__card__address">
                     <span>${to}</span>
                 </ion-col>
             </ion-row>
