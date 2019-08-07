@@ -13,45 +13,49 @@
             </div>
 
         </div>
-        <h2>Setting everything up...</h2>
-        <div class="load-screen__progress-container">
-            <ion-progress-bar type="indeterminate" color="secondary"></ion-progress-bar>
-            <br>
+    <h2>The wheels on the bus go...</h2>
+    <div class="load-screen__progress-container">
+            <ion-progress-bar type="indeterminate" color="secondary"></ion-progress-bar><br>
             <ion-progress-bar type="indeterminate" color="secondary" reversed></ion-progress-bar>
         </div>
 
     </div>
 
-    {% include "./components/action_buttons.html" %}
-    <ion-toast-controller></ion-toast-controller>
-    <div class="map__container">
-        <div id="map"></div>
-    </div>
-    <div class="journey_show__container" id="show-container">
-        <!-- Dummy data to build the card -->
-        <div
-                class="journey-planner__routes__card routeCard showCard"
-                id="route-${id}"
-        >
-            <div class="customCard" id="stretchCard">
+  {% include "./components/action_buttons.html" %}
+  <ion-toast-controller></ion-toast-controller>
+  <div class="map__container">
+    <div id="map"></div>
+  </div>
+ 
+  <ion-tabs class="tabs">
+    {% include "./drawers/bottom_drawer.html" %} 
+    {% include "./components/tabs.html" %}
+  </ion-tabs>
+</div>
 
-                <div class="showCard__toggleButtonsContainer">
-                    <div class="showCard__backToRoutesContainer" id="backToRoutes">
-                        <ion-icon
-                                name="md-arrow-back"
-                                class="showCard__backArrow"
-                        ></ion-icon>
-                        <h2 class="showCard__routeText showText">Choose another route</h2>
-                    </div>
-                    <div class="showCard__moreInfoContainer" id="moreInfo-click">
-                        <ion-icon
-                                name="arrow-dropup-circle"
-                                class="showCard__moreInfoButton"
-                        ></ion-icon>
-                        <h2 class="showCard__infoText showText" id="infoText">More Info</h2>
-                    </div>
-                </div>
-                <!-- dummy data starts here -->
+
+<script>
+  var icon = "{{icon}}";
+  var temperature = "{{temperature}}";
+</script>
+
+{% include "./partials/footer.html" %}
+
+
+
+<!-- 
+<div class="journey_show__container" id="show-container">
+
+    <div
+      class="journey-planner__routes__card routeCard showCard"
+      id="route-${id}"
+    >
+      <div class="customCard" id="stretchCard">
+
+            <div class="showCard__toggleButtonsContainer">
+                    
+                  </div>
+      
 
                 <div class="journey-planner__card__container">
 
@@ -106,20 +110,5 @@
         </div>
         `
     </div>
-    <ion-tabs class="tabs">
-        {% include "./drawers/bottom_drawer.html" %}
-        {% include "./components/tabs.html" %}
-    </ion-tabs>
-</div>
-
-
-<script>
-    var icon = "{{icon}}";
-    var temperature = "{{temperature}}";
-    let is_mobile = 'True' === "{{ is_mobile }}";
-    if (!is_mobile) {
-        document.querySelector('ion-tabs').style.width = '30%';
-    }
-</script>
-
-{% include "./partials/footer.html" %}
+    `
+  </div>  -->

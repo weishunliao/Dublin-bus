@@ -10,6 +10,104 @@ input::selection {
   height: 100%;
   width: 100%;
 
+  &__moreInfoContainer {
+      display: none;
+      height: 100%;
+      width: 100%;
+      overflow-y: hidden;
+      margin: 0 auto;
+      padding-top: 2rem;
+      overflow: scroll;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding-top: 7rem;
+      padding-bottom: 8rem;
+  }
+
+
+  &__showscreen {
+    height: 100%; 
+    width: 100%; 
+    position: relative;
+
+    &__buttons {
+        height: 4rem;
+        width: 94%;
+        margin: 0 auto;
+        transform: translateY(-2rem);
+        
+        
+        & .left-button {
+            float: left;
+        
+            
+        }
+
+        & .right-button {
+            float: right;
+            
+        }
+
+        & .general-button {
+            position: relative;
+            width: 50%;
+            height: 100%;
+        }
+
+        & .button-icon {
+            font-size: 1.6rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+
+            &--left {
+                left: 1rem;
+            }
+
+            &--right {
+                right: 1rem;
+            }
+        }
+
+        & .button-text {
+            font-size: 1.6rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-56%);
+            margin: 0;
+
+            &--right {
+                right: 3rem;
+            }
+
+            &--left{
+                left: 2.7rem;
+            }
+        }
+
+        &::after {
+            content: "";
+        clear: both;
+        display: table;
+        }
+    }
+
+    &__journeyInfo {
+        position: relative;
+        width: calc(100% - 2rem);
+        margin: 0 auto;
+        height: 11rem;
+        background: white;
+        border-radius: 1.5rem;
+        background: white;
+        border-radius: 1.5rem;
+        transform: translateY(-2.5rem);
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.17);
+    }
+  }
+
   // ^ FORM CONTAINER
 
   &__form-container {
@@ -18,7 +116,7 @@ input::selection {
     position: relative;
     text-align: center;
     transition: all 0.3s linear;
-    margin-top: 4rem;
+   
 
     &::after {
       position: absolute;
@@ -35,10 +133,11 @@ input::selection {
   }
 
   &__routes-container {
-    height: 67%;
+    height: 100%;
     width: 100%;
     display: none;
     background: white;
+    position: relative;
   }
 
   &__routes {
@@ -49,8 +148,7 @@ input::selection {
       padding: 1rem;
       padding-top: 2rem;
       width: 95%;
-
-      height: calc(100% - 2rem);
+      height: calc(100% - 4rem);
     }
 
     &__card {
@@ -77,6 +175,16 @@ input::selection {
       float: left;
       position: relative;
 
+      &__futureTitle {
+        font-size: 1.2rem;
+        position: absolute;
+        top: 75%;
+        color: $db_blue;
+        left: 1.5rem;
+        font-style: italic;
+        margin:0;
+      }
+
       &__depTitle {
         width: 90%;
         margin-left: 1rem;
@@ -86,7 +194,7 @@ input::selection {
 
         & h2 {
           @media screen and (max-width: 600px) {
-            font-size: 1.6rem !important;
+            font-size: 1.2rem !important;
           }
           margin: 0;
         }
@@ -111,17 +219,31 @@ input::selection {
       &__travelTime {
         margin-top: 1rem;
         width: 100%;
+        height: 70%;
+        text-align: right;
+      
+        right: 2rem;
+        position: absolute;
         & h2 {
-          @media screen and (max-width: 600px) {
-            font-size: 1.6rem !important;
-          }
-          margin: 0;
+            font-size: 1.2rem !important;
+            margin: 0;
+            float: right;
         }
+
+        
       }
 
       &__descriptionContainer {
-        height: 80%;
-
+        height: 70%;
+        position: absolute;
+        right: 0;
+        top: 58%;
+        @media screen and (max-width: 400px) {
+            
+          }
+        
+        width: 100%;
+        transform: translateY(-50%);
         overflow-y: auto;
         overflow-x: hidden;
         // margin-top: 1.2rem;
@@ -155,7 +277,7 @@ input::selection {
     }
 
     &__timeNumber {
-      color: #409ce0;
+      color: #3d5f7e;
     }
 
     &__timeTitle {
@@ -163,12 +285,32 @@ input::selection {
       color: #409ce0;
       font-size: 5.6rem !important;
         font-weight: bold;
+        position: absolute;
+        left: 2rem;
+        transform: translateY(-50%);
+        top: 56%;
+        margin: 0 !important;
       @media screen and (max-width: 600px) {
-        font-size: 3rem !important;
-        transform: translateY(9px);
+        font-size: 6.2rem !important;
       }
-      display: inline-block;
-      transform: translateY(13px);
+      @media screen and (max-width: 400px) {
+        font-size: 5.2rem !important;
+        left: 1.2rem;
+      }
+
+      &__mins {
+          font-size: 1.8rem;
+      }
+
+      &.futureTimeTitle {
+        top: 50%;
+        @media screen and (max-width: 600px) {
+            font-size: 3.6rem !important;
+          }
+        left: 1rem;
+    }
+      
+     
     }
 
     &__minuteSpan {
@@ -177,7 +319,7 @@ input::selection {
       @media screen and (max-width: 600px) {
         font-size: 4.6rem !important;
       }
-      color: #409ce0;
+      color: $db_blue;
       display: inline-block;
       line-height: 0;
     }
@@ -255,7 +397,7 @@ input::selection {
   &__form {
     padding: 1rem 4rem;
     width: 100%;
-    margin-top: 4rem;
+   
     position: relative;
 
     &__input-container {
@@ -352,8 +494,19 @@ ion-datetime {
     }
   }
 
+  & .journey-planner__card__left__depTitle {
+      text-align: left;
+      margin-left: 2rem;
+  }
+
   & .journey-planner__routes-container {
     display: block;
+  }
+
+  & .journey-planner__card__container {
+      height: 100%;
+      border-radius: 1.5rem;
+     
   }
 
   & .journey-planner__title {
@@ -362,7 +515,7 @@ ion-datetime {
 
   & .journey-planner__form {
     padding-left: 2rem;
-    margin-top: 0;
+ 
     width: 100%;
   }
 
@@ -374,9 +527,9 @@ ion-datetime {
   }
 
   & .journey-planner__form-container {
-    background: $bus_yellow;
     padding-top: 2rem;
-    height: 19rem;
+    background: $bus_yellow;
+    height: 20rem;
     margin-top: 0;
 
     &::after {
@@ -516,7 +669,7 @@ ion-tab-button {
   }
 
   & .journey-planner__card__container {
-    height: 12rem;
+    height: 100%;
     position: relative;
   }
 
@@ -530,14 +683,14 @@ ion-tab-button {
     margin-top: 0;
   }
 
-  &
-    .journey-planner__card__right
+  & .journey-planner__card__right
     .journey-planner__card__title--departingTitle {
-    margin-left: 3rem;
+        
   }
 
   & .journey-planner__card__left__depTitle {
     margin-left: 2rem;
+    text-align: left;
   }
 
   & .journey-planner__card__numberbox {
@@ -611,6 +764,24 @@ ion-tab-button {
   margin-top: 1.5rem;
   padding-top: 2rem;
 
+  &__individualTime {
+    position: absolute;
+    min-width: 4rem;
+    top: -.5px;
+    transform: translateY(-50%);
+    display: inline-block;
+    left: 10%;
+    & h2 {
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+    &.finalTime {
+        top: 100%; 
+
+    }
+  }
+
   &__locationDiv {
     width: 100%;
     height: 14rem;
@@ -622,35 +793,33 @@ ion-tab-button {
     &::before {
       content: "";
       position: absolute;
-      left: 1.5rem;
+      left: 25%;
       top: 0;
       transform: translateY(-50%);
-      height: 1rem;
-      width: 1rem;
+      height: 1.5rem;
+      width: 1.5rem;
       border-radius: 50%;
-      border: 2px solid #3d5f7e;
-      background: white;
+    //   border: 2px solid #3d5f7e;
+      background: $bus_blue;
       z-index: 3;
     }
     &::after {
       content: "";
       position: absolute;
-      left: 1.5rem;
+      left: 25%;
       top: 0;
       transform: translateX(5.5px);
       z-index: 2;
       height: 100%;
       width: 5px;
       background: white;
-
-      border-left: 3px #3d5f7e dashed;
+      border-left: 3px $bus_blue dashed;
     }
   }
 
   &__icon {
     position: relative;
-    min-width: 4rem;
-    margin-left: 4rem;
+    min-width: 100%;
     height: 100%;
     display: inline-block;
 
@@ -658,8 +827,9 @@ ion-tab-button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 2.5rem;
+      font-size: 3.5rem;
       color: #3d5f7e;
+      left: 35%;
     }
   }
 
@@ -667,16 +837,18 @@ ion-tab-button {
     position: absolute;
     top: 0;
     transform: translateY(-50%);
-    left: 5rem;
+    left: 35%;
 
     & h2 {
-      color: green;
-      font-size: 1.8rem !important;
+      color: #3D5F7E;
+      font-size: 1.6rem !important;
       margin: 0 !important;
     }
   }
   &__distanceText {
-    left: 5rem;
+      color: $bus_orange;
+      font-weight: 800;
+      left: 40%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -690,27 +862,26 @@ ion-tab-button {
 
   &__finalCircle {
     position: absolute;
-    left: 1.5rem;
+    left: 25%;
     top: 100%;
     transform: translateY(-50%);
     height: 1.5rem;
     width: 1.5rem;
     border-radius: 50%;
-    border: 2px solid #3d5f7e;
-    background: white;
+    background: $bus_blue;
     z-index: 3;
   }
 
   &__finalText {
     position: absolute;
     top: 100%;
-    left: 5rem;
+    left: 35%;
     transform: translateY(-50%);
 
     & h2 {
-        color: green;
-      font-size: 1.8rem !important;
-      margin: 0 !important;
+        color: #3D5F7E;
+        font-size: 1.6rem !important;
+        margin: 0 !important;
     }
   }
 }
@@ -724,3 +895,25 @@ ion-tab-button {
     color: inherit;
 }
 
+.walking-numberbox {
+    top: 69%;
+    right: 0;
+    left: 0;
+    transform: translateX(18%);
+    font-size: 1.2rem;
+}
+
+.bus-numberbox {
+    font-weight: 800;
+    color: #FFA200;
+}
+
+.journeyFocus {
+    height: 16rem !important;
+}
+
+.busLocationDiv {
+    &::after {
+        border-left: 3px $bus_blue solid;
+    }
+}

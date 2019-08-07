@@ -1,7 +1,9 @@
 import {
   search,
+  height,
   fromInput,
   toInput,
+  dateInput,
   selectedTab,
   Route,
   sightInput,
@@ -15,11 +17,67 @@ import { get_bus_real_time_info, detail, drawer_default_height } from "./stops";
 import { get_sights_info_search } from "./sightseeing";
 import { bottomSwiper } from "./touches";
 
-import { checkFavouriteJourneys } from './favourites';
+import { checkFavouriteJourneys } from "./favourites";
+
 
 const { searchInput } = search;
 let resp;
 
+let months = {
+    0: 'January',
+    1: 'February',
+    2: 'March',
+    3: 'April',
+    4: 'May',
+    5: 'June',
+    6: 'July',
+    7: 'August',
+    8: 'September',
+    9: 'October',
+    10: 'November',
+    11: 'December'
+}
+
+let daySelection = {
+    0: 'Sun',
+    1: 'Mon',
+    2: 'Tue',
+    3: 'Wed',
+    4: 'Thu',
+    5: 'Fri',
+    6: 'Sat'
+}
+
+function dateBuilder(date){
+    let month = months[date.getMonth()]
+    let dayDate = date.getDate();
+    let year = date.getFullYear();
+    let dayName = daySelection[date.getDay()];
+
+    return "" + dayName + ", " + dayDate + " " + month + ", " + year;
+}
+
+function transformTimeValue(valueGoesHere) {
+
+      let val = new Date(valueGoesHere);
+      val = val.getHours() +
+    ":" +
+    sortLeavingInMinutes(val.getMinutes());
+
+    return val
+}
+
+function sortLeavingInMinutes(val){
+    let ls;
+    if (val < 10){
+        ls = "0" + val;
+    } else {
+        ls = val;
+    }
+    return ls;
+}
+export let directionsService;
+export let initialLocation;
 export let markers = {};
 export let map;
 export let directionsDisplay;
@@ -28,7 +86,7 @@ export let bus_route_drawer;
 // const toInputContainer = document.querySelector('#to-input')
 
 export default function initMap() {
-  let initialLocation;
+  
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
   setTimeout(() => {
     map = new google.maps.Map(document.getElementById("map"), {
@@ -98,7 +156,7 @@ export default function initMap() {
 
     let geocoder = new google.maps.Geocoder();
 
-    let directionsService = new google.maps.DirectionsService();
+    directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
       map: map
     });
@@ -114,6 +172,7 @@ export default function initMap() {
       country: "Ireland"
     };
 
+
     const searchAutocomplete = new google.maps.places.Autocomplete(
       searchInput,
       options
@@ -124,21 +183,23 @@ export default function initMap() {
       options
     );
 
-    
-
     const toAutocomplete = new google.maps.places.Autocomplete(
       toInput,
       options
     );
-    const autocompletes = [toAutocomplete, fromAutocomplete]
+    const autocompletes = [toAutocomplete, fromAutocomplete];
 
     autocompletes.forEach(autocomplete => {
-        autocomplete.addListener('place_changed', () => {
-            if (document.querySelector('.journey-planner').classList.contains('converted')){
-                checkFavouriteJourneys();
+      autocomplete.addListener("place_changed", () => {
+        if (
+          document
+            .querySelector(".journey-planner")
+            .classList.contains("converted")
+        ) {
+          checkFavouriteJourneys();
         }
-        })
-    })
+      });
+    });
 
     const sightAutocomplete = new google.maps.places.Autocomplete(
       sightInput,
@@ -211,9 +272,8 @@ export default function initMap() {
             map.setZoom(17);
 
             // setTimeout(() => {
-                $(".load-screen").fadeOut();
+            $(".load-screen").fadeOut();
             // }, 1000)
-            
 
             let marker = new google.maps.Marker({
               position: pos,
@@ -221,15 +281,14 @@ export default function initMap() {
               icon: "./static/images/location32.png"
             });
 
-            if (toInput.value === "") {
-              console.log("yes it's empty");
-            }
+            // if (toInput.value === "") {
+            // }
 
             locationMarkers.push(marker);
             marker.setAnimation(google.maps.Animation.DROP);
 
             geocoder.geocode({ location: pos }, function(results, status) {
-              console.log("GETTING");
+         
               if (status === "OK") {
                 if (results[0]) {
                   initialLocation = results[0];
@@ -256,10 +315,8 @@ export default function initMap() {
       }
 
       function handleLocationError(browserHasGeolocation, pos) {
+        $(".load-screen").fadeOut();
 
-            $(".load-screen").fadeOut();
-    
-       
         controller
           .create({
             color: "primary",
@@ -277,226 +334,7 @@ export default function initMap() {
       .getElementById("submitter-form")
       .addEventListener("submit", function(e) {
         e.preventDefault();
-        document.querySelector("#routesHere").innerHTML = "";
-        submitButton.innerHTML = "Go!";
-        document.querySelector("#routesHere").innerHTML = `
-      
-      <div class="loader__wrapper loader-jp" id="bus_loader-jp">
-      <h3>Please wait...</h3><br>
-      <div>
-          <img src="/static/images/bus.png" alt="" class="loader__bus">
-      </div>
-      <div class="loader__wrapper2">
-          <img src="/static/images/road.png" alt="" class="loader__road"/>
-      </div>
-            </div>
-      
-      `;
-
-        document.querySelector(".journey-planner").classList.add("converted");
-        let fromLocation;
-        if (fromInput.value === "Current location") {
-          fromLocation = initialLocation;
-          fromInput.value = fromLocation.formatted_address;
-          fromInput.style.color = "#3D5F7E";
-        } else {
-          fromLocation = fromInput.value;
-        }
-        checkFavouriteJourneys();
-
-
-        directionsService.route(
-          {
-            origin: fromInput.value,
-            destination: toInput.value,
-            travelMode: "TRANSIT",
-            provideRouteAlternatives: true
-          },
-          async function(response, status) {
-            resp = response;
-            console.log(response);
-            if (status === "OK") {
-              console.log("RESPONSE IS ", response);
-              for (let i = 0; i < response.routes.length; i++) {
-                let directions = new google.maps.DirectionsRenderer({
-                  preserveViewport: true,
-                  directions: response,
-                  routeIndex: i
-                });
-                let length = response.routes[i].legs[0].steps.length;
-                let error_count = 0; // used to track if any steps in the route are not run by Dublin Bus
-                for (let j = 0; j < length; j++) {
-                  if (
-                    response.routes[i].legs[0].steps[j].travel_mode == "TRANSIT"
-                  ) {
-                    let agent =
-                      response.routes[i].legs[0].steps[j].transit.line
-                        .agencies[0]["name"];
-                    if (agent !== "Dublin Bus") {
-                      error_count++;
-                    }
-                  }
-                }
-                if (error_count > 0) {
-                  continue;
-                }
-                let full_travel_time = 0;
-                let button =
-                  '<button type="button" class="btn btn-secondary" onclick="change_route(' +
-                  i +
-                  ')">Show</button>';
-                let step = 0;
-                let routeDescription = [];
-                let start = response.routes[i].legs[0].start_address;
-                let end = response.routes[i].legs[0].end_address;
-                let departure_stop = "";
-                let route_id = "Walking";
-                let head_sign = "";
-                let departure_time = "";
-                let leavingIn;
-                let leavingInValue;
-                let leavingCounter = 0;
-
-                while (step < length) {
-                  let duration =
-                    response.routes[i].legs[0].steps[step].duration.text;
-                  let distance =
-                    response.routes[i].legs[0].steps[step].distance.text;
-                  let travel_mode =
-                    response.routes[i].legs[0].steps[step].travel_mode;
-                  if (travel_mode === "WALKING") {
-                    let walkTime =
-                      response.routes[i].legs[0].steps[step].duration.value;
-                    full_travel_time += walkTime;
-                    let departurePoint = routeDescription.push([
-                      "walking",
-                      walkTime,
-                      distance,
-                      null,
-                      null,
-                      start,
-                      end,
-                      duration
-                    ]);
-                  } else {
-                    // clear this when the server is back
-                    let departureStop =
-                      response.routes[i].legs[0].steps[step].transit
-                        .departure_stop.name;
-                    let arrivalStop =
-                      response.routes[i].legs[0].steps[step].transit
-                        .arrival_stop.name;
-                    if (!leavingCounter) {
-                      let ct = Date.now() / 1000;
-                    //   console.log("time now: ", ct)
-                      let busTimeStamp = response.routes[i].legs[0].steps[step].transit.departure_time.value.getTime() / 1000
-                    //   console.log("leaving in: ", busTimeStamp)
-                      leavingIn = Math.floor((busTimeStamp - ct) / 60)
-                    //   console.log("so leaving in is", leavingIn)
-                    //   console.log("the actual bus leaving time is: ", response.routes[i].legs[0].steps[step].transit.departure_time)
-                     
-                      leavingInValue = response.routes[i].legs[0].steps[step].transit.departure_time.value.getTime();
-                      leavingInValue = new Date(leavingInValue);
-                      leavingInValue = leavingInValue.getHours() + ":" + leavingInValue.getMinutes()
-                      leavingCounter++;
-                    }
-
-                    let num_stops =
-                      response.routes[i].legs[0].steps[step].transit.num_stops;
-                    departure_stop =
-                      response.routes[i].legs[0].steps[step].transit
-                        .departure_stop.name;
-                    let arrival_stop =
-                      response.routes[i].legs[0].steps[step].transit
-                        .arrival_stop.name;
-                    let departure_time_value =
-                      response.routes[i].legs[0].steps[
-                        step
-                      ].transit.departure_time.value.getTime() /
-                        1000 +
-                      3600;
-                    route_id =
-                      response.routes[i].legs[0].steps[step].transit.line
-                        .short_name;
-                    head_sign =
-                      response.routes[i].legs[0].steps[step].transit.headsign;
-                    departure_time =
-                      response.routes[i].legs[0].steps[step].transit
-                        .departure_time.text;
-
-                    await fetch("get_travel_time", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json"
-                      },
-                      body: JSON.stringify({
-                        route_id: route_id,
-                        start_point: departure_stop,
-                        end_point: arrival_stop,
-                        num_stops: num_stops,
-                        departure_time_value: departure_time_value,
-                        head_sign: head_sign
-                      })
-                    })
-                      .then(response => {
-                        return response.json();
-                      })
-                      .then(data => {
-                        console.log("DATA", data);
-                        full_travel_time += data.journey_time;
-                        routeDescription.push([
-                          "bus",
-                          route_id,
-                          distance,
-                          departureStop,
-                          arrivalStop,
-                          start,
-                          end,
-                          Math.round(data.journey_time / 60)
-                        ]);
-                      });
-                  }
-                  step++;
-                }
-                if (true) {
-                  const newDirections = directions.directions.routes.slice(
-                    i,
-                    i + 1
-                  );
-                  // the directions object is adjusted to only contain the information about one particular route
-                  // this is so that we can associate the directions with a particular card
-                  directions.directions.routes = newDirections;
-
-                  if (!leavingIn){
-                      leavingIn = "N/A";
-                  }
-
-                  const newRoute = new Route({
-                    route: [response.routes[i]],
-                    full_travel_time,
-                    directions,
-                    routeDescription,
-                    departure_time,
-                    id: i,
-                    leavingIn,
-                    leavingInValue
-                  });
-                  
-                  Route.appendToDom(newRoute);
-                }
-                
-              }
-              document.getElementById("bus_loader-jp").style.display = "none";
-            Route.signalAppend()
-              
-              // directionsDisplay.setDirections(response);
-              console.log("directionsDisplay", directionsDisplay);
-            } else {
-              window.alert("Directions request failed due to " + status);
-            }
-          }
-        );
+        FindMyRoutes(initialLocation, directionsService);
       });
     getLocation();
 
@@ -627,6 +465,272 @@ const close_btn = () => {
     .getElementById("stops__toolbar__back-btn")
     .addEventListener("click", detail);
 };
+
+
+
+
+function FindMyRoutes(initialLocation, directionsService){
+    document.querySelector("#routesHere").innerHTML = "";
+    submitButton.innerHTML = "Go!";
+
+    let theight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+
+    document.querySelector('.journey-planner__routes-container').style.height = (height - 160 - theight - (height * 0.03)) + "px";
+
+
+
+    let date = new Date(dateInput.value);
+    
+    // [date.getDay()]
+        let formattedDate = dateBuilder(date)
+
+    document.querySelector("#routesHere").innerHTML = `
+  
+  <div class="loader__wrapper loader-jp" id="bus_loader-jp">
+  <h3>Please wait...</h3><br>
+  <div>
+      <img src="/static/images/bus.png" alt="" class="loader__bus">
+  </div>
+  <div class="loader__wrapper2">
+      <img src="/static/images/road.png" alt="" class="loader__road"/>
+  </div>
+        </div>
+  
+  `;
+
+    document.querySelector(".journey-planner").classList.add("converted");
+    let fromLocation;
+    if (fromInput.value === "Current location") {
+      fromLocation = initialLocation;
+      fromInput.value = fromLocation.formatted_address;
+      fromInput.style.color = "#3D5F7E";
+    } else {
+      fromLocation = fromInput.value;
+    }
+    checkFavouriteJourneys();
+
+    directionsService.route(
+      {
+        origin: fromInput.value,
+        destination: toInput.value,
+        travelMode: "TRANSIT",
+        transitOptions: {
+          departureTime: new Date(dateInput.value)
+          // modes: ['BUS'],
+          // routingPreference: 'FEWER_TRANSFERS'
+        },
+        provideRouteAlternatives: true
+      },
+      async function(response, status) {
+        resp = response;
+        console.log(response);
+        if (status === "OK") {
+          console.log("RESPONSE IS ", response);
+          for (let i = 0; i < response.routes.length; i++) {
+            let directions = new google.maps.DirectionsRenderer({
+              preserveViewport: true,
+              directions: response,
+              routeIndex: i
+            });
+            let length = response.routes[i].legs[0].steps.length;
+            let error_count = 0; // used to track if any steps in the route are not run by Dublin Bus
+            for (let j = 0; j < length; j++) {
+              if (
+                response.routes[i].legs[0].steps[j].travel_mode == "TRANSIT"
+              ) {
+                let agent =
+                  response.routes[i].legs[0].steps[j].transit.line
+                    .agencies[0]["name"];
+                if (agent !== "Dublin Bus") {
+                  error_count++;
+                }
+              }
+            }
+            if (error_count > 0) {
+              continue;
+            }
+            let full_travel_time = 0;
+            let button =
+              '<button type="button" class="btn btn-secondary" onclick="change_route(' +
+              i +
+              ')">Show</button>';
+            let step = 0;
+            let routeDescription = [];
+            let start = response.routes[i].legs[0].start_address;
+            let routeSetOff = response.routes[i].legs[0].departure_time.value.getTime();
+            let routeArrive = response.routes[i].legs[0].arrival_time.value.getTime();
+            routeSetOff = transformTimeValue(routeSetOff)   
+            routeArrive = transformTimeValue(routeArrive)
+            let end = response.routes[i].legs[0].end_address;
+            let departure_stop = "";
+            let route_id = "Walking";
+            let head_sign = "";
+            let departure_time = "";
+            let leavingIn;
+            let leavingInValue;
+            let leavingCounter = 0;
+            let firstLeavingIn;
+
+            while (step < length) {
+              let duration =
+                response.routes[i].legs[0].steps[step].duration.text;
+              let distance =
+                response.routes[i].legs[0].steps[step].distance.text;
+              let travel_mode =
+                response.routes[i].legs[0].steps[step].travel_mode;
+              if (travel_mode === "WALKING") {
+                let walkTime =
+                  response.routes[i].legs[0].steps[step].duration.value;
+                full_travel_time += walkTime;
+                let departurePoint = routeDescription.push([
+                  "walking",
+                  walkTime,
+                  distance,
+                  null,
+                  null,
+                  start,
+                  end,
+                  duration,
+                  Math.round(walkTime / 60)
+                ]);
+              } else {
+                // clear this when the server is back
+                let departureStop =
+                  response.routes[i].legs[0].steps[step].transit
+                    .departure_stop.name;
+                let arrivalStop =
+                  response.routes[i].legs[0].steps[step].transit
+                    .arrival_stop.name;
+              
+
+                  let ct = Date.now() / 1000;
+                  
+                  let busTimeStamp =
+                    response.routes[i].legs[0].steps[
+                      step
+                    ].transit.departure_time.value.getTime() / 1000;
+                 
+                  leavingIn = Math.floor((busTimeStamp - ct) / 60);
+                  
+
+                  leavingInValue = response.routes[i].legs[0].steps[
+                    step
+                  ].transit.departure_time.value.getTime();
+
+                  
+
+                  leavingInValue = transformTimeValue(leavingInValue)
+                  
+                  
+                if (!leavingCounter){
+                    firstLeavingIn = leavingInValue;
+                    leavingCounter++;
+                }
+
+
+                let num_stops =
+                  response.routes[i].legs[0].steps[step].transit.num_stops;
+                departure_stop =
+                  response.routes[i].legs[0].steps[step].transit
+                    .departure_stop.name;
+                let arrival_stop =
+                  response.routes[i].legs[0].steps[step].transit
+                    .arrival_stop.name;
+                let departure_time_value =
+                  response.routes[i].legs[0].steps[
+                    step
+                  ].transit.departure_time.value.getTime() /
+                    1000 +
+                  3600;
+                route_id =
+                  response.routes[i].legs[0].steps[step].transit.line
+                    .short_name;
+                head_sign =
+                  response.routes[i].legs[0].steps[step].transit.headsign;
+                departure_time =
+                  response.routes[i].legs[0].steps[step].transit
+                    .departure_time.text;
+
+                await fetch("get_travel_time", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                  },
+                  body: JSON.stringify({
+                    route_id: route_id,
+                    start_point: departure_stop,
+                    end_point: arrival_stop,
+                    num_stops: num_stops,
+                    departure_time_value: departure_time_value,
+                    head_sign: head_sign
+                  })
+                })
+                  .then(response => {
+                    return response.json();
+                  })
+                  .then(data => {
+                    // console.log("DATA", data);
+                    full_travel_time += data.journey_time;
+                    routeDescription.push([
+                      "bus",
+                      route_id,
+                      distance,
+                      departureStop,
+                      arrivalStop,
+                      start,
+                      end,
+                      Math.round(data.journey_time / 60) + " mins",
+                      leavingInValue
+                    ]);
+                  });
+              }
+              step++;
+            }
+            if (true) {
+              const newDirections = directions.directions.routes.slice(
+                i,
+                i + 1
+              );
+              // the directions object is adjusted to only contain the information about one particular route
+              // this is so that we can associate the directions with a particular card
+              directions.directions.routes = newDirections;
+
+              if (!leavingIn) {
+                leavingIn = "N/A";
+              }
+
+
+              const newRoute = new Route({
+                route: [response.routes[i]],
+                full_travel_time,
+                directions,
+                routeDescription,
+                departure_time,
+                id: i,
+                firstLeavingIn,
+                routeSetOff,
+                routeArrive,
+                leavingInValue,
+                leavingIn,
+                formattedDate
+              });
+            //   console.log(newRoute)
+              Route.appendToDom(newRoute);
+            }
+          }
+          document.getElementById("bus_loader-jp").style.display = "none";
+          Route.signalAppend();
+
+          // directionsDisplay.setDirections(response);
+        //   console.log("directionsDisplay", directionsDisplay);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
+}
+
 //   function() {
 //     handleLocationError(true, infoWindow, map.getCenter());
 //   }
