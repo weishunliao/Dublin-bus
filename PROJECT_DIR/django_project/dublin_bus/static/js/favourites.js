@@ -160,7 +160,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
                 );
                 elem.addEventListener("click", () => {
                     get_bus_real_time_info(elem.dataset.item);
-                    window.setTimeout(detail, 800);
+                    detail();
                 });
             } else {
                 document

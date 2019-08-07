@@ -18,12 +18,23 @@ $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
 
     document.getElementById('typeahead_stop').blur();
     get_bus_real_time_info(suggestion);
-    window.setTimeout(detail, 800);
+    detail();
 });
 
 
 export const get_bus_real_time_info = (stop_id) => {
     document.getElementById('stops__show-on-map-btn').dataset.id = stop_id;
+    document.getElementById("slots").innerHTML = `
+                    <div class="loader__wrapper" id="bus_loader">
+                        <h3>Please wait...</h3><br>
+                        <div>
+                            <img src="/static/images/bus.png" alt="" class="loader__bus">
+                        </div>
+                        <div class="loader__wrapper2">
+                            <img src="/static/images/road.png" alt="" class="loader__road"/>
+                        </div>
+                    </div>
+    `;
     fetch('real_time_info_for_bus_stop?stop_id=' + stop_id, {method: 'get'})
         .then(function (response) {
             return response.json();
@@ -306,3 +317,9 @@ const hide_card = (stop_id) => {
         card.style.display = 'none';
     }
 };
+
+document.getElementById("realtime_stop_refresher").addEventListener('click', () => {
+    let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
+    console.log(stop_id);
+    get_bus_real_time_info(stop_id);
+});
