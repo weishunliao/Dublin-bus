@@ -2,6 +2,7 @@ import {map, markers} from "./google_maps";
 import {create_favourite_stop_card} from "./favourites";
 import {height} from './nodes'
 import {toast_route_add, toast_route_remove} from "./routes";
+import {bottomSwiper} from "./touches";
 
 
 export const set_height = () => {
@@ -163,12 +164,18 @@ const change_marker_icon = (stop_marker) => {
 };
 const show_on_map_btn = document.getElementById("stops__show-on-map-btn");
 const stops_show_on_map = () => {
-    const draw_height = $(".drawer__container").css('height');
     let stop_marker = markers["" + show_on_map_btn.dataset.id];
-    if (draw_height === "290px") {
+    if (bottomSwiper.currentState === 4) {
         change_marker_icon(stop_marker);
-        drawer_default_height();
+        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+        document.getElementById("stops__show-on-map-btn__name").innerText = "";
+        document.getElementById("routes__show-on-map-btn__name").innerText = "";
+        $("#stops__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        document.getElementById("stops__toolbar__back-btn").style.display = '';
+        document.getElementById("routes__toolbar__back-btn").style.display = '';
     } else {
+        bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         let stop_position = stop_marker.getPosition();
         map.setCenter({lat: stop_position.lat(), lng: stop_position.lng()});
         map.setZoom(18);
@@ -176,7 +183,7 @@ const stops_show_on_map = () => {
         document.getElementById("stops__show-on-map-btn__name").innerText = "";
         document.getElementById("stops__toolbar__back-btn").style.display = 'none';
         $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
-        $('.drawer__container').animate({'height': 290}, 200, 'linear');
+        // $('.drawer__container').animate({'height': 290}, 200, 'linear');
     }
 };
 

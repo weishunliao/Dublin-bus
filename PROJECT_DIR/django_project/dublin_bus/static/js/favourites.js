@@ -6,7 +6,7 @@ import {
     toggle_heart,
     set_height,
 } from "./stops";
-import {markerListener} from "./google_maps";
+import {markerListener, initialLocation, directionsService, FindMyRoutes} from "./google_maps";
 import {
     detail2,
     get_bus_stop_list,
@@ -237,7 +237,7 @@ export const create_favourite_route_card = (route_id, tab_name) => {
             );
             elem.addEventListener("click", () => {
                 get_bus_stop_list(route_id, "in");
-                window.setTimeout(detail2, 800);
+                detail2();
             });
         } else {
             document
@@ -354,6 +354,7 @@ const update_journey_list = () => {
                 fromInput.value = addr.offsetParent.dataset.from;
                 toInput.value = addr.offsetParent.dataset.to;
                 document.querySelector("ion-tabs").select("journey");
+                FindMyRoutes(initialLocation, directionsService);
             })
         }
         const heart_icons = document.querySelectorAll('.journey__content__card__icon2');

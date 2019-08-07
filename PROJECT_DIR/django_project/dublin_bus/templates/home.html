@@ -37,6 +37,10 @@
 <script>
   var icon = "{{icon}}";
   var temperature = "{{temperature}}";
+  let is_mobile = "{{ is_mobile }}" === "True";
+  if (!is_mobile) {
+      document.querySelector('ion-tabs').style.width = '30%';
+  }
 </script>
 
 {% include "./partials/footer.html" %}

@@ -469,7 +469,7 @@ const close_btn = () => {
 
 
 
-function FindMyRoutes(initialLocation, directionsService){
+export function FindMyRoutes(initialLocation, directionsService){
     document.querySelector("#routesHere").innerHTML = "";
     submitButton.innerHTML = "Go!";
 

@@ -2,6 +2,7 @@ import {markers, map, bus_route_drawer} from "./google_maps";
 import {create_favourite_route_card} from "./favourites";
 import {controller_confirm} from "./stops";
 import {controller} from "./nodes";
+import {bottomSwiper} from "./touches";
 
 
 let route_id;
@@ -210,14 +211,15 @@ const blinker = () => {
 
 const route_show_on_map = () => {
     const draw_height = $(".drawer__container").css('height');
-    if (draw_height === "290px") {
+    if (bottomSwiper.currentState === 4) {
+        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         bus_route_drawer.setMap(null);
         clear_bus_marker_on_map();
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
-        $('.drawer__container').animate({'height': window.innerHeight * 0.95}, 200, 'linear');
     } else {
+        bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         snap_to_road();
         draw_bus_markers_on_route();
         let mid_stop = stop_list[Math.floor(stop_list.length / 2)];
@@ -227,7 +229,6 @@ const route_show_on_map = () => {
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         document.getElementById("routes__toolbar__back-btn").style.display = 'none';
         $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
-        $('.drawer__container').animate({'height': 290}, 200, 'linear');
     }
 };
 

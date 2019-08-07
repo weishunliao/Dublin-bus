@@ -1,4 +1,5 @@
 import { cardShowing } from './nodes';
+import {bottomSwiper} from "./touches";
 
 window.requestAnimFrame = (function() {
     return (

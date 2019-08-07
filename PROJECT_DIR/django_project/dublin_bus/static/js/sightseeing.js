@@ -1,4 +1,5 @@
 import {fromInput, height, toInput} from './nodes'
+import {directionsService, FindMyRoutes, initialLocation} from "./google_maps";
 
 
 let ourTabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
@@ -48,6 +49,7 @@ const create_card = (point) => {
     document.getElementById(point[0]).addEventListener("click", () => {
         toInput.value = point[0] + " " + point[1];
         document.querySelector("ion-tabs").select("journey");
+        FindMyRoutes(initialLocation, directionsService);
     });
 };
 
