@@ -1,4 +1,4 @@
-import { height} from './nodes'
+import {fromInput, height, toInput} from './nodes'
 
 
 let ourTabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
@@ -31,7 +31,7 @@ for (let card of cards) {
 }
 const create_card = (point) => {
     let rating = Math.round(parseFloat(point[2]) / 5 * 100) + "%";
-    let card = '<ion-card><ion-grid><ion-row><ion-col align-self-center size="5" class="sightseeing__options__cards__photo" >' +
+    let card = '<ion-card id="'+ point[0] +'"><ion-grid><ion-row><ion-col align-self-center size="5" class="sightseeing__options__cards__photo" >' +
         '<img id="sightseeing__options__cards__photo" src="' + point[3] + '"/></ion-col><ion-col align-self-center size="7" ' +
         'class="sightseeing__options__cards__info"><ion-row><ion-col size="12" class="sightseeing__options__cards__info__name">' +
         '<span id="sightseeing__options__cards__info__name">' + point[0] + '</span></ion-col></ion-row><ion-row><ion-col size="12" ' +
@@ -45,6 +45,10 @@ const create_card = (point) => {
         '</ion-grid></ion-card>';
 
     $('#sightseeing__options__cards').append(card);
+    document.getElementById(point[0]).addEventListener("click", () => {
+        toInput.value = point[0] + " " + point[1];
+        document.querySelector("ion-tabs").select("journey");
+    });
 };
 
 const page_switch = () => {
