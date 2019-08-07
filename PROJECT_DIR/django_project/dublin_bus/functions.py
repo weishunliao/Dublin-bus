@@ -323,7 +323,7 @@ def get_real_time_data(stop_id):
 
 
 def get_trip_id(direction, service_id, current_time, route_id):
-    path = os.path.join(BASE_DIR, '../static/cache/route_15a_timetable.json')
+    path = os.path.join(BASE_DIR, '../bus_info/timetable/route_' + route_id + '_time_table.json')
     slots = []
     with open(path, 'r') as json_file:
         timetable = json.load(json_file)[direction][str(service_id)]
@@ -344,7 +344,7 @@ def get_trip_id(direction, service_id, current_time, route_id):
 def get_trip_info(trip_ids, service_id, direction, route_id):
     if not trip_ids:
         return []
-    path = os.path.join(BASE_DIR, '../static/cache/route_15a.json')
+    path = os.path.join(BASE_DIR, '../bus_info/routes/route_' + route_id + '.json')
     infos = []
     print(trip_ids)
     with open(path, 'r') as json_file:
@@ -361,11 +361,15 @@ def calculate_time_diff(trips, time):
     stops_list = []
 
     while i <= len(trips[1]):
-        t = 0
-        while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
-            t += 1
+        # t = 0
+        # while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
+        #     t += 1
+        # print(trips[t])
+        # stops_list.append(
+        #     [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
         stops_list.append(
-            [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
+            [trips[1][str(i)][0][-4:], trips[1][str(i)][1], (trips[1][str(i)][2] - time) // 60, trips[1][str(i)][3]])
+
         i += 1
     return stops_list
 
