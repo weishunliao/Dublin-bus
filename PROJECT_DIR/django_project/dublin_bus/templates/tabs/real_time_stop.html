@@ -61,7 +61,8 @@
                             <ion-col align-self-end size="3">
                                 <div class="stops__content__card__heart">
                                     <ion-icon name="heart" id="stops__content__card__heart-solid" style=""></ion-icon>
-                                    <ion-icon name="heart-empty" id="stops__content__card__heart-empty" style="display: none"></ion-icon>
+                                    <ion-icon name="heart-empty" id="stops__content__card__heart-empty"
+                                              style="display: none"></ion-icon>
                                 </div>
                                 <ion-alert-controller></ion-alert-controller>
                             </ion-col>
@@ -92,6 +93,14 @@
             <div id="stops__time-table" class="stops__time-table">
                 <ion-list class="stops__time-table-list" id="stops__time-table-list">
                     <ion-grid>
+                        <ion-row>
+                            <ion-col size="6"></ion-col>
+                            <ion-col size="6">
+                                <div id="realtime_stop_refresher">
+                                    <ion-icon slot="icon-only" name="refresh" color="primary" size="small"></ion-icon>
+                                </div>
+                            </ion-col>
+                        </ion-row>
                         <ion-row class="stops__time-table-list__header">
                             <ion-col size="3">
                                 <ion-item lines="none">
@@ -130,9 +139,6 @@
 </ion-tab>
 
 
-
-
-
 {#            <div id="drawer_container_stops" style="">#}
 {#            <ion-item lines="none" class="stops__chips">#}
 {#                <ion-grid id="stops_chips_grid">#}
@@ -141,7 +147,6 @@
 {#                </ion-grid>#}
 {#            </ion-item>#}
 {#            </div>#}
-
 
 
 {#<ion-card class="stops__content__card" id="stops__content__card" data-item="2">#}

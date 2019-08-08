@@ -432,7 +432,6 @@ export const markerListener = stopID => {
       }
       get_bus_real_time_info(stopID);
       change_btn();
-      window.setTimeout(drawer_default_height, 500);
     });
 };
 
@@ -469,7 +468,7 @@ const close_btn = () => {
 
 
 
-function FindMyRoutes(initialLocation, directionsService){
+export function FindMyRoutes(initialLocation, directionsService){
     document.querySelector("#routesHere").innerHTML = "";
     submitButton.innerHTML = "Go!";
 

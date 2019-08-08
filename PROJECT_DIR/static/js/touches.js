@@ -75,13 +75,10 @@ window.addEventListener("load", function() {
   
     }
 
-    
 
     if (e.target.id !== "tab-button-journey"){
         changeCardShowing();
     } 
-
-  
 
     if (e.target.id === currentTab) {
       if (bottomSwiper.currentState === bottomSwiper.OUT_STATE) {

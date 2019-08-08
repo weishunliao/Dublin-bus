@@ -18,7 +18,7 @@ export let cardShowing = false;
 
 export function changeCardShowing() {
   cardShowing = false;
-  showContainer.style.display = "none";
+  // showContainer.style.display = "none";
   directionsDisplay.set("directions", null);
 }
 

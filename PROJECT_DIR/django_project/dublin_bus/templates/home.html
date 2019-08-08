@@ -5,21 +5,21 @@
 <div class="main">
 
 
-   <div class="load-screen">
+    <div class="load-screen">
 
-    <div class="load-screen__inner">
-        <div class="load-screen__logo-container">
+        <div class="load-screen__inner">
+            <div class="load-screen__logo-container">
                 <img src="/static/images/db_logo.png" alt="" class="load-screen__logo"/>
+            </div>
+
         </div>
-       
-    </div>
     <h2>The wheels on the bus go...</h2>
     <div class="load-screen__progress-container">
             <ion-progress-bar type="indeterminate" color="secondary"></ion-progress-bar><br>
             <ion-progress-bar type="indeterminate" color="secondary" reversed></ion-progress-bar>
-       </div>
+        </div>
 
-  </div>  
+    </div>
 
   {% include "./components/action_buttons.html" %}
   <ion-toast-controller></ion-toast-controller>
@@ -37,6 +37,10 @@
 <script>
   var icon = "{{icon}}";
   var temperature = "{{temperature}}";
+  let is_mobile = "{{ is_mobile }}" === "True";
+  if (!is_mobile) {
+      document.querySelector('ion-tabs').style.width = '30%';
+  }
 </script>
 
 {% include "./partials/footer.html" %}
@@ -57,56 +61,58 @@
                   </div>
       
 
-        <div class="journey-planner__card__container">
-          
-          
-            <div class="journey-planner__card__left">
-              <div class="journey-planner__card__left__depTitle">
-                <h2
-                  class="journey-planner__card__title journey-planner__card__title--departingTitle"
-                >
-                  Departing in:
-                </h2>
-              </div>
-              <div class="journey-planner__card__left__minsTitle">
-                <span class="journey-planner__card__minuteSpan">5</span>
-                <h1 class="journey-planner__card__timeTitle">mins</h1>
-              </div>
+                <div class="journey-planner__card__container">
+
+
+                    <div class="journey-planner__card__left">
+                        <div class="journey-planner__card__left__depTitle">
+                            <h2
+                                    class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                            >
+                                Departing in:
+                            </h2>
+                        </div>
+                        <div class="journey-planner__card__left__minsTitle">
+                            <span class="journey-planner__card__minuteSpan">5</span>
+                            <h1 class="journey-planner__card__timeTitle">mins</h1>
+                        </div>
+                    </div>
+                    <div class="journey-planner__card__right">
+                        <div class="journey-planner__card__right__travelTime">
+                            <h2
+                                    class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                            >
+                                Travel time:
+                                <span
+                                        class="journey-planner__card__timeNumber"
+                                        id="jp-travel-time"
+                                >33</span
+                                >
+                                minutes
+                            </h2>
+                        </div>
+                        <div
+                                class="journey-planner__card__right__descriptionContainer"
+                                id="route-descriptions"
+                        ></div>
+                    </div>
+
+                </div>
+                <div class="more-route-info">
+                    <div class="more-route-info__locationDiv">
+                        <div class="more-route-info__icon">
+                            <ion-icon class="more-route-info__icon__internal" name="walk"></ion-icon>
+                        </div>
+                        <div class="more-route-info__distanceText">
+                            <h2><span class="type-span">Walk</span> 250 metres</h2>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
-            <div class="journey-planner__card__right">
-              <div class="journey-planner__card__right__travelTime">
-                <h2
-                  class="journey-planner__card__title journey-planner__card__title--departingTitle"
-                >
-                  Travel time:
-                  <span
-                    class="journey-planner__card__timeNumber"
-                    id="jp-travel-time"
-                    >33</span
-                  >
-                  minutes
-                </h2>
-              </div>
-              <div
-                class="journey-planner__card__right__descriptionContainer"
-                id="route-descriptions"
-              ></div>
-            </div>
-          
         </div>
-       <div class="more-route-info">
-           <div class="more-route-info__locationDiv">
-               <div class="more-route-info__icon">
-                <ion-icon class="more-route-info__icon__internal" name="walk"></ion-icon>
-               </div>
-               <div class="more-route-info__distanceText">
-                   <h2><span class="type-span">Walk</span> 250 metres</h2>
-               </div>
-               
-           </div>
-           
-       </div>
-      </div>
+        `
     </div>
     `
   </div>  -->

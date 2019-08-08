@@ -6,7 +6,7 @@ import {
     toggle_heart,
     set_height,
 } from "./stops";
-import {markerListener} from "./google_maps";
+import {markerListener, initialLocation, directionsService, FindMyRoutes} from "./google_maps";
 import {
     detail2,
     get_bus_stop_list,
@@ -160,7 +160,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
                 );
                 elem.addEventListener("click", () => {
                     get_bus_real_time_info(elem.dataset.item);
-                    window.setTimeout(detail, 800);
+                    detail();
                 });
             } else {
                 document
@@ -237,7 +237,7 @@ export const create_favourite_route_card = (route_id, tab_name) => {
             );
             elem.addEventListener("click", () => {
                 get_bus_stop_list(route_id, "in");
-                window.setTimeout(detail2, 800);
+                detail2();
             });
         } else {
             document
@@ -255,6 +255,12 @@ export const create_favourite_route_card = (route_id, tab_name) => {
                     route_save_favourites(route_id);
                     route_toggle_heart();
                 });
+            document.querySelector("#routes__content__card__" + route_id).children[0].children[1].addEventListener('click', ()=>{
+                switch_to_route_tab(route_id);
+            });
+            document.querySelector("#routes__content__card__" + route_id).children[0].children[0].children[0].addEventListener('click', ()=>{
+                switch_to_route_tab(route_id);
+            })
         }
     });
 };
@@ -266,7 +272,7 @@ document
         update_journey_list();
     });
 
-const update_stop_list = () => {
+export const update_stop_list = () => {
     let stop_arr = JSON.parse(localStorage.getItem("stops"));
     let elem = document.getElementById("favourite_stops__cards__in__favo");
     if (elem) {
@@ -279,9 +285,11 @@ const update_stop_list = () => {
         for (let id of stop_arr) {
             create_favourite_stop_card(id, "favo");
         }
+    } else {
+        $("#favourite_stops__cards__in__favo").append(empty_msg('stop'));
     }
 };
-const update_route_list = () => {
+export const update_route_list = () => {
     let route_arr = JSON.parse(localStorage.getItem("routes"));
     let elem = document.getElementById("favourite_routes__cards__in__favo");
     if (elem) {
@@ -294,6 +302,8 @@ const update_route_list = () => {
         for (let id of route_arr) {
             create_favourite_route_card(id, "favo");
         }
+    } else {
+        $("#favourite_routes__cards__in__favo").append(empty_msg('route'));
     }
 };
 
@@ -331,21 +341,40 @@ async function removeFavourite(id) {
 
 }
 
-savedJourneysContainer.addEventListener('click', e => {
-    removeFavourite(e.target.id)
-})
+// savedJourneysContainer.addEventListener('click', e => {
+//     console.log(e.target.id);
+//     removeFavourite(e.target.id)
+// })
+
 
 const update_journey_list = () => {
     journeyList = JSON.parse(localStorage.getItem("journeys"));
 
-
-    if (journeyList) {
-        console.log(journeyList);
+    if (journeyList && Object.keys(journeyList).length !== 0) {
         savedJourneysContainer.innerHTML = "";
-        let journeys = Object.keys(journeyList)
+        let journeys = Object.keys(journeyList);
         journeys.forEach(journey => {
             savedJourneysContainer.innerHTML += journeyList[journey].nodeHTML;
         });
+        let addrs = document.querySelectorAll("#journey__content__card__address");
+        for (let addr of addrs) {
+            addr.addEventListener('click', () => {
+                fromInput.value = addr.offsetParent.dataset.from;
+                toInput.value = addr.offsetParent.dataset.to;
+                document.querySelector("ion-tabs").select("journey");
+                FindMyRoutes(initialLocation, directionsService);
+            })
+        }
+        const heart_icons = document.querySelectorAll('.journey__content__card__icon2');
+        for (let heartIcon of heart_icons) {
+            let id = heartIcon.children[0].id;
+            heartIcon.addEventListener('click', () => {
+                removeFavourite(id);
+            });
+        }
+
+    } else {
+        savedJourneysContainer.innerHTML = empty_msg('journey');
     }
 };
 
@@ -385,13 +414,13 @@ class SavedJourney {
     constructor(from, to) {
         this.from = from;
         this.to = to;
-        this.nodeHTML = `<ion-card class="journey__content__ card">
+        this.nodeHTML = `<ion-card class="journey__content__card" data-from = "${from}" data-to="${to}">
         <ion-grid no-padding>
             <ion-row class="journey__content__card__row">
                 <ion-col size="2" class="journey__content__card__icon1" align-self-center>
                     <div><i class="fas fa-circle"></i></div>
                 </ion-col>
-                <ion-col size="8" class="journey__content__card__start" align-self-center>
+                <ion-col size="8" class="journey__content__card__start" id="journey__content__card__address" align-self-center>
                     <span>${from}</span>
                 </ion-col>
                 <ion-col size="2" class="journey__content__card__icon2" align-self-center>
@@ -399,7 +428,7 @@ class SavedJourney {
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col size="2" class="ion-no-padding">
+                <ion-col size="2" class="ion-no-padding" id="journey__content__card__address">
                     <div class="journey__content__card__to">.<br>.<br>.<br>.<br>.<br>.<br>.<br>
                     </div>
                 </ion-col>
@@ -409,7 +438,7 @@ class SavedJourney {
                     <div class="journey__content__card__icon3"><i
                             class="fas fa-map-marker-alt"></i></div>
                 </ion-col>
-                <ion-col size="9" class="journey__content__card__end">
+                <ion-col size="9" class="journey__content__card__end" id="journey__content__card__address">
                     <span>${to}</span>
                 </ion-col>
             </ion-row>
@@ -494,13 +523,86 @@ export function checkFavouriteJourneys() {
 
     for (let key of journeyKeys) {
         if (currentJourneysInStorage[key].from == fromInput.value && currentJourneysInStorage[key].to == toInput.value) {
-            console.log("YES");
+
             saveJourneyButton.children[0].setAttribute("name", "heart");
             return;
         } else {
-            console.log("no")
+
             saveJourneyButton.children[0].setAttribute("name", "heart-empty");
         }
     }
 
 }
+
+
+export const empty_msg = (tab) => {
+    return '<ion-grid class="empty_favourite_wrapper">\n' +
+        '                    <ion-row>\n' +
+        '                    <ion-col size="5" class="empty_favourite_div">\n' +
+        '                    <ion-icon name="heart-empty" class="empty_favourite_icon"></ion-icon>\n' +
+        '                    </ion-col>    \n' +
+        '                    </ion-row>\n' +
+        '                    <ion-row><ion-col size="12" class="empty_favourite_title">\n' +
+        '                    <span>You haven\'t added any ' + tab + ' yet...</span>\n' +
+        '                    </ion-col>\n' +
+        '                    </ion-row>\n' +
+        '                    <ion-row>\n' +
+        '                    <ion-col size="10" class="empty_favourite_subtitle">\n' +
+        '                    <span>Favourite a station by tapping the heart on top right corner of ' + tab + ' page.</span>\n' +
+        '                    </ion-col>\n' +
+        '                    </ion-row>\n' +
+        '                    </ion-grid>'
+};
+
+
+export const switch_to_route_tab = (route_id) => {
+  document.querySelector("ion-tabs").getSelected().then(function(current_tab) {
+      if (current_tab === "routes") {
+        document
+          .querySelector("ion-tabs")
+          .select("none")
+          .then(() => {
+            document.querySelector("ion-tabs").select("routes");
+          });
+      } else {
+        document.querySelector("ion-tabs").select("routes");
+      }
+      const routes_container_position = $("#routes-container").css("margin-left");
+      if (routes_container_position === "0px") {
+        detail2();
+      }
+      get_bus_stop_list(route_id, "in");
+      change_btn2();
+    });
+};
+
+
+const change_btn2 = () => {
+  document.getElementById("routes__toolbar__back-btn").innerText = "";
+  document.getElementById("routes__show-on-map-btn__name").style.display =
+    "none";
+  $("#routes__toolbar__back-btn").append(
+    "<ion-icon name='md-close' size='medium'></ion-icon>"
+  );
+  document
+    .getElementById("routes__toolbar__back-btn")
+    .removeEventListener("click", detail2);
+  document
+    .getElementById("routes__toolbar__back-btn")
+    .addEventListener("click", close_btn2);
+};
+
+const close_btn2 = () => {
+  bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
+  document.getElementById("routes__toolbar__back-btn").innerText = "";
+  $("#routes__toolbar__back-btn").append(
+    "<ion-icon name='arrow-back'></ion-icon>Back"
+  );
+  document.getElementById("routes__show-on-map-btn__name").style.display = "";
+  document
+    .getElementById("routes__toolbar__back-btn")
+    .removeEventListener("click", close_btn2);
+  document
+    .getElementById("routes__toolbar__back-btn")
+    .addEventListener("click", detail2);
+};

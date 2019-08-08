@@ -1,7 +1,8 @@
 import {map, markers} from "./google_maps";
-import {create_favourite_stop_card} from "./favourites";
+import {create_favourite_stop_card, empty_msg, update_stop_list} from "./favourites";
 import {height} from './nodes'
 import {toast_route_add, toast_route_remove} from "./routes";
+import {bottomSwiper} from "./touches";
 
 
 export const set_height = () => {
@@ -18,12 +19,23 @@ $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
 
     document.getElementById('typeahead_stop').blur();
     get_bus_real_time_info(suggestion);
-    window.setTimeout(detail, 800);
+    detail();
 });
 
 
 export const get_bus_real_time_info = (stop_id) => {
     document.getElementById('stops__show-on-map-btn').dataset.id = stop_id;
+    document.getElementById("slots").innerHTML = `
+                    <div class="loader__wrapper" id="bus_loader">
+                        <h3>Please wait...</h3><br>
+                        <div>
+                            <img src="/static/images/bus.png" alt="" class="loader__bus">
+                        </div>
+                        <div class="loader__wrapper2">
+                            <img src="/static/images/road.png" alt="" class="loader__road"/>
+                        </div>
+                    </div>
+    `;
     fetch('real_time_info_for_bus_stop?stop_id=' + stop_id, {method: 'get'})
         .then(function (response) {
             return response.json();
@@ -152,12 +164,18 @@ const change_marker_icon = (stop_marker) => {
 };
 const show_on_map_btn = document.getElementById("stops__show-on-map-btn");
 const stops_show_on_map = () => {
-    const draw_height = $(".drawer__container").css('height');
     let stop_marker = markers["" + show_on_map_btn.dataset.id];
-    if (draw_height === "290px") {
+    if (bottomSwiper.currentState === 4) {
         change_marker_icon(stop_marker);
-        drawer_default_height();
+        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+        document.getElementById("stops__show-on-map-btn__name").innerText = "";
+        document.getElementById("routes__show-on-map-btn__name").innerText = "";
+        $("#stops__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        document.getElementById("stops__toolbar__back-btn").style.display = '';
+        document.getElementById("routes__toolbar__back-btn").style.display = '';
     } else {
+        bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         let stop_position = stop_marker.getPosition();
         map.setCenter({lat: stop_position.lat(), lng: stop_position.lng()});
         map.setZoom(18);
@@ -165,7 +183,7 @@ const stops_show_on_map = () => {
         document.getElementById("stops__show-on-map-btn__name").innerText = "";
         document.getElementById("stops__toolbar__back-btn").style.display = 'none';
         $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
-        $('.drawer__container').animate({'height': 290}, 200, 'linear');
+        // $('.drawer__container').animate({'height': 290}, 200, 'linear');
     }
 };
 
@@ -226,8 +244,9 @@ export function confirm_box(stop_id) {
                 handler: () => {
                     remove_favourites(stop_id);
                     toggle_heart();
-                    hide_card(stop_id);
+                    // hide_card(stop_id);
                     toast_route_remove();
+                    update_stop_list();
                 }
             }
         ]
@@ -289,6 +308,9 @@ document.getElementById("tab-button-stops").addEventListener('click', () => {
 const update_favourites_stops = () => {
     let stop_arr = JSON.parse(localStorage.getItem("stops"));
     let elem = document.getElementById("favourite_stops__cards__in__stop");
+    if (document.querySelector('.stops__depart_label').style.display === 'none') {
+        document.querySelector('.stops__depart_label').style.display = '';
+    }
     if (elem) {
         elem.remove();
         $('#stops__content__wrapper').append('<div id="favourite_stops__cards__in__stop"></div>');
@@ -297,6 +319,9 @@ const update_favourites_stops = () => {
         for (let id of stop_arr) {
             create_favourite_stop_card(id, "stop");
         }
+    } else {
+        document.querySelector('.stops__depart_label').style.display = 'none';
+        $("#favourite_stops__cards__in__stop").append(empty_msg('stop'));
     }
 };
 
@@ -306,3 +331,9 @@ const hide_card = (stop_id) => {
         card.style.display = 'none';
     }
 };
+
+document.getElementById("realtime_stop_refresher").addEventListener('click', () => {
+    let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
+    console.log(stop_id);
+    get_bus_real_time_info(stop_id);
+});

@@ -20,20 +20,9 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get(self, request):
-
         return render(request, self.template_name,
-                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY })
-
-    def post(self, request):
-        if request.method == "POST":
-            form = JourneyPlannerForm(request.POST)
-            if form.is_valid():
-                start = form.cleaned_data['start']
-                end = form.cleaned_data['end']
-                time = form.cleaned_data['time']
-                print(form.cleaned_data)
-
-            return HttpResponseRedirect('')
+                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY,
+                       "is_mobile": request.user_agent.is_mobile})
 
 
 def test_routing(request):
@@ -145,6 +134,7 @@ def get_server_route(request):
 
 def get_sights_info(request):
     category = request.GET['category']
+    offset = int(request.GET['offset'])
     url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + MAP_KEY + "&query="
     if category == "Sightseeing":
         url += "Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z/data=!3m1!4b1"
@@ -160,17 +150,12 @@ def get_sights_info(request):
         url += "shopping+dublin/@53.3455021,-6.2690574,16z/data=!3m1!4b1"
     infos = requests.get(url=url).json()['results']
     points = []
-    count = 1
-    for i in infos:
-        if count > 10:
-            break
+    for i in infos[offset:5 + offset]:
         try:
             info = clean_resp(i)
             points.append(info)
         except KeyError as e:
             print(e)
-        count += 1
-
     return JsonResponse({"points": points})
 
 
