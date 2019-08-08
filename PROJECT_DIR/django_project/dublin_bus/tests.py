@@ -475,7 +475,7 @@ class TestRoutePrediction(TestCase):
         weekday = 1
         school_hol = 0
         self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
-                school_hol, weekday, rain, temp, month), 2465)
+                school_hol, weekday, rain, temp, month), 2480)
 
 class TesParseWeatherForecast(TestCase):
     """Test cases for the parse_weather_forecast function."""
