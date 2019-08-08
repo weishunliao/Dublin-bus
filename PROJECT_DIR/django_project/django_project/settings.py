@@ -95,8 +95,10 @@ DATABASES = {
         'HOST': 'localhost',
         # 'HOST': '127.0.0.1'
 
-        # UCD - 137.43.49.50 is for development
+        # DEVELOPMENT - UCD
         # 'HOST': '137.43.49.50'
+        # DEVELOPMENT - HOME
+        # 'HOST': '127.0.0.1'
     }
 
 }
