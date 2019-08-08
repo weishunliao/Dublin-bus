@@ -1,6 +1,8 @@
 import {markers, map, bus_route_drawer} from "./google_maps";
-import {create_favourite_route_card} from "./favourites";
-import {controller} from "./stops";
+import {create_favourite_route_card, empty_msg, update_route_list} from "./favourites";
+import {controller_confirm} from "./stops";
+import {controller} from "./nodes";
+import {bottomSwiper} from "./touches";
 
 
 let route_id;
@@ -16,9 +18,8 @@ $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     document.getElementById("direction_switch").checked = false;
     get_bus_stop_list(route_id, "in");
     // document.getElementById("").innerText = suggestion;
-    window.setTimeout(detail2, 800);
+    detail2();
 });
-
 export const get_bus_stop_list = (id, direction) => {
     route_id = id;
     head_sign = direction;
@@ -33,38 +34,56 @@ export const get_bus_stop_list = (id, direction) => {
             }
         })
         .then(function (data) {
-            return display_stops(data['stops_list'], route_id);
+            document.getElementById('timeline-wrapper__content__box').innerHTML =
+                '<div class="loader__wrapper" id="bus_loader">\n' +
+                '    <h3>Please wait...</h3><br>\n' +
+                '    <div>\n' +
+                '        <img src="/static/images/bus.png" alt="" class="loader__bus">\n' +
+                '    </div>\n' +
+                '    <div class="loader__wrapper2">\n' +
+                '        <img src="/static/images/road.png" alt="" class="loader__road"/>\n' +
+                '    </div>\n' +
+                '</div>';
+            let stops = data['stops_list'];
+            stop_list = [];
+            realtime_bus_marker = [];
+            for (let i = 0; i < stops.length; i++) {
+                stop_list.push(parseInt(stops[i][0]));
+                update_real_time(i, stops[i][0], route_id);
+            }
+            document.getElementById("routes__content__card__route-id").innerText = route_id;
+            setTimeout(() => {
+                display_stops(stops, route_id);
+            }, 5000);
+            // display_stops(stops, route_id);
         }).then(function (stops) {
-        stop_list = [];
-        realtime_bus_marker = [];
-        for (let i = 0; i < stops.length; i++) {
-            stop_list.push(parseInt(stops[i][0]));
-            update_real_time(i, stops[i][0], route_id);
-        }
+
     }).catch(function (error) {
         return error;
     })
 };
 
-const timeline__content = document.getElementById("timeline__content");
-const display_stops = (stops, route_id) => {
-    for (let i of document.querySelectorAll("li")) {
-        i.remove();
-    }
 
-    for (let value of stops) {
-        let li = document.createElement("li");
-        let h3 = document.createElement("h3");
-        h3.innerHTML = "<h6 class='stop_id'>" + value[0] + "<span class='stop_id__span'>" + value[2] + " min</span></h6>" + value[1];
-        h3.className = "timeline-wrapper__content__h3";
-        li.append(h3);
-        li.className = "timeline-wrapper__content__event";
-        li.id = "timeline-wrapper__content-li";
-        timeline__content.appendChild(li);
+const display_stops = (stops, route_id) => {
+    document.getElementById('timeline-wrapper__content__box').innerHTML = '<ul class="timeline-wrapper__content" id="timeline__content"></ul>';
+    let timeline__content = document.getElementById("timeline__content");
+    if (stops.length === 0) {
+        document.getElementById('timeline-wrapper__content__box').innerHTML = "<h1 id='empty_stop_list'>This route is currently out of service.</h1>";
+        document.getElementById("routes__content__card__direction").innerText = "Towards";
+    } else {
+        for (let value of stops) {
+            let li = document.createElement("li");
+            let h3 = document.createElement("h3");
+            h3.innerHTML = "<h6 class='stop_id'>" + value[0] + "<span class='stop_id__span'>" + value[2] + " min</span></h6>" + value[1];
+            h3.className = "timeline-wrapper__content__h3";
+            li.append(h3);
+            li.className = "timeline-wrapper__content__event";
+            li.id = "timeline-wrapper__content-li";
+            timeline__content.appendChild(li);
+        }
+        let split_index = stops[0][3].indexOf("-");
+        document.getElementById("routes__content__card__direction").innerText = "Towards" + stops[0][3].substring(split_index + 1);
     }
-    let split_index = stops[0][3].indexOf("-");
-    document.getElementById("routes__content__card__direction").innerText = "Towards" + stops[0][3].substring(split_index + 1);
-    document.getElementById("routes__content__card__route-id").innerText = route_id;
     if (is_favourite(route_id)) {
         route_heart_empty.style.display = 'none';
         route_heart_solid.style.display = '';
@@ -94,14 +113,14 @@ const update_real_time = (num, stop_id, route_id) => {
             return data.json();
 
         }).then(function (data) {
-        let elem = document.querySelectorAll("li")[num];
-        if (data['time'] === 'Due') {
-            display_bus_arrival_time(num);
-            realtime_bus_marker.push(stop_id);
-            elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon class="bus-icon" name="md-bus" size="large"></ion-icon>';
-        } else {
-            elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ';
-        }
+        // let elem = document.querySelectorAll("li")[num];
+        // if (data['time'] === 'Due') {
+        //     display_bus_arrival_time(num);
+        //     realtime_bus_marker.push(stop_id);
+        //     elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon class="bus-icon" name="md-bus" size="large"></ion-icon>';
+        // } else {
+        //     elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ';
+        // }
     })
         .catch(function (error) {
             console.log(error)
@@ -137,7 +156,7 @@ for (let card of cards) {
     card.addEventListener('click', function () {
         route_id = this.dataset.id;
         get_bus_stop_list(this.dataset.id, this.dataset.direction);
-        window.setTimeout(detail2, 800);
+        detail2();
     });
 }
 
@@ -200,14 +219,15 @@ const blinker = () => {
 
 const route_show_on_map = () => {
     const draw_height = $(".drawer__container").css('height');
-    if (draw_height === "290px") {
+    if (bottomSwiper.currentState === 4) {
+        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         bus_route_drawer.setMap(null);
         clear_bus_marker_on_map();
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
-        $('.drawer__container').animate({'height': window.innerHeight * 0.95}, 200, 'linear');
     } else {
+        bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         snap_to_road();
         draw_bus_markers_on_route();
         let mid_stop = stop_list[Math.floor(stop_list.length / 2)];
@@ -217,7 +237,6 @@ const route_show_on_map = () => {
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
         document.getElementById("routes__toolbar__back-btn").style.display = 'none';
         $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
-        $('.drawer__container').animate({'height': 290}, 200, 'linear');
     }
 };
 
@@ -244,6 +263,7 @@ route_heart_solid.addEventListener('click', () => {
 });
 
 route_heart_empty.addEventListener('click', () => {
+    toast_route_add();
     let route_id = document.getElementById("routes__content__card__route-id").innerText;
     route_save_favourites(route_id);
     route_toggle_heart();
@@ -251,9 +271,9 @@ route_heart_empty.addEventListener('click', () => {
 
 
 export function route_confirm_box(route_id) {
-    controller.create({
-        header: 'CONFIRM!',
-        message: 'Do you want to <strong>remove</strong> this route?',
+    controller_confirm.create({
+        header: 'DELETE ROUTE?',
+        message: 'Do you want to <strong>remove</strong> this route from your favourite?',
         buttons: [
             {
                 text: 'Cancel',
@@ -264,7 +284,9 @@ export function route_confirm_box(route_id) {
                 handler: () => {
                     route_remove_favourites(route_id);
                     route_toggle_heart();
-                    update_hide_card(route_id);
+                    // update_hide_card(route_id);
+                    toast_route_remove();
+                    update_route_list();
                 }
             }
         ]
@@ -326,6 +348,9 @@ document.getElementById("tab-button-routes").addEventListener('click', () => {
 const update_favourites_routes = () => {
     let route_arr = JSON.parse(localStorage.getItem("routes"));
     let elem = document.getElementById("favourite_routes__cards__in__route");
+    if (document.querySelector('.routes__favorite_label').style.display === 'none') {
+        document.querySelector('.routes__favorite_label').style.display = '';
+    }
     if (elem) {
         elem.remove();
         $('#routes__content__wrapper').append('<div id="favourite_routes__cards__in__route"></div>');
@@ -334,6 +359,9 @@ const update_favourites_routes = () => {
         for (let id of route_arr) {
             create_favourite_route_card(id, "route");
         }
+    } else {
+        document.querySelector('.routes__favorite_label').style.display = 'none';
+        $("#favourite_routes__cards__in__route").append(empty_msg('route'));
     }
 };
 
@@ -342,4 +370,28 @@ const update_hide_card = (route_id) => {
     for (let card of cards) {
         card.style.display = 'none';
     }
+};
+
+export const toast_route_add = () => {
+    controller.create({
+        color: 'primary',
+        duration: 1500,
+        message: 'Adding to favourite!',
+        showCloseButton: true,
+        position: 'top',
+    }).then(toast => {
+        toast.present();
+    });
+};
+
+export const toast_route_remove = () => {
+    controller.create({
+        color: 'primary',
+        duration: 1500,
+        message: 'Removed from favourite.',
+        showCloseButton: true,
+        position: 'top',
+    }).then(toast => {
+        toast.present();
+    });
 };

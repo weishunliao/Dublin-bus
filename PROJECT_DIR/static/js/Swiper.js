@@ -1,4 +1,5 @@
 import { cardShowing } from './nodes';
+import {bottomSwiper} from "./touches";
 
 window.requestAnimFrame = (function() {
     return (
@@ -33,6 +34,7 @@ window.requestAnimFrame = (function() {
       this.IN_STATE = 1;
       this.OUT_STATE = 2;
       this.MID_STATE = 3;
+      this.LOWERED_STATE = 4;
       this.differenceInY = 0;
       this.rafPending = false;
       //   * where the touch happens
@@ -40,6 +42,7 @@ window.requestAnimFrame = (function() {
       // * where the last touch happened
       this.lastTouchPos = 0;
       this.open = true;
+      this.jp_active = false;
       this.scrollThreshold;
       this.itemHeight = element.offsetHeight;
       this.tabs = $("ion-tab-button");
@@ -47,6 +50,7 @@ window.requestAnimFrame = (function() {
       this.inTransformVal = element.offsetHeight;
       this.outTransformVal = element.offsetHeight * 0;
       this.midVal = element.offsetHeight * 0.09;
+      this.loweredVal = element.offsetHeight - 210;
       this.startTransform = this.inTransformVal;
   
       //   * where the bottom of the div is currently located
@@ -125,15 +129,19 @@ window.requestAnimFrame = (function() {
       let n = null;
   
       if (Math.abs(differenceInY) > this.slopValue) {
-        if (this.currentState === this.IN_STATE) {
+        if (this.currentState === this.IN_STATE || this.currentState === this.LOWERED_STATE) {
           if (differenceInY < 0) {
-            newState = this.IN_STATE;
+            newState = this.currentState;
           } else {
             newState = this.OUT_STATE;
           }
         } else {
           if (this.currentState === this.OUT_STATE && differenceInY < 0) {
-            newState = this.IN_STATE;
+              if (this.jp_active){
+                newState = this.LOWERED_STATE;
+              } else {
+                  newState = this.IN_STATE;
+              }
           } else if (this.currentState === this.OUT_STATE && differenceInY > 0) {
             newState = this.OUT_STATE;
           }
@@ -169,7 +177,8 @@ window.requestAnimFrame = (function() {
           break;
         case this.MID_STATE:
             this.startTransform = this.midVal;
-
+        case this.LOWERED_STATE:
+            this.startTransform = this.loweredVal;
       }
   
       this.transformStyle =

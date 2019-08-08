@@ -57,9 +57,11 @@
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.17);
     border-radius: 10px;
     color: $db_blue;
+
     &__row {
       padding-top: 5px;
     }
+
     &__icon1 {
       font-size: 1.5rem;
       text-align: center;
@@ -71,7 +73,7 @@
       font-size: 25px;
       text-align: end;
       color: $db_blue;
-      padding: 1rem 1rem 0 0 ;
+      padding: 1rem 1rem 0 0;
     }
 
     &__icon3 {
@@ -103,9 +105,50 @@
 
 
 .favourite-journeys-container {
-    -webkit-overflow-scrolling: touch;
-    overflow: scroll;
-    width: 100%;
-    height: 10rem;
-    
+  -webkit-overflow-scrolling: touch;
+  overflow: scroll;
+  width: 100%;
+  height: 10rem;
+  margin-top: 1.5rem;
+}
+
+#favourite_stops__content__wrapper {
+  margin-top: 16px;
+  -webkit-overflow-scrolling: touch;
+  overflow: scroll;
+  width: 100%;
+}
+
+#favourite_routes__content__wrapper {
+  margin-top: 16px;
+  -webkit-overflow-scrolling: touch;
+  overflow: scroll;
+  width: 100%;
+}
+
+.empty_favourite_wrapper {
+  margin-top: 2rem;
+}
+.empty_favourite_div {
+  margin: 0 auto;
+  text-align: center
+}
+
+.empty_favourite_icon {
+  font-size: 25px;
+  color:$db_blue;
+}
+
+.empty_favourite_title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2.2rem;
+  color:$db_blue;
+}
+
+.empty_favourite_subtitle {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.5rem;
+  color:darkslategrey;
 }
