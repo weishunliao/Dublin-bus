@@ -1,5 +1,5 @@
 import {map, markers} from "./google_maps";
-import {create_favourite_stop_card} from "./favourites";
+import {create_favourite_stop_card, empty_msg, update_stop_list} from "./favourites";
 import {height} from './nodes'
 import {toast_route_add, toast_route_remove} from "./routes";
 import {bottomSwiper} from "./touches";
@@ -244,8 +244,9 @@ export function confirm_box(stop_id) {
                 handler: () => {
                     remove_favourites(stop_id);
                     toggle_heart();
-                    hide_card(stop_id);
+                    // hide_card(stop_id);
                     toast_route_remove();
+                    update_stop_list();
                 }
             }
         ]
@@ -307,6 +308,9 @@ document.getElementById("tab-button-stops").addEventListener('click', () => {
 const update_favourites_stops = () => {
     let stop_arr = JSON.parse(localStorage.getItem("stops"));
     let elem = document.getElementById("favourite_stops__cards__in__stop");
+    if (document.querySelector('.stops__depart_label').style.display === 'none') {
+        document.querySelector('.stops__depart_label').style.display = '';
+    }
     if (elem) {
         elem.remove();
         $('#stops__content__wrapper').append('<div id="favourite_stops__cards__in__stop"></div>');
@@ -315,6 +319,9 @@ const update_favourites_stops = () => {
         for (let id of stop_arr) {
             create_favourite_stop_card(id, "stop");
         }
+    } else {
+        document.querySelector('.stops__depart_label').style.display = 'none';
+        $("#favourite_stops__cards__in__stop").append(empty_msg('stop'));
     }
 };
 

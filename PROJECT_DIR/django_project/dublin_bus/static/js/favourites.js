@@ -266,7 +266,7 @@ document
         update_journey_list();
     });
 
-const update_stop_list = () => {
+export const update_stop_list = () => {
     let stop_arr = JSON.parse(localStorage.getItem("stops"));
     let elem = document.getElementById("favourite_stops__cards__in__favo");
     if (elem) {
@@ -279,9 +279,11 @@ const update_stop_list = () => {
         for (let id of stop_arr) {
             create_favourite_stop_card(id, "favo");
         }
+    } else {
+        $("#favourite_stops__cards__in__favo").append(empty_msg('stop'));
     }
 };
-const update_route_list = () => {
+export const update_route_list = () => {
     let route_arr = JSON.parse(localStorage.getItem("routes"));
     let elem = document.getElementById("favourite_routes__cards__in__favo");
     if (elem) {
@@ -294,6 +296,8 @@ const update_route_list = () => {
         for (let id of route_arr) {
             create_favourite_route_card(id, "favo");
         }
+    } else {
+        $("#favourite_routes__cards__in__favo").append(empty_msg('route'));
     }
 };
 
@@ -340,11 +344,9 @@ async function removeFavourite(id) {
 const update_journey_list = () => {
     journeyList = JSON.parse(localStorage.getItem("journeys"));
 
-
-    if (journeyList) {
-
+    if (journeyList && Object.keys(journeyList).length !== 0) {
         savedJourneysContainer.innerHTML = "";
-        let journeys = Object.keys(journeyList)
+        let journeys = Object.keys(journeyList);
         journeys.forEach(journey => {
             savedJourneysContainer.innerHTML += journeyList[journey].nodeHTML;
         });
@@ -365,6 +367,8 @@ const update_journey_list = () => {
             });
         }
 
+    } else {
+        savedJourneysContainer.innerHTML = empty_msg('journey');
     }
 };
 
@@ -513,13 +517,33 @@ export function checkFavouriteJourneys() {
 
     for (let key of journeyKeys) {
         if (currentJourneysInStorage[key].from == fromInput.value && currentJourneysInStorage[key].to == toInput.value) {
-            console.log("YES");
+
             saveJourneyButton.children[0].setAttribute("name", "heart");
             return;
         } else {
-            console.log("no")
+
             saveJourneyButton.children[0].setAttribute("name", "heart-empty");
         }
     }
 
 }
+
+
+export const empty_msg = (tab) => {
+    return '<ion-grid class="empty_favourite_wrapper">\n' +
+        '                    <ion-row>\n' +
+        '                    <ion-col size="5" class="empty_favourite_div">\n' +
+        '                    <ion-icon name="heart-empty" class="empty_favourite_icon"></ion-icon>\n' +
+        '                    </ion-col>    \n' +
+        '                    </ion-row>\n' +
+        '                    <ion-row><ion-col size="12" class="empty_favourite_title">\n' +
+        '                    <span>You haven\'t added any ' + tab + ' yet...</span>\n' +
+        '                    </ion-col>\n' +
+        '                    </ion-row>\n' +
+        '                    <ion-row>\n' +
+        '                    <ion-col size="10" class="empty_favourite_subtitle">\n' +
+        '                    <span>Favourite a station by tapping the heart on top right corner of ' + tab + ' page.</span>\n' +
+        '                    </ion-col>\n' +
+        '                    </ion-row>\n' +
+        '                    </ion-grid>'
+};

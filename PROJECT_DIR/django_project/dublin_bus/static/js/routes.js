@@ -1,5 +1,5 @@
 import {markers, map, bus_route_drawer} from "./google_maps";
-import {create_favourite_route_card} from "./favourites";
+import {create_favourite_route_card, empty_msg, update_route_list} from "./favourites";
 import {controller_confirm} from "./stops";
 import {controller} from "./nodes";
 import {bottomSwiper} from "./touches";
@@ -284,8 +284,9 @@ export function route_confirm_box(route_id) {
                 handler: () => {
                     route_remove_favourites(route_id);
                     route_toggle_heart();
-                    update_hide_card(route_id);
+                    // update_hide_card(route_id);
                     toast_route_remove();
+                    update_route_list();
                 }
             }
         ]
@@ -347,6 +348,9 @@ document.getElementById("tab-button-routes").addEventListener('click', () => {
 const update_favourites_routes = () => {
     let route_arr = JSON.parse(localStorage.getItem("routes"));
     let elem = document.getElementById("favourite_routes__cards__in__route");
+    if (document.querySelector('.routes__favorite_label').style.display === 'none') {
+        document.querySelector('.routes__favorite_label').style.display = '';
+    }
     if (elem) {
         elem.remove();
         $('#routes__content__wrapper').append('<div id="favourite_routes__cards__in__route"></div>');
@@ -355,6 +359,9 @@ const update_favourites_routes = () => {
         for (let id of route_arr) {
             create_favourite_route_card(id, "route");
         }
+    } else {
+        document.querySelector('.routes__favorite_label').style.display = 'none';
+        $("#favourite_routes__cards__in__route").append(empty_msg('route'));
     }
 };
 

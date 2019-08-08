@@ -37,8 +37,7 @@ const get_sights_info = (category) => {
                     if (document.getElementById("more")) {
                         document.getElementById("more").remove();
                     }
-                    wrapper.append(`<div id="more" class="more"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div>
-                                </div><div></div><div></div></div></div>`);
+                    wrapper.append(`<div id="more" class="more"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>`);
                     get_sights_info(category);
                 })
             }
@@ -124,7 +123,11 @@ export const get_sights_info_search = (place_id) => {
             }
             let point = data['point'];
             create_card(point);
-        }).catch((e) => {
+        }).then(() => {
+        if (document.getElementById("more")) {
+            document.getElementById("more").remove();
+        }
+    }).catch((e) => {
         console.log(e);
     })
 };
