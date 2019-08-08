@@ -432,7 +432,6 @@ export const markerListener = stopID => {
       }
       get_bus_real_time_info(stopID);
       change_btn();
-      window.setTimeout(drawer_default_height, 500);
     });
 };
 
