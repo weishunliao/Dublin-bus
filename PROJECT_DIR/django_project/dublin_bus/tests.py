@@ -7,10 +7,98 @@ from dublin_bus.functions import get_opening_hour, clean_resp
 class TestLoadModel(TestCase):
     """Test cases for the load_model function."""
 
-    def test_load_model_success(self):
+    def test_load_model_success_aug(self):
         """Test to ensure that a model is loaded correctly."""
         try:
             month = 8   
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_sep(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 9
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_oct(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 10
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_nov(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 11
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_dec(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 12
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_jan(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 1
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_feb(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 2
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_mar(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 3
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_apr(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 4
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_may(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 5
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_jun(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 6
+            functions.load_model(month)
+        except Exception:
+            self.fail("load_model() raised an exception unexpectedly!")
+
+    def test_load_model_success_jul(self):
+        """Test to ensure that a model is loaded correctly."""
+        try:
+            month = 7
             functions.load_model(month)
         except Exception:
             self.fail("load_model() raised an exception unexpectedly!")
@@ -48,16 +136,125 @@ class TestCreateHourFeatureRef(TestCase):
 class TestCreateSegmentRef(TestCase):
     """Test cases for the create_segment_ref function."""
 
-    def test_create_segment_ref_mean(self):
+    def test_create_segment_ref_mean_aug(self):
         """Test for the ouput of the create_segment_ref function."""
         segment_ref = functions.create_segment_ref(8)
         self.assertEqual(segment_ref["1279_1282"]["mean"], 151.0)
 
-    def test_create_segment_ref_std(self):
+    def test_create_segment_ref_std_aug(self):
         """Test for the ouput of the create_segment_ref function."""
         segment_ref = functions.create_segment_ref(8)
         self.assertEqual(segment_ref["1279_1282"]["std"], 54.0)
+        
+    def test_create_segment_ref_mean_sep(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(9)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 147.0)
 
+    def test_create_segment_ref_std_sep(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(9)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 42.0)
+
+    def test_create_segment_ref_mean_oct(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(10)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 145.0)
+
+    def test_create_segment_ref_std_oct(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(10)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 39.0)
+
+    def test_create_segment_ref_mean_nov(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(11)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 148.0)
+
+    def test_create_segment_ref_std_nov(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(11)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 42.0)
+
+    def test_create_segment_ref_mean_dec(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(12)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 147.0)
+
+    def test_create_segment_ref_std_dec(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(12)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 47.0)
+
+    def test_create_segment_ref_mean_jan(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(1)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 137.0)
+
+    def test_create_segment_ref_std_jan(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(1)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 37.0)
+
+    def test_create_segment_ref_mean_feb(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(2)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 141.0)
+
+    def test_create_segment_ref_std_feb(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(2)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 37.0)
+
+    def test_create_segment_ref_mean_mar(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(3)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 144.0)
+
+    def test_create_segment_ref_std_mar(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(3)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 43.0)
+
+    def test_create_segment_ref_mean_apr(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(4)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 141.0)
+
+    def test_create_segment_ref_std_apr(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(4)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 39.0)
+
+    def test_create_segment_ref_mean_may(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(5)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 141.0)
+
+    def test_create_segment_ref_std_may(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(5)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 39.0)
+
+    def test_create_segment_ref_mean_jun(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(6)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 143.0)
+
+    def test_create_segment_ref_std_jun(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(6)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 42.0)
+
+    def test_create_segment_ref_mean_jul(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(7)
+        self.assertEqual(segment_ref["1279_1282"]["mean"], 146.0)
+
+    def test_create_segment_ref_std_jul(self):
+        """Test for the ouput of the create_segment_ref function."""
+        segment_ref = functions.create_segment_ref(7)
+        self.assertEqual(segment_ref["1279_1282"]["std"], 48.0)
 
 class TestCreateSegmentRefGtfs(TestCase):
     """Test cases for the create_segment_ref_gtfs function."""
@@ -76,7 +273,7 @@ class TestCreateSegmentRefGtfs(TestCase):
 class TestRoutePrediction(TestCase):
     """Test cases for the route_prediction function."""
 
-    def test_route_prediction(self):
+    def test_route_prediction_aug(self):
         """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
         stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
                  1079, 1080, \
@@ -89,9 +286,196 @@ class TestRoutePrediction(TestCase):
         peak = 1
         month = 8  # august
         weekday = 1
-        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, weekday, \
-               rain, temp, month), 2527)
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2494)
 
+    def test_route_prediction_sep(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 9 # september
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2691)
+
+    def test_route_prediction_oct(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 10 # october
+        weekday = 1
+        school_hol = 1
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2596)
+
+    def test_route_prediction_nov(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 11 # november
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2835)
+
+    def test_route_prediction_dec(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 12 # december
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2775)
+
+    def test_route_prediction_jan(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 1 # january
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2802)
+
+    def test_route_prediction_feb(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 2 # february
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2684)
+
+    def test_route_prediction_mar(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 3 # march
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2814)
+
+    def test_route_prediction_apr(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 4 # april
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2724)
+
+    def test_route_prediction_may(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 5 # may
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2618)
+
+    def test_route_prediction_jun(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                 1079, 1080, \
+                 1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                 1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 6 # june
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+               school_hol, weekday, rain, temp, month), 2633)
+
+    def test_route_prediction_jul(self):
+        """Test for the ouput of the route_prediction function for the 15A going in the Limekiln direction."""
+        stops = [395, 396, 397, 398, 399, 400, 7581, 1283, 7579, 1285, 1016, 1017, 1018, 1019, 1020, 1076, 1077, 1078,
+                    1079, 1080, \
+                    1081, 1082, 1083, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1101, 1102,
+                    1103, 1104]
+        rain = 0.1
+        temp = 15
+        actualtime_arr_stop_first = 32400  # 9:00
+        hour = 9
+        peak = 1
+        month = 7 # july
+        weekday = 1
+        school_hol = 0
+        self.assertEqual(functions.route_prediction(stops, actualtime_arr_stop_first, hour, peak, \
+                school_hol, weekday, rain, temp, month), 2480)
 
 class TesParseWeatherForecast(TestCase):
     """Test cases for the parse_weather_forecast function."""
@@ -237,17 +621,22 @@ class TestParseTimestamp(TestCase):
     def test_parse_timestamp_weekday(self):
         """Test that the correct values are returned for a weekday timestamp."""
         timestamp = datetime.utcfromtimestamp(1562581800)
-        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10, 0))
+        self.assertEqual(functions.parse_timestamp(timestamp), (37800, 1, 10, 0, 0))
 
     def test_parse_timestamp_weekend(self):
         """Test that the correct values are returned for a weekend timestamp."""
         timestamp = datetime.utcfromtimestamp(1564830000)
-        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11, 0))
+        self.assertEqual(functions.parse_timestamp(timestamp), (39600, 0, 11, 0, 0))
 
     def test_parse_timestamp_bank_holiday(self):
         """Test that the correct values are returned for a bank holiday timestamp."""
         timestamp = datetime.utcfromtimestamp(1565019000)
-        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15, 0))
+        self.assertEqual(functions.parse_timestamp(timestamp), (55800, 0, 15, 0, 0))
+
+    def test_parse_timestamp_school_holiday(self):
+        """Test that the correct values are returned for a bank holiday timestamp."""
+        timestamp = datetime.utcfromtimestamp(1572339600)
+        self.assertEqual(functions.parse_timestamp(timestamp), (32400, 1, 9, 1, 1))
 
 
 class TestFormatStopList(TestCase):
@@ -752,3 +1141,14 @@ class TestGetWeatherDefaults(TestCase):
         """Test that the correct values are returned for a given month."""
 
         self.assertEqual(functions.get_weather_defaults(8), (0, 16.0))
+
+class TestIsSchoolHoliday(TestCase):
+    """Test cases for the is_school_holiday function."""
+
+    def test_is_school_holiday(self):
+        """Test that the value True is returned for a school holiday"""
+        self.assertEqual(functions.is_school_holiday(29, 10), 1)
+
+    def test_not_school_holiday(self):
+        """Test that the value False is returned for a normal day"""
+        self.assertEqual(functions.is_school_holiday(5, 11), 0)

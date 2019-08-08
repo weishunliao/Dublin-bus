@@ -39,3 +39,6 @@ It also outlines steps for loading data into the tables.
 10. Navigate back to the gtfs_data directory and run the following script:
 
         mysql -u USER -pPASSWORD db_route_info < trim_leading_spaces.sql
+11. Run the add_indices_GTFS.SQL script as follows:
+
+        nohup mysql -u USER -pPASSWORD < add_indices_GTFS.SQL
