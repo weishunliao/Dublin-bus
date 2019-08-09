@@ -109,3 +109,10 @@ ion-progress-bar {
    --height: 5rem;
 }
 
+
+.desktop {
+    & .picker-wrapper {
+        margin: 0 !important;
+        width: 30% !important;
+    }
+}

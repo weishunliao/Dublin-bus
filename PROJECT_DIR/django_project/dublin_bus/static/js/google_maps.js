@@ -819,7 +819,7 @@ export function FindMyRoutes(initialLocation, directionsService){
                 formattedDate
               });
             //   console.log(newRoute)
-              Route.appendToDom(newRoute);
+            //   Route.appendToDom(newRoute);
             }
           }
           document.getElementById("bus_loader-jp").style.display = "none";
@@ -828,7 +828,8 @@ export function FindMyRoutes(initialLocation, directionsService){
           // directionsDisplay.setDirections(response);
         //   console.log("directionsDisplay", directionsDisplay);
         } else {
-          window.alert("Directions request failed due to " + status);
+          document.querySelector('#routesHere').innerHTML = "";
+
         }
       }
     );
