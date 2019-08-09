@@ -251,9 +251,18 @@ export default function initMap() {
 
     let geocoder = new google.maps.Geocoder();
 
+    // create an object for the bus stop icon
+    let locationIcon = {
+      url: "/static/images/location_route.png", // url for the image
+      scaledSize: new google.maps.Size(50, 50), // size of the image
+      origin: new google.maps.Point(0, 0), // origin
+     anchor: new google.maps.Point(25, 50) // anchor
+    };
+
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
-      map: map
+      map: map,
+      markerOptions: {icon: locationIcon}
     });
 
     let defaultBounds = new google.maps.LatLngBounds(
