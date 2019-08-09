@@ -376,7 +376,7 @@ export default function initMap() {
             map.setZoom(17);
 
             // setTimeout(() => {
-            $(".load-screen").fadeOut();
+            
             // }, 1000)
 
             let marker = new google.maps.Marker({
@@ -419,8 +419,6 @@ export default function initMap() {
       }
 
       function handleLocationError(browserHasGeolocation, pos) {
-        $(".load-screen").fadeOut();
-
         controller
           .create({
             color: "primary",
@@ -429,7 +427,10 @@ export default function initMap() {
             showCloseButton: true
           })
           .then(toast => {
-            toast.present();
+              setTimeout(() => {
+                toast.present();
+              }, 1000)
+           
           });
       }
     }
@@ -454,6 +455,7 @@ export default function initMap() {
   }, 200);
 }
 
+let errorText;
 //   Dummy text to add extras
 
 //   finString = finString + '<div class="journey-planner__card__right__iconContainer"> <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon> <div class="journey-planner__card__numberbox journey-planner__card__numberbox">4</div><ion-icon class="journey-planner__card__icon journey-planner__card__icon--arrow" name="arrow-forward"></ion-icon></div>'
@@ -497,20 +499,18 @@ function AddMarkers(data, map) {
     markers[stopID] = busMarker;
     allMarkers.push(busMarker);
   }
-  let clusterStyles = [
-    {
-      textColor: "rgba(0,0,0,0)",
-      url: "/static/images/marker.png",
-      height: 50,
-      width: 50
-    }
-  ];
+//   let clusterStyles = [
+//     {
+//       url: '/static/images/m3.png',
+//       textColor: "rgba(0,0,0)",
+//       width: 100,
+//       textSize: 16
+//     }
+//   ];
 
   let mcOptions = {
-    gridSize: 50,
-    styles: clusterStyles,
-    maxZoom: 16
-  };
+      imagePath: "/static/images/m"
+  }
 
   let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
@@ -573,7 +573,7 @@ const close_btn = () => {
 
 
 export function FindMyRoutes(initialLocation, directionsService){
-    document.querySelector("#routesHere").innerHTML = "";
+    
     submitButton.innerHTML = "Go!";
 
     let theight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
@@ -611,7 +611,7 @@ export function FindMyRoutes(initialLocation, directionsService){
       fromLocation = fromInput.value;
     }
     checkFavouriteJourneys();
-
+    
     directionsService.route(
       {
         origin: fromInput.value,
@@ -624,10 +624,13 @@ export function FindMyRoutes(initialLocation, directionsService){
         },
         provideRouteAlternatives: true
       },
+      
       async function(response, status) {
+        try {
         resp = response;
         console.log(response);
         if (status === "OK") {
+          document.querySelector("#routesHere").innerHTML = "";
           console.log("RESPONSE IS ", response);
           for (let i = 0; i < response.routes.length; i++) {
             let directions = new google.maps.DirectionsRenderer({
@@ -819,18 +822,50 @@ export function FindMyRoutes(initialLocation, directionsService){
                 formattedDate
               });
             //   console.log(newRoute)
-            //   Route.appendToDom(newRoute);
+              Route.appendToDom(newRoute);
             }
           }
-          document.getElementById("bus_loader-jp").style.display = "none";
+        //   document.getElementById("bus_loader-jp").style.display = "none";
           Route.signalAppend();
 
           // directionsDisplay.setDirections(response);
         //   console.log("directionsDisplay", directionsDisplay);
         } else {
+            console.log("ERROR ")
           document.querySelector('#routesHere').innerHTML = "";
+          errorText = `
+          <div class="error-container">
+          
+          <div class="error-inner">
+          
+          <h2>I'm sorry - something went wrong, please try again</h2>
+
+          </div>
+          
+          </div>
+          `
+          document.querySelector('#routesHere').innerHTML = errorText;
+
 
         }
+      } catch (err){
+        document.querySelector('#routesHere').innerHTML = "";
+        errorText = 
+        `
+          <div class="error-container">
+          
+          <div class="error-inner">
+          
+          <h2>No response received - please check your internet connection :( </h2>
+
+          </div>
+          
+          </div>
+          `
+          document.querySelector('#routesHere').innerHTML = errorText;
+          console.log(err)
       }
+    }
+   
     );
 }
