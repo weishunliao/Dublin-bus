@@ -468,9 +468,9 @@ function AddMarkers(data, map) {
     // create an object for the bus stop icon
     let busStopIcon = {
       url: "/static/images/marker.png", // url for the image
-      scaledSize: new google.maps.Size(66, 66), // size of the image
+      scaledSize: new google.maps.Size(74, 74), // size of the image
       origin: new google.maps.Point(0, 0), // origin
-      anchor: new google.maps.Point(33, 66) // anchor
+      anchor: new google.maps.Point(37, 74) // anchor
     };
     // generate a marker object for bus stop
     let busMarker = new google.maps.Marker({
