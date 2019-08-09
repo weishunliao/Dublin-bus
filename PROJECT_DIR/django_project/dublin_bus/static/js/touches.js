@@ -105,7 +105,16 @@ window.addEventListener("load", function() {
     
     let bdTabs = document.querySelector('.tabbar-container').getBoundingClientRect().height;
     bottomDrawer.style.height = (bdHeight * 0.95) + "px";
-    bottomSwiper = new Swiper(bottomDrawer, grabber);
+    if (is_mobile_JS) {
+        bottomSwiper = new Swiper(bottomDrawer, grabber);
+    } else {
+        bottomDrawer.style.height = bdHeight + "px";
+        bottomDrawer.style.transform = "none";
+        bottomDrawer.style.borderRadius = "0";
+        bottomDrawer.style.left = "0";
+        document.querySelector('.drawer__container__grab').style.display = 'none';
+        document.body.classList.add('desktop')
+    }
     tabs.addEventListener("ionTabsWillChange", handleOut);
     
   }, 1000);
