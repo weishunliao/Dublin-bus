@@ -114,16 +114,19 @@ document.getElementById("refresh_btn").addEventListener('click', () => {
 
 const update_real_time = (stop_list, route_id) => {
     return new Promise((resolve, reject) => {
+        if (stop_list.length === 0) {
+            resolve();
+            return;
+        }
         fetch('real_time_for_route', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({"stop_list": stop_list, "route_id": route_id})
-        })
-            .then(function (data) {
-                return data.json();
-            }).then(function (data) {
+        }).then(function (data) {
+            return data.json();
+        }).then(function (data) {
             resolve(data);
         })
     }).catch(function (error) {
@@ -373,7 +376,7 @@ const update_hide_card = (route_id) => {
 export const toast_route_add = () => {
     controller.create({
         color: 'primary',
-        duration: 1500,
+        duration: 1000,
         message: 'Adding to favourite!',
         showCloseButton: true,
         position: 'top',
