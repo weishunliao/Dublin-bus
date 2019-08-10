@@ -1,6 +1,8 @@
 import os
 import pickle
 import datetime
+
+import aiohttp
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -290,17 +292,20 @@ def get_service_id(weekday, bank_holiday):
         return 2
 
 
-def get_real_time_data(stop_id):
+async def get_real_time_data(stop_id):
     headers = {
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
-    resp = requests.get(
-        "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
-        headers=headers)
+    # resp = requests.get(
+    #     "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
+    #     headers=headers)
 
+    session = aiohttp.ClientSession()
+    resp = await session.get("https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id, headers=headers)
     data = []
     real_time_info = {stop_id: data}
-    if resp.status_code == 200:
-        content = resp.text
+    if resp.status == 200:
+        content = await resp.text()
+        await session.close()
         soup = BeautifulSoup(content, features="lxml")
         slots1 = soup.find_all('tr', class_='odd')
         slots2 = soup.find_all('tr', class_='even')

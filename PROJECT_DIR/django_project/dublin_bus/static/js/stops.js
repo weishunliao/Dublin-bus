@@ -70,7 +70,7 @@ export const get_bus_real_time_info = (stop_id) => {
             } else {
                 for (let i = 0; i < data[stop_id].length; i++) {
                     let slot = data[stop_id][i];
-                    create_card(slot[0], slot[2], slot[3], slot[1]);
+                    create_card(slot[0], slot[1], slot[2]);
                 }
             }
         }).catch(function (error) {
@@ -79,7 +79,7 @@ export const get_bus_real_time_info = (stop_id) => {
 };
 
 
-const create_card = (route_id, arrival_time, remain, direction) => {
+const create_card = (route_id, direction, remain) => {
     if (remain !== 'Due') {
         remain += '<br>mins';
     }
@@ -334,6 +334,5 @@ const hide_card = (stop_id) => {
 
 document.getElementById("realtime_stop_refresher").addEventListener('click', () => {
     let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
-    console.log(stop_id);
     get_bus_real_time_info(stop_id);
 });

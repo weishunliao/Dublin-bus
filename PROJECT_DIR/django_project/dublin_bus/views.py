@@ -1,3 +1,7 @@
+import asyncio
+import time as timepkg
+
+import aiohttp
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
@@ -22,7 +26,7 @@ class HomeView(TemplateView):
     def get(self, request):
         return render(request, self.template_name,
                       {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY,
-                       "is_mobile": request.user_agent.is_mobile})
+                       "is_mobile": request.user_agent.is_touch_capable})
 
 
 def test_routing(request):
@@ -69,7 +73,6 @@ def get_bus_stop_list(request):
     bank_holiday = is_bank_holiday(time.day, time.month)
     service_id = get_service_id(weekday, bank_holiday)
     trip_id_list = get_trip_id(direction, service_id, current, route_id)
-
     trip_info = get_trip_info(trip_id_list, service_id, direction, route_id)
     stops_list = calculate_time_diff(trip_info, current)
     return JsonResponse({"stops_list": stops_list})
@@ -82,43 +85,32 @@ def real_time_info_for_bus_stop(request):
         stop_name = json.load(json_file)[str(stop_id)][2]
     current = datetime.now()
     current_min = current.hour * 60 + current.minute
-    real_time_data = get_real_time_data(stop_id)
-    real_time_data['stop_name'] = stop_name
-    for i in real_time_data[stop_id]:
-        if i[2] == 'Due':
-            i.append('Due')
-        else:
+    data = []
+    async def send_request(stopid):
+        stopid = str(stopid)
+        result = await get_real_time_data(stopid)
+        for info in result[stopid]:
+            data.append(info)
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    tasks = [asyncio.ensure_future(send_request(stop_id))]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+    real_time_data = {'stop_name': stop_name, str(stop_id): []}
+    for i in data:
+        temp = i
+        if i[2] != 'Due':
             hr = int(i[2].split(":")[0])
-            min = int(i[2].split(":")[1])
-            remain = hr * 60 + min - current_min
+            m = int(i[2].split(":")[1])
+            remain = hr * 60 + m - current_min
             if remain == 0:
-                i.append('Due')
+                temp[2] = 'Due'
             else:
-                i.append(remain)
-    print(real_time_data)
+                temp[2] = remain
+        real_time_data[str(stop_id)].append(temp)
     return JsonResponse(real_time_data)
 
-
-def real_time_for_route(request):
-    stop_id = request.GET['stop_id']
-    route_id = request.GET['route_id']
-
-    real_time_info = get_real_time_data(stop_id)
-    current = datetime.now()
-    t = 9999
-    current_min = current.hour * 60 + current.minute
-    for i in real_time_info[stop_id]:
-        if i[0] == route_id:
-            if i[2] == 'Due':
-                return JsonResponse({'time': 'Due'})
-            hr = int(i[2].split(":")[0])
-            min = int(i[2].split(":")[1])
-            time = hr * 60 + min - current_min
-            if time < t:
-                t = time
-    if t == 0:
-        t = 'Due'
-    return JsonResponse({'time': t})
 
 
 def get_server_route(request):
@@ -199,3 +191,41 @@ def snap_to_road(request):
     for i in resp['snappedPoints']:
         road.append({'lat': i['location']['latitude'], 'lng': i['location']['longitude']})
     return JsonResponse({'road': road})
+
+
+@csrf_exempt
+def real_time_for_route(request):
+    stop_list = json.loads(request.body)['stop_list']
+    route_id = json.loads(request.body)['route_id']
+    real_time_info = dict()
+
+    async def send_request(stop_id):
+        stop_id = str(stop_id)
+        result = await get_real_time_data(stop_id)
+        real_time_info[stop_id] = result[stop_id]
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    tasks = [asyncio.ensure_future(send_request(stop)) for stop in stop_list]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+
+    current = datetime.now()
+    current_min = current.hour * 60 + current.minute
+    # print(real_time_info)
+    for k in real_time_info.keys():
+        temp = []
+        for s in real_time_info[k]:
+            if s[0] == route_id:
+                if s[2] == 'Due':
+                    temp.append('Due')
+                else:
+                    hr = int(s[2].split(":")[0])
+                    m = int(s[2].split(":")[1])
+                    diff = hr * 60 + m - current_min
+                    if diff == 0:
+                        diff = 'Due'
+                    temp.append(diff)
+        real_time_info[k] = temp
+    print(real_time_info)
+    return JsonResponse(real_time_info)
