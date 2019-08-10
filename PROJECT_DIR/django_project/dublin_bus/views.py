@@ -1,11 +1,11 @@
 import asyncio
-import time as timepkg
 
-import aiohttp
+
+
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from dublin_bus.functions import is_weekday, is_bank_holiday, get_service_id, get_real_time_data, get_trip_id, \
     get_trip_info, calculate_time_diff, get_opening_hour, clean_resp
 from .forms import JourneyPlannerForm
@@ -24,8 +24,11 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get(self, request):
+        response = requests.get('https://api.darksky.net/forecast/c1ccc48fbb3a574d8549162b1b16518b/53.346591,-6.258284?units=si').json()
+        icon = response['currently']['icon']
+        temperature = int(response['currently']['temperature'])
         return render(request, self.template_name,
-                      {'icon': "partly-cloudy-day", 'temperature': "22", "map_key": MAP_KEY,
+                      {'icon': icon, 'temperature': temperature, "map_key": MAP_KEY,
                        "is_mobile": request.user_agent.is_touch_capable})
 
 
