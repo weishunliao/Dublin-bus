@@ -102,6 +102,9 @@ $(".sightseeing__options__cards").on("touchmove", (e) => {
 
 function category_btn(category) {
     page_switch();
+    if (document.getElementById("more")) {
+        document.getElementById("more").remove();
+    }
     document.getElementById("bus_loader").style.display = "block";
     get_sights_info(category).then(() => {
         document.getElementById("bus_loader").style.display = "none";

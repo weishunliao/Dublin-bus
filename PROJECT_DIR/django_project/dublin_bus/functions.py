@@ -1,14 +1,17 @@
 import os
 import pickle
 import datetime
+import ssl
 
 import aiohttp
+import certifi
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 import json
 from django_project.settings import BASE_DIR, MAP_KEY
 from django.db import connection
+
 
 def load_model(month):
     """Loads and returns a machine learning model & scaler depending on the month."""
@@ -39,6 +42,7 @@ def load_model(month):
         scaler = pickle.load(file)
     return model, scaler
 
+
 def create_hour_feature_ref():
     """Builds a dictionary with hours (0 and 1 and 4-23) as key and 1D lists as values.
 
@@ -57,6 +61,7 @@ def create_hour_feature_ref():
                 hour_array[j] = 1
         hour_feature_ref[i] = hour_array
     return hour_feature_ref
+
 
 def create_segment_ref(month):
     """Builds a dictionary that gives the mean & standard deviation for each segment based on month."""
@@ -81,6 +86,7 @@ def create_segment_ref(month):
         segment_mean_ref = json.load(file)
     return segment_mean_ref
 
+
 def create_segment_ref_gtfs():
     """Builds a dictionary from segment_means_gtfs.JSON that gives the mean value for each segment \
     based on the GTFS data."""
@@ -89,6 +95,7 @@ def create_segment_ref_gtfs():
     with open(path) as file:
         segment_mean_ref_gtfs = json.load(file)
     return segment_mean_ref_gtfs
+
 
 def route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, weekday, rain, temp, month):
     """Returns a prediction of journey length in seconds for any bus route.
@@ -111,9 +118,9 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, w
     arrival_times = []
     arrival_times.append(arrival_time_at_stop)
     # loop through each set of stops in the list
-    for i in range(len(stops)-1):
+    for i in range(len(stops) - 1):
         stop_first = stops[i]
-        stop_next = stops[i+1]
+        stop_next = stops[i + 1]
         segment = str(stop_first) + "_" + str(stop_next)
         if segment in seg_ref:
             segment_mean = seg_ref[segment]["mean"]
@@ -126,7 +133,7 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, w
             segment_std = 57
             print("Unexpected segment encountered! Using default values for mean and standard deviation...")
         # specify the input for the prediction
-        if month in [5,6,7,8,9]:
+        if month in [5, 6, 7, 8, 9]:
             input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, rain, temp] + hour]
         else:
             input = [[arrival_time_at_stop, segment_mean, weekday, segment_std, peak, school_hol, rain, temp] + hour]
@@ -139,7 +146,7 @@ def route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, w
             arrival_time_at_stop = arrival_time_at_stop + prediction[0]
             arrival_times.append(arrival_time_at_stop)
     # calculate the time for the full trip
-    full_trip = arrival_times[len(arrival_times)-1] - arrival_times[0]
+    full_trip = arrival_times[len(arrival_times) - 1] - arrival_times[0]
     return int(full_trip)
 
 
@@ -186,7 +193,7 @@ def parse_weather_forecast(journey_timestamp, weather_data):
             # extract the relevant weather data from the JSON
             temp = item.get("main").get("temp")
             if "rain" in item and "3h" in item["rain"]:
-                rain = item.get("rain").get("3h")/3
+                rain = item.get("rain").get("3h") / 3
             else:
                 rain = 0
             # once weather is found, break out of the loop
@@ -206,7 +213,7 @@ def convert_to_seconds(hour, minute):
     If the hour is less than 3, then it should be treated as part of the last day."""
 
     if hour > 3:
-        seconds = hour*60*60 + minute*60
+        seconds = hour * 60 * 60 + minute * 60
     else:
         seconds = 86400 + hour * 60 * 60 + minute * 60
     return seconds
@@ -278,7 +285,8 @@ def predict_journey_time(stops, timestamp, rain, temp):
     timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
     actualtime_arr_stop_first, weekday, hour, peak, school_hol = parse_timestamp(timestamp)
     # make a prediction based on the input and return it
-    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, weekday, rain, temp, timestamp.month)
+    prediction = route_prediction(stops, actualtime_arr_stop_first, hour, peak, school_hol, weekday, rain, temp,
+                                  timestamp.month)
     # return the prediction
     return prediction
 
@@ -299,8 +307,11 @@ async def get_real_time_data(stop_id):
     #     "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
     #     headers=headers)
 
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     session = aiohttp.ClientSession()
-    resp = await session.get("https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id, headers=headers)
+    resp = await session.get(
+        "https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=" + stop_id,
+        headers=headers, ssl=ssl_context)
     data = []
     real_time_info = {stop_id: data}
     if resp.status == 200:
@@ -393,7 +404,8 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
     # get the relevant service id based on the departure time
     service_id = get_current_service_id(departure_time)
     # get the bus stop id of the start point
-    start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time, service_id)
+    start_point_id = get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time,
+                                        service_id)
     # if -1 was returned, the bus stop id could not be found so return an empty array
     if start_point_id == -1:
         return []
@@ -402,6 +414,7 @@ def get_stop_list(route_id, headsign, start_point, end_point, num_stops, departu
     # get the list of stops that the bus will travel along between the user's origin and destination
     stop_list = get_stop_list_start_point(all_stops, start_point_id, num_stops)
     return stop_list
+
 
 def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, departure_time, service_id):
     """Returns the bus stop id of the start point based on the input."""
@@ -413,19 +426,24 @@ def get_start_point_id(route_id, headsign, start_point, end_point, num_stops, de
         cursor.execute(sql, [route_id, start_point, headsign])
         if cursor.rowcount == 0:
             print("No bus stops found for start point: " + start_point)
-            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 0)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time,
+                                                            service_id, 0)
         elif cursor.rowcount == 1:
             start_point_id = cursor.fetchone()[0]
             print("Bus stop found for start point: " + start_point)
         else:
             print("Multiple bus stops found for start point: " + start_point)
-            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, 1)
+            start_point_id = get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time,
+                                                            service_id, 1)
             if start_point_id == -1:
                 print("Choosing a stop from start point options.")
-                start_point_id = get_stop_from_multiple(service_id, route_id, start_point, headsign, departure_time, num_stops, 1)
+                start_point_id = get_stop_from_multiple(service_id, route_id, start_point, headsign, departure_time,
+                                                        num_stops, 1)
     return start_point_id
 
-def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id, multiple_start):
+
+def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, departure_time, service_id,
+                                   multiple_start):
     """Returns the bus stop id of the start point based on the end point. multiple_start will be 1 if multiple \
         start points were found, it will be 0 if no start points were found."""
     with connection.cursor() as cursor:
@@ -449,13 +467,14 @@ def get_start_point_from_end_point(route_id, headsign, end_point, num_stops, dep
                 return -1
             else:
                 print("Choosing a stop from end point options.")
-                end_point_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time, num_stops, 0)
+                end_point_id = get_stop_from_multiple(service_id, route_id, end_point, headsign, departure_time,
+                                                      num_stops, 0)
                 if end_point_id == -1:
                     return -1
                 all_stops = get_all_stops(service_id, route_id, end_point_id, headsign, departure_time)
                 start_point_id = get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops)
                 return start_point_id
-            
+
 
 def get_current_service_id(departure_time):
     """Returns a service id based on the datetime object entered."""
@@ -466,6 +485,7 @@ def get_current_service_id(departure_time):
     else:
         service_id = 'y101c'
     return service_id
+
 
 def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
     """Returns a list of all stops on the route based on the input."""
@@ -491,6 +511,7 @@ def get_all_stops(service_id, route_id, stop_id, headsign, departure_time):
         all_stops = cursor.fetchall()
         return all_stops
 
+
 def get_stop_list_start_point(all_stops, start_point_id, num_stops):
     """Get a list of stops based on the stop that the user gets on at."""
     index = 0
@@ -499,9 +520,10 @@ def get_stop_list_start_point(all_stops, start_point_id, num_stops):
             index = i
     if index > 0 and (index + num_stops) < len(all_stops):
         stop_list = all_stops[index:index + num_stops]
-    else: 
+    else:
         stop_list = []
     return stop_list
+
 
 def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
     """Get a start point id based on the end point id."""
@@ -515,6 +537,7 @@ def get_start_point_id__from_end_point_id(all_stops, end_point_id, num_stops):
     else:
         start_point_id = -1
     return start_point_id
+
 
 def get_stop_from_multiple(service_id, route_id, stop_name, headsign, departure_time, num_stops, start):
     """Returns a random stop id from those returned. Returns -1 if a valid stop id can't be found."""
@@ -565,12 +588,14 @@ def clean_resp(resp):
     point.append(opening_hour)
     return point
 
+
 def is_peak(hour, weekday_flag):
     """Takes an hour and weekday flag as input, and returns 1 for peak time and 0 for off-peak."""
-    peak_hours = [7,8,9,16,17,18]
+    peak_hours = [7, 8, 9, 16, 17, 18]
     if hour in peak_hours and weekday_flag == 1:
         return 1
     return 0
+
 
 def get_weather_defaults(month):
     path = os.path.join(settings.STATIC_ROOT, 'cache/weather.json')
@@ -580,13 +605,14 @@ def get_weather_defaults(month):
     rain = 0
     return rain, temp
 
+
 def is_school_holiday(day, month):
     """Returns 1 if the day and month entered is a school holiday, returns 0 otherwise.
     
     List of school holidays will need to be updated periodically. Currently has remaining school
     holidays in 2019 only."""
 
-    school_holidays = [(29, 10), (30, 10), (31, 10), (1,11), (23,12), (24,12), (27,12), (30,12), (31,12)]
+    school_holidays = [(29, 10), (30, 10), (31, 10), (1, 11), (23, 12), (24, 12), (27, 12), (30, 12), (31, 12)]
     if (day, month) in school_holidays:
         return 1
     return 0
