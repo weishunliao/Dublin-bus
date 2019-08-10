@@ -14,7 +14,6 @@
               <h3>From</h3>
             </div>
             <input
-            
               required
               type="text"
               class="journey-planner__form__input"
@@ -40,14 +39,13 @@
               <h3>To</h3>
             </div>
             <!-- <ion-label position="floating">Floating Label</ion-label> -->
-             <input
-           
+            <input
               required
               type="text"
               class="journey-planner__form__input"
               id="to"
               placeholder=""
-            /> 
+            />
             <!-- <ion-item>
                 <ion-label position="floating">To</ion-label>
                 <ion-input
@@ -60,7 +58,6 @@
                 </ion-input>
 
             </ion-item> -->
-            
           </div>
           <div
             class="journey-planner__form__input-container"
@@ -75,8 +72,6 @@
               display-format="MMM DD, HH:mm"
               picker-format="YYYY MMM DD, HH:mm"
               value=""
-              
-              
             ></ion-datetime>
           </div>
           <div class="submitter">
@@ -93,87 +88,25 @@
             <img src="/static/images/switch.png" alt="" />
           </div>
           <div class="heart-img-container">
-              <div class="heart-img-container__inner" id="save-journey">
-                <ion-icon name="heart-empty"></ion-icon>
-              </div>
-            
+            <div class="heart-img-container__inner" id="save-journey">
+              <ion-icon name="heart-empty"></ion-icon>
+            </div>
           </div>
-        
         </form>
       </div>
       <div class="journey-planner__routes-container">
-          <div class="journey-planner__moreInfoContainer"></div>
+        <div class="journey-planner__moreInfoContainer"></div>
         <div class="journey-planner__routes__scroll-area" id="routesHere">
-       
-
-        
-            
-            <div class="journey-planner__routes__card routeCard" id="route-${id}">
-                <div class="customCard">
-                  
-
-                    <div class="journey-planner__card__container">
-                        <div class="journey-planner__card__left">
-                          <div class="journey-planner__card__left__depTitle">
-                            <h2
-                              class="journey-planner__card__title journey-planner__card__title--departingTitle"
-                            >
-                              Departing in: 
-                            </h2>
-                          </div>
-                          <div class="journey-planner__card__left__minsTitle">
-                           
-                            <span class="journey-planner__card__minuteSpan">5</span>
-                            <h1 class="journey-planner__card__timeTitle">mins</h1>
-                          </div>
-                        </div>
-                        <div class="journey-planner__card__right">
-                          <div class="journey-planner__card__right__travelTime">
-                            <h2
-                              class="journey-planner__card__title journey-planner__card__title--departingTitle"
-                            >
-                              Travel time:
-                              <span
-                                class="journey-planner__card__timeNumber"
-                                id="jp-travel-time"
-                                >${Math.round(full_travel_time / 60)}</span
-                              >
-                              minutes
-                            </h2>
-                          </div>
-                          <div
-                            class="journey-planner__card__right__descriptionContainer" id="route-descriptions"
-                          > 
-                        
-                          <div class="journey-planner__card__right__iconContainer">
-                            <ion-icon class="journey-planner__card__icon journey-planner__card__icon--walk" name="walk"></ion-icon>
-                            <div class="journey-planner__card__numberbox journey-planner__card__numberbox">10</div>
-                            
-                      </div>
-              
-                            
-                          </div>
-                        </div>
-                      </div>
-
-
-
-
-                </div>
-                 </div>
-
-           
+          <div class="error-container">
+            <div class="error-inner">
+              <h1>LOLOLOL</h1>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </ion-content>
 </ion-tab>
-
-
-
-
-
-
 
 <!-- 
 
@@ -521,3 +454,54 @@
           </ion-card-content>
         </ion-card>
       </div> -->
+
+<!-- <div class="journey-planner__routes__card routeCard" id="route-${id}">
+            <div class="customCard">
+              <div class="journey-planner__card__container">
+                <div class="journey-planner__card__left">
+                  <div class="journey-planner__card__left__depTitle">
+                    <h2
+                      class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                    >
+                      Departing in:
+                    </h2>
+                  </div>
+                  <div class="journey-planner__card__left__minsTitle">
+                    <span class="journey-planner__card__minuteSpan">5</span>
+                    <h1 class="journey-planner__card__timeTitle">mins</h1>
+                  </div>
+                </div>
+                <div class="journey-planner__card__right">
+                  <div class="journey-planner__card__right__travelTime">
+                    <h2
+                      class="journey-planner__card__title journey-planner__card__title--departingTitle"
+                    >
+                      Travel time:
+                      <span
+                        class="journey-planner__card__timeNumber"
+                        id="jp-travel-time"
+                        >${Math.round(full_travel_time / 60)}</span
+                      >
+                      minutes
+                    </h2>
+                  </div>
+                  <div
+                    class="journey-planner__card__right__descriptionContainer"
+                    id="route-descriptions"
+                  >
+                    <div class="journey-planner__card__right__iconContainer">
+                      <ion-icon
+                        class="journey-planner__card__icon journey-planner__card__icon--walk"
+                        name="walk"
+                      ></ion-icon>
+                      <div
+                        class="journey-planner__card__numberbox journey-planner__card__numberbox"
+                      >
+                        10
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->

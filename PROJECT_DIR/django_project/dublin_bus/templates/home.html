@@ -37,9 +37,14 @@
 <script>
   var icon = "{{icon}}";
   var temperature = "{{temperature}}";
-  let is_mobile = "{{ is_mobile }}" === "True";
+  var is_mobile = "{{ is_mobile }}" === "True";
+  
+
   if (!is_mobile) {
+      is_mobile_JS = false;
       document.querySelector('ion-tabs').style.width = '30%';
+  } else {
+      is_mobile_JS = true;
   }
 </script>
 
@@ -47,72 +52,3 @@
 
 
 
-<!-- 
-<div class="journey_show__container" id="show-container">
-
-    <div
-      class="journey-planner__routes__card routeCard showCard"
-      id="route-${id}"
-    >
-      <div class="customCard" id="stretchCard">
-
-            <div class="showCard__toggleButtonsContainer">
-                    
-                  </div>
-      
-
-                <div class="journey-planner__card__container">
-
-
-                    <div class="journey-planner__card__left">
-                        <div class="journey-planner__card__left__depTitle">
-                            <h2
-                                    class="journey-planner__card__title journey-planner__card__title--departingTitle"
-                            >
-                                Departing in:
-                            </h2>
-                        </div>
-                        <div class="journey-planner__card__left__minsTitle">
-                            <span class="journey-planner__card__minuteSpan">5</span>
-                            <h1 class="journey-planner__card__timeTitle">mins</h1>
-                        </div>
-                    </div>
-                    <div class="journey-planner__card__right">
-                        <div class="journey-planner__card__right__travelTime">
-                            <h2
-                                    class="journey-planner__card__title journey-planner__card__title--departingTitle"
-                            >
-                                Travel time:
-                                <span
-                                        class="journey-planner__card__timeNumber"
-                                        id="jp-travel-time"
-                                >33</span
-                                >
-                                minutes
-                            </h2>
-                        </div>
-                        <div
-                                class="journey-planner__card__right__descriptionContainer"
-                                id="route-descriptions"
-                        ></div>
-                    </div>
-
-                </div>
-                <div class="more-route-info">
-                    <div class="more-route-info__locationDiv">
-                        <div class="more-route-info__icon">
-                            <ion-icon class="more-route-info__icon__internal" name="walk"></ion-icon>
-                        </div>
-                        <div class="more-route-info__distanceText">
-                            <h2><span class="type-span">Walk</span> 250 metres</h2>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        `
-    </div>
-    `
-  </div>  -->
