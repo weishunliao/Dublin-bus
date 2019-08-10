@@ -68,7 +68,6 @@ const display_stops = (route_id, info) => {
         document.getElementById('timeline-wrapper__content__box').innerHTML = "<h1 id='empty_stop_list'>This route is currently out of service.</h1>";
         document.getElementById("routes__content__card__direction").innerText = "Towards";
     } else {
-        console.log(info);
         for (let value of stops) {
             let li = document.createElement("li");
             let h3 = document.createElement("h3");
@@ -182,7 +181,6 @@ const snap_to_road = () => {
     });
 };
 const clear_bus_marker_on_map = () => {
-    clearInterval(blinker);
     for (let bus of realtime_bus_marker_on_map) {
         bus.setMap(null);
         bus = null;
@@ -211,21 +209,12 @@ const draw_bus_markers_on_route = () => {
         realtime_bus_marker_on_map.push(busMarker);
         busMarker.setMap(map);
     }
-    // setInterval(blinker, 800);
-};
-const blinker = () => {
-    for (let busMarker of realtime_bus_marker_on_map) {
-        if (busMarker.getMap() === null) {
-            busMarker.setMap(map);
-        } else {
-            busMarker.setMap(null);
-        }
-    }
+
 };
 
+
 const route_show_on_map = () => {
-    const draw_height = $(".drawer__container").css('height');
-    if (bottomSwiper.currentState === 4) {
+    if (bottomSwiper.currentState === 4 || bus_route_drawer.getMap() !== null) {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         bus_route_drawer.setMap(null);
         clear_bus_marker_on_map();
@@ -240,9 +229,12 @@ const route_show_on_map = () => {
         map.setZoom(12);
         let mid_marker = markers["" + mid_stop].getPosition();
         map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
-        document.getElementById("routes__show-on-map-btn__name").innerText = "";
-        document.getElementById("routes__toolbar__back-btn").style.display = 'none';
-        $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
+        if (is_mobile) {
+            document.getElementById("routes__show-on-map-btn__name").innerText = "";
+            document.getElementById("routes__toolbar__back-btn").style.display = 'none';
+            $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
+
+        }
     }
 };
 

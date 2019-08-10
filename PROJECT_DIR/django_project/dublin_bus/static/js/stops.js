@@ -178,12 +178,13 @@ const stops_show_on_map = () => {
         bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         let stop_position = stop_marker.getPosition();
         map.setCenter({lat: stop_position.lat(), lng: stop_position.lng()});
-        map.setZoom(18);
+        map.setZoom(19);
         change_marker_icon(stop_marker);
-        document.getElementById("stops__show-on-map-btn__name").innerText = "";
-        document.getElementById("stops__toolbar__back-btn").style.display = 'none';
-        $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
-        // $('.drawer__container').animate({'height': 290}, 200, 'linear');
+        if (is_mobile) {
+            document.getElementById("stops__show-on-map-btn__name").innerText = "";
+            document.getElementById("stops__toolbar__back-btn").style.display = 'none';
+            $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
+        }
     }
 };
 
