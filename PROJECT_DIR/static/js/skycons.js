@@ -637,7 +637,7 @@ caf = cancelAnimationFrame        ||
 
   
 export default function buildWeather(weather_type){
-    console.log(weather_type)
+    // console.log(weather_type)
     let obj;
     let color;
 

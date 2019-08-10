@@ -10,6 +10,7 @@ export let stop_list = [];
 let realtime_bus_marker = [];
 let realtime_bus_marker_on_map = [];
 let head_sign;
+let stops;
 
 $('#typeahead_route').bind('typeahead:select', function (ev, suggestion) {
     // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
@@ -44,27 +45,23 @@ export const get_bus_stop_list = (id, direction) => {
                 '        <img src="/static/images/road.png" alt="" class="loader__road"/>\n' +
                 '    </div>\n' +
                 '</div>';
-            let stops = data['stops_list'];
+            stops = data['stops_list'];
             stop_list = [];
             realtime_bus_marker = [];
             for (let i = 0; i < stops.length; i++) {
                 stop_list.push(parseInt(stops[i][0]));
-                update_real_time(i, stops[i][0], route_id);
             }
             document.getElementById("routes__content__card__route-id").innerText = route_id;
-            setTimeout(() => {
-                display_stops(stops, route_id);
-            }, 5000);
-            // display_stops(stops, route_id);
-        }).then(function (stops) {
-
-    }).catch(function (error) {
+            update_real_time(stop_list, route_id).then((info) => {
+                display_stops(route_id, info);
+            });
+        }).catch(function (error) {
         return error;
     })
 };
 
 
-const display_stops = (stops, route_id) => {
+const display_stops = (route_id, info) => {
     document.getElementById('timeline-wrapper__content__box').innerHTML = '<ul class="timeline-wrapper__content" id="timeline__content"></ul>';
     let timeline__content = document.getElementById("timeline__content");
     if (stops.length === 0) {
@@ -74,10 +71,18 @@ const display_stops = (stops, route_id) => {
         for (let value of stops) {
             let li = document.createElement("li");
             let h3 = document.createElement("h3");
-            h3.innerHTML = "<h6 class='stop_id'>" + value[0] + "<span class='stop_id__span'>" + value[2] + " min</span></h6>" + value[1];
+            let id = parseInt(value[0]);
+            let arrive = info[id].length === 0 ? 'N/A' : info[id][0];
+            if (arrive === 'Due') {
+                realtime_bus_marker.push(id);
+                h3.innerHTML = "<h6 class='stop_id'>" + id + "<ion-icon class=\"bus-icon\" name=\"md-bus\" size=\"large\"></ion-icon></h6>" + value[1];
+                li.className = "timeline-wrapper__content__event__fill";
+            } else {
+                h3.innerHTML = "<h6 class='stop_id'>" + id + "<span class='stop_id__span'>" + arrive + " min</span></h6>" + value[1];
+                li.className = "timeline-wrapper__content__event";
+            }
             h3.className = "timeline-wrapper__content__h3";
             li.append(h3);
-            li.className = "timeline-wrapper__content__event";
             li.id = "timeline-wrapper__content-li";
             timeline__content.appendChild(li);
         }
@@ -107,24 +112,24 @@ document.getElementById("refresh_btn").addEventListener('click', () => {
     get_bus_stop_list(route_id, head_sign);
 });
 
-const update_real_time = (num, stop_id, route_id) => {
-    fetch('real_time_for_route?stop_id=' + stop_id + '&route_id=' + route_id, {method: 'get'})
-        .then(function (data) {
-            return data.json();
-
-        }).then(function (data) {
-        // let elem = document.querySelectorAll("li")[num];
-        // if (data['time'] === 'Due') {
-        //     display_bus_arrival_time(num);
-        //     realtime_bus_marker.push(stop_id);
-        //     elem.getElementsByTagName('span')[0].innerHTML = '<ion-icon class="bus-icon" name="md-bus" size="large"></ion-icon>';
-        // } else {
-        //     elem.getElementsByTagName('span')[0].innerHTML = data['time'] + 'mins    ';
-        // }
-    })
-        .catch(function (error) {
-            console.log(error)
-        });
+const update_real_time = (stop_list, route_id) => {
+    return new Promise((resolve, reject) => {
+        fetch('real_time_for_route', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"stop_list": stop_list, "route_id": route_id})
+        })
+            .then(function (data) {
+                return data.json();
+            }).then(function (data) {
+            resolve(data);
+        })
+    }).catch(function (error) {
+        console.log(error);
+        reject();
+    });
 };
 
 
@@ -176,7 +181,6 @@ const snap_to_road = () => {
     });
 };
 const clear_bus_marker_on_map = () => {
-    clearInterval(blinker);
     for (let bus of realtime_bus_marker_on_map) {
         bus.setMap(null);
         bus = null;
@@ -205,21 +209,12 @@ const draw_bus_markers_on_route = () => {
         realtime_bus_marker_on_map.push(busMarker);
         busMarker.setMap(map);
     }
-    // setInterval(blinker, 800);
-};
-const blinker = () => {
-    for (let busMarker of realtime_bus_marker_on_map) {
-        if (busMarker.getMap() === null) {
-            busMarker.setMap(map);
-        } else {
-            busMarker.setMap(null);
-        }
-    }
+
 };
 
+
 const route_show_on_map = () => {
-    const draw_height = $(".drawer__container").css('height');
-    if (bottomSwiper.currentState === 4) {
+    if (bottomSwiper.currentState === 4 || bus_route_drawer.getMap() !== null) {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         bus_route_drawer.setMap(null);
         clear_bus_marker_on_map();
@@ -234,9 +229,12 @@ const route_show_on_map = () => {
         map.setZoom(12);
         let mid_marker = markers["" + mid_stop].getPosition();
         map.setCenter({lat: mid_marker.lat(), lng: mid_marker.lng()});
-        document.getElementById("routes__show-on-map-btn__name").innerText = "";
-        document.getElementById("routes__toolbar__back-btn").style.display = 'none';
-        $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
+        if (is_mobile) {
+            document.getElementById("routes__show-on-map-btn__name").innerText = "";
+            document.getElementById("routes__toolbar__back-btn").style.display = 'none';
+            $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
+
+        }
     }
 };
 
