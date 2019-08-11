@@ -88,7 +88,7 @@ const create_card = (route_id, direction, remain) => {
         '<ion-col size="3"><ion-item lines="none"><ion-label ' +
         'class="stops__time-table-list__content__label__bus stops__time-table-list__content__label">' + route_id + '</ion-label>' +
         '</ion-item></ion-col><ion-col size="6"><ion-item lines="none"><ion-label ' +
-        'class="stops__time-table-list__content__label__des stops__time-table-list__content__label" text-wrap>' + direction + '</ion-label>' +
+        'class="stops__time-table-list__content__label__des stops__time-table-list__content__label" text-wrap> Toward ' + direction + '</ion-label>' +
         '</ion-item></ion-col><ion-col size="3"><ion-item lines="none"><ion-label ' +
         'class="stops__time-table-list__content__label__time stops__time-table-list__content__label">' + remain + '</ion-label>' +
         '</ion-item></ion-col></ion-row>';

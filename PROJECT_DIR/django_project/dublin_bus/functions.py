@@ -300,7 +300,7 @@ def get_service_id(weekday, bank_holiday):
         return 2
 
 
-async def get_real_time_data(stop_id):
+async def get_real_time_data_bk(stop_id):
     headers = {
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"}
     # resp = requests.get(
@@ -616,3 +616,18 @@ def is_school_holiday(day, month):
     if (day, month) in school_holidays:
         return 1
     return 0
+
+
+async def get_real_time_data(stop_id):
+    session = aiohttp.ClientSession()
+    resp = await session.get(
+        "https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?format=json&operator=bac&stopid=" + stop_id)
+
+    real_time_info = {stop_id: []}
+    if resp.status == 200:
+        content = await resp.json()
+        await session.close()
+        for i in content['results']:
+            temp = [i['route'], i['destination'], i['duetime']]
+            real_time_info[stop_id].append(temp)
+    return real_time_info

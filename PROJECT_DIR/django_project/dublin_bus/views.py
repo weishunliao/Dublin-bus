@@ -70,7 +70,8 @@ def get_bus_stop_list(request):
     time = request.GET['t']
     if not time:
         time = datetime.now()
-
+    else:
+        datetime.fromtimestamp(1565539195)
     current = int(time.hour) * 60 * 60 + int(time.minute) * 60
     weekday = is_weekday(time.weekday())
     bank_holiday = is_bank_holiday(time.day, time.month)
@@ -81,7 +82,7 @@ def get_bus_stop_list(request):
     return JsonResponse({"stops_list": stops_list})
 
 
-def real_time_info_for_bus_stop(request):
+def real_time_info_for_bus_stop_bk(request):
     stop_id = request.GET['stop_id']
     path = os.path.join(BASE_DIR, '../static/cache/stops.json')
     with open(path, 'r') as json_file:
@@ -114,6 +115,26 @@ def real_time_info_for_bus_stop(request):
         real_time_data[str(stop_id)].append(temp)
     return JsonResponse(real_time_data)
 
+def real_time_info_for_bus_stop(request):
+    stop_id = request.GET['stop_id']
+    path = os.path.join(BASE_DIR, '../static/cache/stops.json')
+    with open(path, 'r') as json_file:
+        stop_name = json.load(json_file)[str(stop_id)][2]
+
+    data = []
+    async def send_request(stopid):
+        stopid = str(stopid)
+        result = await get_real_time_data(stopid)
+        for info in result[stopid]:
+            data.append(info)
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    tasks = [asyncio.ensure_future(send_request(stop_id))]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+    real_time_data = {'stop_name': stop_name, str(stop_id): data}
+    return JsonResponse(real_time_data)
 
 
 def get_server_route(request):
@@ -197,7 +218,7 @@ def snap_to_road(request):
 
 
 @csrf_exempt
-def real_time_for_route(request):
+def real_time_for_route_bk(request):
     stop_list = json.loads(request.body)['stop_list']
     route_id = json.loads(request.body)['route_id']
     real_time_info = dict()
@@ -231,4 +252,30 @@ def real_time_for_route(request):
                     temp.append(diff)
         real_time_info[k] = temp
     print(real_time_info)
+    return JsonResponse(real_time_info)
+
+
+@csrf_exempt
+def real_time_for_route(request):
+    stop_list = json.loads(request.body)['stop_list']
+    route_id = json.loads(request.body)['route_id']
+    real_time_info = dict()
+
+    async def send_request(stop_id):
+        stop_id = str(stop_id)
+        result = await get_real_time_data(stop_id)
+        real_time_info[stop_id] = result[stop_id]
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    tasks = [asyncio.ensure_future(send_request(stop)) for stop in stop_list]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+
+    for k in real_time_info.keys():
+        temp = []
+        for s in real_time_info[k]:
+            if s[0].lower() == route_id:
+                temp.append(s[2])
+        real_time_info[k] = temp
     return JsonResponse(real_time_info)
