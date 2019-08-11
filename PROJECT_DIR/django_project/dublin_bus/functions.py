@@ -570,21 +570,27 @@ def get_opening_hour(resp):
     return res
 
 
-def clean_resp(resp):
+async def clean_resp(resp):
     point = list()
     point.append(resp['name'])
     point.append(resp['formatted_address'][:resp['formatted_address'].find('Dublin') - 2])
     point.append(resp['rating'])
     photo_ref = resp['photos'][0]['photo_reference']
-    photo = requests.get(
-        "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
-        allow_redirects=True).url
-    point.append(photo)
     place_id = resp['place_id']
-    resp = requests.get(
-        "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&fields=name,opening_hours&key=" + MAP_KEY).json()[
-        'result']
-    opening_hour = get_opening_hour(resp)
+    session = aiohttp.ClientSession()
+    result = await session.get("https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY)
+    photo = str(result._real_url)
+    # photo = requests.get(
+    #     "https://maps.googleapis.com/maps/api/place/photo?maxheight=200&photoreference=" + photo_ref + "&key=" + MAP_KEY,
+    #     allow_redirects=True).url
+    point.append(photo)
+    result2= await session.get("https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&fields=name,opening_hours&key=" + MAP_KEY)
+    content = await result2.json()
+    await session.close()
+    # resp = await requests.get(
+    #     "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + "&fields=name,opening_hours&key=" + MAP_KEY).json()[
+    #     'result']
+    opening_hour = get_opening_hour(content['result'])
     point.append(opening_hour)
     return point
 

@@ -166,12 +166,19 @@ def get_sights_info(request):
         url += "shopping+dublin/@53.3455021,-6.2690574,16z/data=!3m1!4b1"
     infos = requests.get(url=url).json()['results']
     points = []
-    for i in infos[offset:5 + offset]:
+
+    async def send_request(info_id):
         try:
-            info = clean_resp(i)
+            info = await clean_resp(info_id)
             points.append(info)
         except KeyError as e:
             print(e)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    tasks = [asyncio.ensure_future(send_request(info_id)) for info_id in infos[offset:10 + offset]]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+
     return JsonResponse({"points": points})
 
 

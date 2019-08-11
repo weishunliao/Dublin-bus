@@ -16,7 +16,7 @@ const get_sights_info = (category) => {
                     document.getElementById("more").remove();
                     return;
                 } else {
-                    offset += 5;
+                    offset += 10;
                     let points = data['points'];
                     for (let point of points) {
                         create_card(point);
