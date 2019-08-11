@@ -8,6 +8,7 @@
 @import 'project/Map/map';
 @import 'project/Components/tabs';
 @import 'project/Components/action-button';
+@import 'project/Components/errors';
 @import 'project/Components/load-screen';
 @import 'project/Components/card';
 @import 'project/Timeline/timeline';
@@ -109,3 +110,15 @@ ion-progress-bar {
    --height: 5rem;
 }
 
+
+.desktop {
+    & .picker-wrapper {
+        margin: 0 !important;
+        width: 30% !important;
+    }
+
+    & #map {
+        float: right;
+        width: 70%;
+    }
+}

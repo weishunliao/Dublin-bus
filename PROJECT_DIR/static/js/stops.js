@@ -70,7 +70,7 @@ export const get_bus_real_time_info = (stop_id) => {
             } else {
                 for (let i = 0; i < data[stop_id].length; i++) {
                     let slot = data[stop_id][i];
-                    create_card(slot[0], slot[2], slot[3], slot[1]);
+                    create_card(slot[0], slot[1], slot[2]);
                 }
             }
         }).catch(function (error) {
@@ -79,7 +79,7 @@ export const get_bus_real_time_info = (stop_id) => {
 };
 
 
-const create_card = (route_id, arrival_time, remain, direction) => {
+const create_card = (route_id, direction, remain) => {
     if (remain !== 'Due') {
         remain += '<br>mins';
     }
@@ -88,7 +88,7 @@ const create_card = (route_id, arrival_time, remain, direction) => {
         '<ion-col size="3"><ion-item lines="none"><ion-label ' +
         'class="stops__time-table-list__content__label__bus stops__time-table-list__content__label">' + route_id + '</ion-label>' +
         '</ion-item></ion-col><ion-col size="6"><ion-item lines="none"><ion-label ' +
-        'class="stops__time-table-list__content__label__des stops__time-table-list__content__label" text-wrap>' + direction + '</ion-label>' +
+        'class="stops__time-table-list__content__label__des stops__time-table-list__content__label" text-wrap> Toward ' + direction + '</ion-label>' +
         '</ion-item></ion-col><ion-col size="3"><ion-item lines="none"><ion-label ' +
         'class="stops__time-table-list__content__label__time stops__time-table-list__content__label">' + remain + '</ion-label>' +
         '</ion-item></ion-col></ion-row>';
@@ -178,12 +178,13 @@ const stops_show_on_map = () => {
         bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         let stop_position = stop_marker.getPosition();
         map.setCenter({lat: stop_position.lat(), lng: stop_position.lng()});
-        map.setZoom(18);
+        map.setZoom(19);
         change_marker_icon(stop_marker);
-        document.getElementById("stops__show-on-map-btn__name").innerText = "";
-        document.getElementById("stops__toolbar__back-btn").style.display = 'none';
-        $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
-        // $('.drawer__container').animate({'height': 290}, 200, 'linear');
+        if (is_mobile) {
+            document.getElementById("stops__show-on-map-btn__name").innerText = "";
+            document.getElementById("stops__toolbar__back-btn").style.display = 'none';
+            $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
+        }
     }
 };
 
@@ -334,6 +335,5 @@ const hide_card = (stop_id) => {
 
 document.getElementById("realtime_stop_refresher").addEventListener('click', () => {
     let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
-    console.log(stop_id);
     get_bus_real_time_info(stop_id);
 });

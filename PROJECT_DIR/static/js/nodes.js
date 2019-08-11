@@ -112,6 +112,7 @@ export class Route {
   static addClick(route) {
     route.domNode.addEventListener("click", () => {
       //   remove color add to show journey planner is still in use
+      
       bottomSwiper.jp_active = true;
       bottomSwiper.changeState(bottomSwiper.LOWERED_STATE)
       // remove the journey_planner form

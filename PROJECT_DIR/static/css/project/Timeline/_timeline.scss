@@ -125,7 +125,8 @@
 }
 .bus-icon {
   font-size: 20px;
-  color: $bus_orange
+  color: $bus_orange;
+  animation: blinker 1.5s linear infinite;
 }
 
 
