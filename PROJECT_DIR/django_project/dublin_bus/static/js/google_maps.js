@@ -85,7 +85,7 @@ export let bus_route_drawer;
 
 // const toInputContainer = document.querySelector('#to-input')
 
-// styling for the map
+// styling for the map - based on https://snazzymaps.com/style/60/blue-gray
 let blueGray = [
   {
       "featureType": "water",
