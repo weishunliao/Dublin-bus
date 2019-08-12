@@ -6,6 +6,7 @@ import {
   changeCardShowing
 } from "./nodes";
 
+
 import { checkFavouriteJourneys } from "./favourites";
 import Swiper from "./Swiper";
 
@@ -84,12 +85,7 @@ window.addEventListener("load", function() {
     // alert('called!')
     checkFavouriteJourneys();
     if (
-      e.target.id == "tab-button-journey" &&
-      bottomSwiper.currentState === bottomSwiper.IN_STATE &&
-      !document
-        .querySelector(".journey-planner")
-        .classList.contains("converted")
-    ) {
+      e.target.id == "tab-button-journey") {
       switchUpText();
       const dateobj = new Date();
       const dateString = dateobj.toISOString();
@@ -99,6 +95,7 @@ window.addEventListener("load", function() {
 
     if (e.target.id !== "tab-button-journey") {
       changeCardShowing();
+      bottomSwiper.jp_active = false;
     }
 
     if (e.target.id === currentTab) {

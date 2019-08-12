@@ -646,6 +646,10 @@ export default function buildWeather(weather_type){
             obj = Skycons.SNOW
             color = "white"
             break;
+        case "rain":
+            obj = Skycons.RAIN
+            color = "white"
+            break;
         case "partly-cloudy-day":
             obj = Skycons.PARTLY_CLOUDY_DAY
             color = "white"
@@ -655,7 +659,7 @@ export default function buildWeather(weather_type){
             color = "white"
             break;
         default:
-            obj = Skycons.SNOW
+            obj = Skycons.RAIN
             color = "white"
             break;
     }

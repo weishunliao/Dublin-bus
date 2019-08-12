@@ -274,7 +274,7 @@ route_heart_empty.addEventListener('click', () => {
 export function route_confirm_box(route_id) {
     controller_confirm.create({
         header: 'DELETE ROUTE?',
-        message: 'Do you want to <strong>remove</strong> this route from your favourite?',
+        message: 'Do you want to <strong>remove</strong> this route from your favourites?',
         buttons: [
             {
                 text: 'Cancel',
@@ -377,7 +377,7 @@ export const toast_route_add = () => {
     controller.create({
         color: 'primary',
         duration: 1000,
-        message: 'Adding to favourite!',
+        message: 'Adding to favourites!',
         showCloseButton: true,
         position: 'top',
     }).then(toast => {
@@ -389,7 +389,7 @@ export const toast_route_remove = () => {
     controller.create({
         color: 'primary',
         duration: 1500,
-        message: 'Removed from favourite.',
+        message: 'Removed from favourites.',
         showCloseButton: true,
         position: 'top',
     }).then(toast => {

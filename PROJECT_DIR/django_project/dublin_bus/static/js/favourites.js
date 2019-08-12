@@ -543,7 +543,7 @@ export const empty_msg = (tab) => {
         '                    </ion-col>    \n' +
         '                    </ion-row>\n' +
         '                    <ion-row><ion-col size="12" class="empty_favourite_title">\n' +
-        '                    <span>You haven\'t added any ' + tab + ' yet...</span>\n' +
+        '                    <span>You haven\'t added any ' + tab + 's yet...</span>\n' +
         '                    </ion-col>\n' +
         '                    </ion-row>\n' +
         '                    <ion-row>\n' +
