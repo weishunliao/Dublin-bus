@@ -19,62 +19,65 @@ import { bottomSwiper } from "./touches";
 
 import { checkFavouriteJourneys } from "./favourites";
 
-
 const { searchInput } = search;
 let resp;
 
+const BOUNDS = {
+  north: 54.020858,
+  south: 52.324929,
+  west: -7.923442,
+  east: -4.793763
+};
+
 let months = {
-    0: 'January',
-    1: 'February',
-    2: 'March',
-    3: 'April',
-    4: 'May',
-    5: 'June',
-    6: 'July',
-    7: 'August',
-    8: 'September',
-    9: 'October',
-    10: 'November',
-    11: 'December'
-}
+  0: "January",
+  1: "February",
+  2: "March",
+  3: "April",
+  4: "May",
+  5: "June",
+  6: "July",
+  7: "August",
+  8: "September",
+  9: "October",
+  10: "November",
+  11: "December"
+};
 
 let daySelection = {
-    0: 'Sun',
-    1: 'Mon',
-    2: 'Tue',
-    3: 'Wed',
-    4: 'Thu',
-    5: 'Fri',
-    6: 'Sat'
-}
+  0: "Sun",
+  1: "Mon",
+  2: "Tue",
+  3: "Wed",
+  4: "Thu",
+  5: "Fri",
+  6: "Sat"
+};
 
-function dateBuilder(date){
-    let month = months[date.getMonth()]
-    let dayDate = date.getDate();
-    let year = date.getFullYear();
-    let dayName = daySelection[date.getDay()];
+function dateBuilder(date) {
+  let month = months[date.getMonth()];
+  let dayDate = date.getDate();
+  let year = date.getFullYear();
+  let dayName = daySelection[date.getDay()];
 
-    return "" + dayName + ", " + dayDate + " " + month + ", " + year;
+  return "" + dayName + ", " + dayDate + " " + month + ", " + year;
 }
 
 function transformTimeValue(valueGoesHere) {
+  let val = new Date(valueGoesHere);
+  val = val.getHours() + ":" + sortLeavingInMinutes(val.getMinutes());
 
-      let val = new Date(valueGoesHere);
-      val = val.getHours() +
-    ":" +
-    sortLeavingInMinutes(val.getMinutes());
-
-    return val
+  return val;
 }
 
-function sortLeavingInMinutes(val){
-    let ls;
-    if (val < 10){
-        ls = "0" + val;
-    } else {
-        ls = val;
-    }
-    return ls;
+function sortLeavingInMinutes(val) {
+  let ls;
+  if (val < 10) {
+    ls = "0" + val;
+  } else {
+    ls = val;
+  }
+  return ls;
 }
 export let directionsService;
 export let initialLocation;
@@ -88,106 +91,109 @@ export let bus_route_drawer;
 // styling for the map
 let blueGray = [
   {
-      "featureType": "water",
-      "stylers": [
-          {
-              "visibility": "on"
-          },
-          {
-              "color": "#b5cbe4"
-          }
-      ]
+    featureType: "water",
+    stylers: [
+      {
+        visibility: "on"
+      },
+      {
+        color: "#b5cbe4"
+      }
+    ]
   },
   {
-      "featureType": "landscape",
-      "stylers": [
-          {
-              "color": "#efefef"
-          }
-      ]
+    featureType: "landscape",
+    stylers: [
+      {
+        color: "#efefef"
+      }
+    ]
   },
   {
-      "featureType": "road.highway",
-      "elementType": "geometry",
-      "stylers": [
-          {
-              "color": "#83a5b0"
-          }
-      ]
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#83a5b0"
+      }
+    ]
   },
   {
-      "featureType": "road.arterial",
-      "elementType": "geometry",
-      "stylers": [
-          {
-              "color": "#bdcdd3"
-          }
-      ]
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#bdcdd3"
+      }
+    ]
   },
   {
-      "featureType": "road.local",
-      "elementType": "geometry",
-      "stylers": [
-          {
-              "color": "#ffffff"
-          }
-      ]
+    featureType: "road.local",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#ffffff"
+      }
+    ]
   },
   {
-      "featureType": "poi.park",
-      "elementType": "geometry",
-      "stylers": [
-          {
-              "color": "#e3eed3"
-          }
-      ]
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#e3eed3"
+      }
+    ]
   },
   {
-      "featureType": "administrative",
-      "stylers": [
-          {
-              "visibility": "on"
-          },
-          {
-              "lightness": 33
-          }
-      ]
+    featureType: "administrative",
+    stylers: [
+      {
+        visibility: "on"
+      },
+      {
+        lightness: 33
+      }
+    ]
   },
   {
-      "featureType": "road"
+    featureType: "road"
   },
   {
-      "featureType": "poi.park",
-      "elementType": "labels",
-      "stylers": [
-          {
-              "visibility": "on"
-          },
-          {
-              "lightness": 20
-          }
-      ]
+    featureType: "poi.park",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "on"
+      },
+      {
+        lightness: 20
+      }
+    ]
   },
   {},
   {
-      "featureType": "road",
-      "stylers": [
-          {
-              "lightness": 20
-          }
-      ]
+    featureType: "road",
+    stylers: [
+      {
+        lightness: 20
+      }
+    ]
   }
-]
+];
 
 export default function initMap() {
-  
   // This setTimeout is to ensure the dom has loaded so the map has somewhere to go
   setTimeout(() => {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 53.3471, lng: -6.26059 },
       zoom: 13,
       disableDefaultUI: true,
-      styles: blueGray
+      styles: blueGray,
+      clickableIcons: false,
+      restriction: {
+        latLngBounds: BOUNDS
+      }
     });
     let symbol = {
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
@@ -256,13 +262,13 @@ export default function initMap() {
       url: "/static/images/location_route.png", // url for the image
       scaledSize: new google.maps.Size(50, 50), // size of the image
       origin: new google.maps.Point(0, 0), // origin
-     anchor: new google.maps.Point(25, 50) // anchor
+      anchor: new google.maps.Point(25, 50) // anchor
     };
 
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({
       map: map,
-      markerOptions: {icon: locationIcon}
+      markerOptions: { icon: locationIcon }
     });
 
     let defaultBounds = new google.maps.LatLngBounds(
@@ -275,7 +281,6 @@ export default function initMap() {
       types: ["establishment"],
       country: "Ireland"
     };
-
 
     const searchAutocomplete = new google.maps.places.Autocomplete(
       searchInput,
@@ -315,7 +320,10 @@ export default function initMap() {
       get_sights_info_search(place.place_id);
     });
 
-    $("ion-tab-button").addClass("color-add");
+    if (is_mobile_JS) {
+      $("ion-tab-button").addClass("color-add");
+    }
+
     searchAutocomplete.addListener("place_changed", function() {
       var place = searchAutocomplete.getPlace();
       if (!place.geometry) {
@@ -376,7 +384,7 @@ export default function initMap() {
             map.setZoom(17);
 
             // setTimeout(() => {
-            
+
             // }, 1000)
 
             let marker = new google.maps.Marker({
@@ -392,14 +400,12 @@ export default function initMap() {
             marker.setAnimation(google.maps.Animation.DROP);
 
             geocoder.geocode({ location: pos }, function(results, status) {
-         
               if (status === "OK") {
                 if (results[0]) {
                   initialLocation = results[0];
                   let res = results[0].formatted_address.slice(0, 30) + "...";
 
                   fromInput.value = "Current location";
-                  fromInput.style.color = "green";
                   fromContainer.classList.add("focussed");
                 } else {
                   console.log("No results found");
@@ -427,10 +433,9 @@ export default function initMap() {
             showCloseButton: true
           })
           .then(toast => {
-              setTimeout(() => {
-                toast.present();
-              }, 1000)
-           
+            setTimeout(() => {
+              toast.present();
+            }, 1000);
           });
       }
     }
@@ -499,18 +504,18 @@ function AddMarkers(data, map) {
     markers[stopID] = busMarker;
     allMarkers.push(busMarker);
   }
-//   let clusterStyles = [
-//     {
-//       url: '/static/images/m3.png',
-//       textColor: "rgba(0,0,0)",
-//       width: 100,
-//       textSize: 16
-//     }
-//   ];
+  //   let clusterStyles = [
+  //     {
+  //       url: '/static/images/m3.png',
+  //       textColor: "rgba(0,0,0)",
+  //       width: 100,
+  //       textSize: 16
+  //     }
+  //   ];
 
   let mcOptions = {
-      imagePath: "/static/images/m"
-  }
+    imagePath: "/static/images/m"
+  };
 
   let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
@@ -569,25 +574,22 @@ const close_btn = () => {
     .addEventListener("click", detail);
 };
 
+export function FindMyRoutes(initialLocation, directionsService) {
+  submitButton.innerHTML = "Go";
 
+  let theight = document
+    .querySelector(".tabbar-container")
+    .getBoundingClientRect().height;
 
+  document.querySelector(".journey-planner__routes-container").style.height =
+    height - 160 - theight - height * 0.03 + "px";
 
-export function FindMyRoutes(initialLocation, directionsService){
-    
-    submitButton.innerHTML = "Go!";
+  let date = new Date(dateInput.value);
 
-    let theight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
+  // [date.getDay()]
+  let formattedDate = dateBuilder(date);
 
-    document.querySelector('.journey-planner__routes-container').style.height = (height - 160 - theight - (height * 0.03)) + "px";
-
-
-
-    let date = new Date(dateInput.value);
-    
-    // [date.getDay()]
-        let formattedDate = dateBuilder(date)
-
-    document.querySelector("#routesHere").innerHTML = `
+  document.querySelector("#routesHere").innerHTML = `
   
   <div class="loader__wrapper loader-jp" id="bus_loader-jp">
   <h3>Please wait...</h3><br>
@@ -601,36 +603,35 @@ export function FindMyRoutes(initialLocation, directionsService){
   
   `;
 
-    document.querySelector(".journey-planner").classList.add("converted");
-    let fromLocation;
-    if (fromInput.value === "Current location") {
-      fromLocation = initialLocation;
-      fromInput.value = fromLocation.formatted_address;
-      fromInput.style.color = "#3D5F7E";
-    } else {
-      fromLocation = fromInput.value;
-    }
-    checkFavouriteJourneys();
-    
-    directionsService.route(
-      {
-        origin: fromInput.value,
-        destination: toInput.value,
-        travelMode: "TRANSIT",
-        transitOptions: {
-          departureTime: new Date(dateInput.value)
-          // modes: ['BUS'],
-          // routingPreference: 'FEWER_TRANSFERS'
-        },
-        provideRouteAlternatives: true
+  document.querySelector(".journey-planner").classList.add("converted");
+  let fromLocation;
+  if (fromInput.value === "Current location") {
+    fromLocation = initialLocation;
+    fromInput.value = fromLocation.formatted_address;
+    fromInput.style.color = "#3D5F7E";
+  } else {
+    fromLocation = fromInput.value;
+  }
+  checkFavouriteJourneys();
+
+  directionsService.route(
+    {
+      origin: fromInput.value,
+      destination: toInput.value,
+      travelMode: "TRANSIT",
+      transitOptions: {
+        departureTime: new Date(dateInput.value)
+        // modes: ['BUS'],
+        // routingPreference: 'FEWER_TRANSFERS'
       },
-      
-      async function(response, status) {
-        try {
+      provideRouteAlternatives: true
+    },
+
+    async function(response, status) {
+      try {
         resp = response;
         console.log(response);
         if (status === "OK") {
-          document.querySelector("#routesHere").innerHTML = "";
           console.log("RESPONSE IS ", response);
           for (let i = 0; i < response.routes.length; i++) {
             let directions = new google.maps.DirectionsRenderer({
@@ -645,8 +646,9 @@ export function FindMyRoutes(initialLocation, directionsService){
                 response.routes[i].legs[0].steps[j].travel_mode == "TRANSIT"
               ) {
                 let agent =
-                  response.routes[i].legs[0].steps[j].transit.line
-                    .agencies[0]["name"];
+                  response.routes[i].legs[0].steps[j].transit.line.agencies[0][
+                    "name"
+                  ];
                 if (agent !== "Dublin Bus") {
                   error_count++;
                 }
@@ -662,11 +664,16 @@ export function FindMyRoutes(initialLocation, directionsService){
               ')">Show</button>';
             let step = 0;
             let routeDescription = [];
+            let journeyTimeReturnedFromModel = [];
             let start = response.routes[i].legs[0].start_address;
-            let routeSetOff = response.routes[i].legs[0].departure_time.value.getTime();
-            let routeArrive = response.routes[i].legs[0].arrival_time.value.getTime();
-            routeSetOff = transformTimeValue(routeSetOff)   
-            routeArrive = transformTimeValue(routeArrive)
+            let routeSetOff = response.routes[
+              i
+            ].legs[0].departure_time.value.getTime();
+            let routeArrive = response.routes[
+              i
+            ].legs[0].arrival_time.value.getTime();
+            routeSetOff = transformTimeValue(routeSetOff);
+            routeArrive = transformTimeValue(routeArrive);
             let end = response.routes[i].legs[0].end_address;
             let departure_stop = "";
             let route_id = "Walking";
@@ -702,46 +709,40 @@ export function FindMyRoutes(initialLocation, directionsService){
               } else {
                 // clear this when the server is back
                 let departureStop =
-                  response.routes[i].legs[0].steps[step].transit
-                    .departure_stop.name;
+                  response.routes[i].legs[0].steps[step].transit.departure_stop
+                    .name;
                 let arrivalStop =
-                  response.routes[i].legs[0].steps[step].transit
-                    .arrival_stop.name;
-              
+                  response.routes[i].legs[0].steps[step].transit.arrival_stop
+                    .name;
 
-                  let ct = Date.now() / 1000;
-                  
-                  let busTimeStamp =
-                    response.routes[i].legs[0].steps[
-                      step
-                    ].transit.departure_time.value.getTime() / 1000;
-                 
-                  leavingIn = Math.floor((busTimeStamp - ct) / 60);
-                  
+                let ct = Date.now() / 1000;
 
-                  leavingInValue = response.routes[i].legs[0].steps[
+                let busTimeStamp =
+                  response.routes[i].legs[0].steps[
                     step
-                  ].transit.departure_time.value.getTime();
+                  ].transit.departure_time.value.getTime() / 1000;
 
-                  
+                leavingIn = Math.floor((busTimeStamp - ct) / 60);
 
-                  leavingInValue = transformTimeValue(leavingInValue)
-                  
-                  
-                if (!leavingCounter){
-                    firstLeavingIn = leavingInValue;
-                    leavingCounter++;
+                leavingInValue = response.routes[i].legs[0].steps[
+                  step
+                ].transit.departure_time.value.getTime();
+
+                leavingInValue = transformTimeValue(leavingInValue);
+
+                if (!leavingCounter) {
+                  firstLeavingIn = leavingInValue;
+                  leavingCounter++;
                 }
-
 
                 let num_stops =
                   response.routes[i].legs[0].steps[step].transit.num_stops;
                 departure_stop =
-                  response.routes[i].legs[0].steps[step].transit
-                    .departure_stop.name;
+                  response.routes[i].legs[0].steps[step].transit.departure_stop
+                    .name;
                 let arrival_stop =
-                  response.routes[i].legs[0].steps[step].transit
-                    .arrival_stop.name;
+                  response.routes[i].legs[0].steps[step].transit.arrival_stop
+                    .name;
                 let departure_time_value =
                   response.routes[i].legs[0].steps[
                     step
@@ -754,8 +755,8 @@ export function FindMyRoutes(initialLocation, directionsService){
                 head_sign =
                   response.routes[i].legs[0].steps[step].transit.headsign;
                 departure_time =
-                  response.routes[i].legs[0].steps[step].transit
-                    .departure_time.text;
+                  response.routes[i].legs[0].steps[step].transit.departure_time
+                    .text;
 
                 await fetch("get_travel_time", {
                   method: "POST",
@@ -776,7 +777,7 @@ export function FindMyRoutes(initialLocation, directionsService){
                     return response.json();
                   })
                   .then(data => {
-                    // console.log("DATA", data);
+                    journeyTimeReturnedFromModel.push(data.journey_time);
                     full_travel_time += data.journey_time;
                     routeDescription.push([
                       "bus",
@@ -806,7 +807,6 @@ export function FindMyRoutes(initialLocation, directionsService){
                 leavingIn = "N/A";
               }
 
-
               const newRoute = new Route({
                 route: [response.routes[i]],
                 full_travel_time,
@@ -819,20 +819,18 @@ export function FindMyRoutes(initialLocation, directionsService){
                 routeArrive,
                 leavingInValue,
                 leavingIn,
-                formattedDate
+                formattedDate,
+                journeyTimeReturnedFromModel
               });
-            //   console.log(newRoute)
+              //   console.log(newRoute)
               Route.appendToDom(newRoute);
             }
           }
-        //   document.getElementById("bus_loader-jp").style.display = "none";
+          document.querySelector("#routesHere").innerHTML = "";
           Route.signalAppend();
-
-          // directionsDisplay.setDirections(response);
-        //   console.log("directionsDisplay", directionsDisplay);
         } else {
-            console.log("ERROR ")
-          document.querySelector('#routesHere').innerHTML = "";
+          console.log("ERROR ");
+          document.querySelector("#routesHere").innerHTML = "";
           errorText = `
           <div class="error-container">
           
@@ -843,15 +841,12 @@ export function FindMyRoutes(initialLocation, directionsService){
           </div>
           
           </div>
-          `
-          document.querySelector('#routesHere').innerHTML = errorText;
-
-
+          `;
+          document.querySelector("#routesHere").innerHTML = errorText;
         }
-      } catch (err){
-        document.querySelector('#routesHere').innerHTML = "";
-        errorText = 
-        `
+      } catch (err) {
+        document.querySelector("#routesHere").innerHTML = "";
+        errorText = `
           <div class="error-container">
           
           <div class="error-inner">
@@ -861,11 +856,10 @@ export function FindMyRoutes(initialLocation, directionsService){
           </div>
           
           </div>
-          `
-          document.querySelector('#routesHere').innerHTML = errorText;
-          console.log(err)
+          `;
+        document.querySelector("#routesHere").innerHTML = errorText;
+        console.log(err);
       }
     }
-   
-    );
+  );
 }

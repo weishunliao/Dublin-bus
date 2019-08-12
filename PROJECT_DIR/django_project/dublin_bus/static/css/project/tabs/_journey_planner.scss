@@ -59,6 +59,7 @@ input::selection {
         & .button-icon {
             font-size: 1.6rem;
             position: absolute;
+            color: $db_blue;
             top: 50%;
             transform: translateY(-50%);
 
@@ -77,6 +78,7 @@ input::selection {
             top: 50%;
             transform: translateY(-56%);
             margin: 0;
+            color: $db_blue;
 
             &--right {
                 right: 3rem;
@@ -194,7 +196,8 @@ input::selection {
 
         & h2 {
           @media screen and (max-width: 600px) {
-            font-size: 1.2rem !important;
+            font-size: 1.3rem !important;
+            font-weight: 700;
           }
           margin: 0;
         }
@@ -225,7 +228,8 @@ input::selection {
         right: 2rem;
         position: absolute;
         & h2 {
-            font-size: 1.2rem !important;
+            font-size: 1.3rem !important;
+            font-weight: 700;
             margin: 0;
             float: right;
         }
@@ -266,7 +270,13 @@ input::selection {
     }
 
     &__title {
-      font-size: 2rem !important;
+
+        @media screen and (min-width: 600px){
+            font-size: 1.6rem !important;
+        }
+
+        font-size: 2rem !important;
+      
       color: #3d5f7e;
       margin: 0;
 
@@ -481,7 +491,7 @@ ion-datetime {
 .focussed {
   & .journey-planner__form__label {
     top: -1rem;
-    transform: scale(0.4);
+    transform: scale(0.5);
   }
 }
 
@@ -496,7 +506,7 @@ ion-datetime {
 
   & .journey-planner__card__left__depTitle {
       text-align: left;
-      margin-left: 2rem;
+      margin-left: 1rem;
   }
 
   & .journey-planner__routes-container {
@@ -522,7 +532,7 @@ ion-datetime {
   & .journey-planner__form__label {
     transform: translateX(3rem) translateY(-50%);
     & h3 {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
   }
 
@@ -575,10 +585,12 @@ ion-datetime {
   & .form-submit {
     border-radius: 50%;
     background: white;
+    color: $db_blue;
     margin: 0;
     height: 4rem;
+    font-weight: 700;
     width: 4rem;
-    font-size: 1rem;
+    font-size: 1.4rem;
     box-shadow: -1px 3px 2px rgba(0, 0, 0, 0.16);
     & button {
         width: 6rem;
@@ -622,6 +634,7 @@ ion-datetime {
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
+    background: white;
 
     
   }
@@ -653,9 +666,13 @@ ion-tab-button {
   --color: #3d5f7e;
 }
 
+
+
 .color-add {
-  color: #3d5f7e;
-}
+    color: #3d5f7e;
+  }
+
+
 
 // SHOW CARD STYLES
 
@@ -893,6 +910,7 @@ ion-tab-button {
     height: 100%;
     width: 100%;
     color: inherit;
+    font-weight: 700;
 }
 
 .walking-numberbox {
@@ -915,5 +933,28 @@ ion-tab-button {
 .busLocationDiv {
     &::after {
         border-left: 3px $bus_blue solid;
+    }
+}
+
+#swapper {
+    font-size: 3rem;
+    transform: rotate(90deg);
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    color: $db_blue;
+}
+
+.rb-clicked {
+    transition: all .2s;
+    & ion-icon {
+        transform: translateY(-50%) rotate(180deg) !important;
+    }
+}
+
+.smallened {
+    width: 25%;
+    & ion-icon {
+        font-size: 2rem !important;
     }
 }

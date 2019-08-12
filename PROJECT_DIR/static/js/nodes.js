@@ -79,7 +79,10 @@ export function switchUpText() {
 
   let num = Math.floor(Math.random() * selection.length);
   let relText = selection[num];
-  submitButton.innerHTML = relText;
+  if (!document.querySelector('.journey-planner').classList.contains('converted')){
+    submitButton.innerHTML = relText;
+  }
+  
 }
 
 let collectionOfRoutes = [];
@@ -193,6 +196,7 @@ export class Route {
         let rightButton = document.querySelector('.right-button');
 
         rightButton.addEventListener("click", () => {
+        
           bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         });
     });
