@@ -66,15 +66,10 @@ export const drawers = {
 
 export function switchUpText() {
   let selection = [
-    "Take me for a ride!",
     "Bus me!",
-    "Vroom vroom!",
-    "The wheels on the bus...",
     "Let's go!",
-    "Trip me!",
-    "Go public transport!",
+    "Go!",
     "Let's bus!",
-    "RT_Trips gave my CPU a stroke"
   ];
 
   let num = Math.floor(Math.random() * selection.length);
@@ -107,6 +102,7 @@ export class Route {
     this.firstLeavingIn = routeData.firstLeavingIn;
     this.routeSetOff = routeData.routeSetOff;
     this.routeArrive = routeData.routeArrive;
+    this.journeyTime = routeData.journeyTimeReturnedFromModel
   }
 
   static addClick(route) {
@@ -130,11 +126,11 @@ export class Route {
     <div class="journey-planner__showscreen__buttons">
         <div class="left-button general-button">
             <ion-icon class="button-icon button-icon--left" name="arrow-back"></ion-icon>
-            <h3 class="button-text button-text--left">Go back</h3>
+            <h3 class="button-text button-text--left">Back to routes</h3>
         </div>
         <div class="right-button general-button">
         <ion-icon class="button-icon button-icon--right" name="arrow-dropup-circle"></ion-icon>
-        <h3 class="button-text button-text--right">Go forward</h3>
+        <h3 class="button-text button-text--right">More info</h3>
        
         </div>
     </div>
@@ -180,6 +176,7 @@ export class Route {
                 ".journey-planner__moreInfoContainer"
               ).style.display = "none";
               document.querySelector(".journey-planner__form").style.display = "block";
+
       // remove the journeys being shown
       document.querySelector("#routesHere").style.display = "block";
       document
@@ -193,13 +190,32 @@ export class Route {
         let rightButton = document.querySelector('.right-button');
 
         rightButton.addEventListener("click", () => {
-          bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+            if (bottomSwiper.currentState === bottomSwiper.LOWERED_STATE){
+                bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+                document.querySelector('.button-text--right').innerHTML = "See map"
+            } else {
+                bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
+                document.querySelector('.button-text--right').innerHTML = "More info"
+            }
+          
+          rightButton.classList.toggle('rb-clicked');
         });
     });
   }
 
   static appendToDom(route) {
-    collectionOfRoutes.push(route);
+      console.log(route)
+      let bad = 0;
+      route.journeyTime.forEach(journey => {
+          if (journey < 0) {
+            bad += 1
+          }
+      })
+
+      if (bad === 0){
+          collectionOfRoutes.push(route)
+      }
+   
   }
 
   static signalAppend() {
@@ -207,10 +223,29 @@ export class Route {
       return a.leavingIn > b.leavingIn;
     });
 
+    if (collectionOfRoutes.length === 0) {
+        document.querySelector("#routesHere").innerHTML = 
+        `
+        <div class="error-container">
+          
+          <div class="error-inner">
+          
+          <h2>No routes found :(</h2>
+
+          </div>
+          
+          </div>
+
+        
+        `
+    }
+
     collectionOfRoutes.forEach(route => {
       $("#routesHere").append(
         Route.jpDisplayCard(route.nodeHTML, route.routeData.id)
       );
+
+    
       route.domNode = document.querySelector(`#route-${route.routeData.id}`);
       Route.addClick(route);
     });
@@ -333,7 +368,7 @@ export class Route {
 
       finString =
         finString +
-        `<div class="journey-planner__card__right__iconContainer">
+        `<div class="journey-planner__card__right__iconContainer ${routeDescription.length > 3 ? "smallened" : ""}">
                           ${icon}
                           <div class="journey-planner__card__numberbox journey-planner__card__numberbox ${
                             walking ? "walking-numberbox" : "bus-numberbox"

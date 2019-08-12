@@ -233,3 +233,8 @@
 #realtime_stop_refresher {
   text-align: end;
 }
+
+
+.stops__toolbar__back-btn, #stops__show-on-map-btn__name, #typeahead_stop, #typeahead_route, #routes__show-on-map-btn__name, .tt-highlight, .tt-suggestion, .tt-dataset {
+    color: $db_blue !important;
+}
