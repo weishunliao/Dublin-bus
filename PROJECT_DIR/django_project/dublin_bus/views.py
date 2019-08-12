@@ -155,9 +155,9 @@ def get_sights_info(request):
     if category == "Sightseeing":
         url += "Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z/data=!3m1!4b1"
     elif category == "Restaurant":
-        url += "restaurant+Dublin/@53.3559966,-6.3761839,12z/data=!4m4!2m3!5m1!4e9!6e5"
+        url += "restaurant+Dublin"
     elif category == "Nightlife":
-        url += "bar%2BDublin/@53.3211591,-6.3004305,12z/data=!4m4!2m3!5m1!4e3!6e5"
+        url += "bar%2BDublin/@53.3211591,-6.3004305,12z/data=!3m1!4b1"
     elif category == "Coffee":
         url += "/coffee+dublin/@53.3454515,-6.2690574,16z/data=!3m1!4b1"
     elif category == "Hotel":
