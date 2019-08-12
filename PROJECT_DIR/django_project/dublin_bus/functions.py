@@ -2,9 +2,7 @@ import os
 import pickle
 import datetime
 import ssl
-
 import aiohttp
-import certifi
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -379,8 +377,7 @@ def calculate_time_diff(trips, time):
         return []
     i = 1
     stops_list = []
-
-    while i <= len(trips[1]):
+    while i <= len(trips[0]):
         # t = 0
         # while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
         #     t += 1
@@ -388,7 +385,7 @@ def calculate_time_diff(trips, time):
         # stops_list.append(
         #     [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
         stops_list.append(
-            [trips[1][str(i)][0][-4:], trips[1][str(i)][1], (trips[1][str(i)][2] - time) // 60, trips[1][str(i)][3]])
+            [trips[0][str(i)][0][-4:], trips[0][str(i)][1], (trips[0][str(i)][2] - time) // 60, trips[0][str(i)][3]])
 
         i += 1
     return stops_list

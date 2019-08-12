@@ -189,7 +189,7 @@ export const create_favourite_route_card = (route_id, tab_name) => {
     get_headsign(route_id).then(direction => {
         let card =
             '<ion-card class="routes__content__card" id="routes__content__card__' +
-            route_id +
+            route_id + "_in_" + tab_name +
             '" data-direction="in"\n' +
             '                                      data-id="' +
             route_id +
@@ -233,7 +233,7 @@ export const create_favourite_route_card = (route_id, tab_name) => {
         $("#favourite_routes__cards__in__" + tab_name).append(card);
         if (tab_name === "route") {
             const elem = document.getElementById(
-                "routes__content__card__" + route_id
+                "routes__content__card__" + route_id + "_in_" + tab_name
             );
             elem.addEventListener("click", () => {
                 get_bus_stop_list(route_id, "in");
@@ -255,10 +255,10 @@ export const create_favourite_route_card = (route_id, tab_name) => {
                     route_save_favourites(route_id);
                     route_toggle_heart();
                 });
-            document.querySelector("#routes__content__card__" + route_id).children[0].children[1].addEventListener('click', ()=>{
+            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[1].addEventListener('click', ()=>{
                 switch_to_route_tab(route_id);
             });
-            document.querySelector("#routes__content__card__" + route_id).children[0].children[0].children[0].addEventListener('click', ()=>{
+            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[0].children[0].addEventListener('click', ()=>{
                 switch_to_route_tab(route_id);
             })
         }
