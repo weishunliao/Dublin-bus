@@ -186,7 +186,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
 };
 export const create_favourite_route_card = (route_id, tab_name) => {
     set_height();
-    
+
     get_headsign(route_id).then(direction => {
         let card =
             '<ion-card class="routes__content__card" id="routes__content__card__' +
@@ -351,14 +351,17 @@ const update_journey_list = () => {
         journeys.forEach(journey => {
             savedJourneysContainer.innerHTML += journeyList[journey].nodeHTML;
         });
+        let cards = document.querySelectorAll(".journey__content__card");
+        for (let card of cards) {
+            card.addEventListener('click', (e) => {
                 if (e.target.name !== 'heart') {
-                setTimeToNow();
-                fromInput.value = addr.offsetParent.dataset.from;
-                toInput.value = addr.offsetParent.dataset.to;
-                document.querySelector("ion-tabs").select("journey");
-                fromContainer.classList.add('focussed');
-                toContainer.classList.add('focussed');
-                FindMyRoutes(initialLocation, directionsService);
+                    setTimeToNow();
+                    fromInput.value = card.dataset.from;
+                    toInput.value = card.dataset.to;
+                    document.querySelector("ion-tabs").select("journey");
+                    fromContainer.classList.add('focussed');
+                    toContainer.classList.add('focussed');
+                    FindMyRoutes(initialLocation, directionsService);
                 }
             })
         }
@@ -369,7 +372,6 @@ const update_journey_list = () => {
                 removeFavourite(id);
             });
         }
-
     } else {
         savedJourneysContainer.innerHTML = empty_msg('journey');
     }
@@ -507,7 +509,6 @@ export function checkFavouriteJourneys() {
     if (!currentJourneysInStorage) {
         currentJourneysInStorage = {}
     }
-
 
 
     let journeyKeys = Object.keys(currentJourneysInStorage)

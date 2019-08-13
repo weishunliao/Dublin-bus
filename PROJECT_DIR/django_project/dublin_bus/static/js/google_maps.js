@@ -868,21 +868,21 @@ export function FindMyRoutes(initialLocation, directionsService) {
 
 
 export const hideMarkers = () => {
-    allMarkers.forEach(marker => {
-        marker.setVisible(false)
-    });
-    markerCluster.repaint()
-}
+  allMarkers.forEach(marker => {
+    marker.setVisible(false)
+  });
+  markerCluster.repaint()
+};
 
 export const showMarkers = () => {
 
-    for (let marker of allMarkers){
-        if (marker.getVisible()){
-            break;
-        } else {
-            marker.setVisible(true)
-        }
+  for (let marker of allMarkers) {
+    if (marker.getVisible()) {
+      break;
+    } else {
+      marker.setVisible(true)
     }
-    
-    markerCluster.repaint()
-}
+  }
+
+  markerCluster.repaint()
+};
