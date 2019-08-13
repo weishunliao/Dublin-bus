@@ -622,9 +622,10 @@ def is_school_holiday(day, month):
 
 
 async def get_real_time_data(stop_id):
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     session = aiohttp.ClientSession()
     resp = await session.get(
-        "https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?format=json&operator=bac&stopid=" + stop_id)
+        "https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?format=json&operator=bac&stopid=" + stop_id, ssl=ssl_context)
 
     real_time_info = {stop_id: []}
     if resp.status == 200:

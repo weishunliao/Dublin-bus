@@ -1,17 +1,15 @@
 #map {
-    height: 100%;
-    
-    
+  height: 100%;
 
-    & .drawer-open {
-        touch-action: none;
-        pointer-events: none;
-    }
+  & .drawer-open {
+    touch-action: none;
+    pointer-events: none;
+  }
 }
 .map__container {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left:0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

@@ -1,5 +1,5 @@
 import { bottomSwiper } from "./touches";
-import { directionsDisplay } from "./google_maps";
+import { directionsDisplay, hideMarkers } from "./google_maps";
 import { checkFavouriteJourneys } from "./favourites";
 
 const topDrawer = document.querySelector(".drawer__container--top");
@@ -16,21 +16,37 @@ export const controller = document.querySelector("ion-toast-controller");
 export let showContainer = document.querySelector("#show-container");
 export let cardShowing = false;
 
+
+
 export function changeCardShowing() {
   cardShowing = false;
-  // showContainer.style.display = "none";
+
   directionsDisplay.set("directions", null);
 }
 
-document
-  .querySelector("ion-datetime")
-  .setAttribute("min", new Date().toISOString());
-document.querySelector("ion-datetime").setAttribute("max", "2021");
+
+export function buildDate(){
+    let date = new Date(); // Or the date you'd like converted.
+    let isoDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();
+    document.querySelector("ion-datetime").setAttribute("min", isoDate);
+}
+
+export function setTimeToNow() {
+    let date = new Date(); // Or the date you'd like converted.
+    let isoDate = date.toISOString()
+    dateInput.value = isoDate;
+}
+
+dateInput.setAttribute("max", "2021");
+dateInput.addEventListener('ionFocus', (e)=> {
+    buildDate();
+})
 
 export let selectedTab = $("ion-tab-button#tab-button-journey");
 export const jpFormInputs = $(".journey-planner__form__input");
 export const fromInput = document.querySelector("#from");
 export const fromContainer = document.querySelector("#from-container");
+export const toContainer = document.querySelector("#to-container");
 export const toInput = document.querySelector("#to");
 
 const allInputs = document.querySelectorAll("input");
@@ -65,16 +81,15 @@ export const drawers = {
 };
 
 export function switchUpText() {
-  let selection = [
-    "Bus me!",
-    "Let's go!",
-    "Go!",
-    "Let's bus!",
-  ];
+  let selection = ["Bus me!", "Let's go!", "Go!", "Let's bus!"];
 
   let num = Math.floor(Math.random() * selection.length);
   let relText = selection[num];
-  submitButton.innerHTML = relText;
+  if (
+    !document.querySelector(".journey-planner").classList.contains("converted")
+  ) {
+    submitButton.innerHTML = relText;
+  }
 }
 
 let collectionOfRoutes = [];
@@ -102,15 +117,15 @@ export class Route {
     this.firstLeavingIn = routeData.firstLeavingIn;
     this.routeSetOff = routeData.routeSetOff;
     this.routeArrive = routeData.routeArrive;
-    this.journeyTime = routeData.journeyTimeReturnedFromModel
+    this.journeyTime = routeData.journeyTimeReturnedFromModel;
   }
 
   static addClick(route) {
     route.domNode.addEventListener("click", () => {
       //   remove color add to show journey planner is still in use
-      
+      hideMarkers();
       bottomSwiper.jp_active = true;
-      bottomSwiper.changeState(bottomSwiper.LOWERED_STATE)
+      bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
       // remove the journey_planner form
       document.querySelector(".journey-planner__form").style.display = "none";
       // remove the journeys being shown
@@ -128,7 +143,7 @@ export class Route {
             <ion-icon class="button-icon button-icon--left" name="arrow-back"></ion-icon>
             <h3 class="button-text button-text--left">Back to routes</h3>
         </div>
-        <div class="right-button general-button">
+        <div class="right-button general-button ${is_mobile_JS ? "" : "hide-button"}">
         <ion-icon class="button-icon button-icon--right" name="arrow-dropup-circle"></ion-icon>
         <h3 class="button-text button-text--right">More info</h3>
        
@@ -169,53 +184,59 @@ export class Route {
         route.routeArrive
       );
 
-      let leftButton = document.querySelector('.left-button');
-        leftButton.addEventListener("click", () => {
-            bottomSwiper.changeState(bottomSwiper.OUT_STATE)
-            document.querySelector(
-                ".journey-planner__moreInfoContainer"
-              ).style.display = "none";
-              document.querySelector(".journey-planner__form").style.display = "block";
+      let leftButton = document.querySelector(".left-button");
+      leftButton.addEventListener("click", () => {
+        bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+        Route.returnToRoutes();
+      });
 
-      // remove the journeys being shown
-      document.querySelector("#routesHere").style.display = "block";
-      document
-      .querySelector(".journey-planner__form-container")
-      .classList.remove("journeyFocus");
-      document.querySelector('.journey-planner__showscreen').style.display ="none";
+      let rightButton = document.querySelector(".right-button");
 
-    
-        });
+      rightButton.addEventListener("click", () => {
+        if (bottomSwiper.currentState === bottomSwiper.LOWERED_STATE) {
+          bottomSwiper.changeState(bottomSwiper.OUT_STATE);
+          document.querySelector(".button-text--right").innerHTML = "See map";
+        } else {
+          bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
+          document.querySelector(".button-text--right").innerHTML = "More info";
+        }
 
-        let rightButton = document.querySelector('.right-button');
-
-        rightButton.addEventListener("click", () => {
-            if (bottomSwiper.currentState === bottomSwiper.LOWERED_STATE){
-                bottomSwiper.changeState(bottomSwiper.OUT_STATE);
-                document.querySelector('.button-text--right').innerHTML = "See map"
-            } else {
-                bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
-                document.querySelector('.button-text--right').innerHTML = "More info"
-            }
-          
-          rightButton.classList.toggle('rb-clicked');
-        });
+        rightButton.classList.toggle("rb-clicked");
+      });
     });
   }
 
-  static appendToDom(route) {
-      console.log(route)
-      let bad = 0;
-      route.journeyTime.forEach(journey => {
-          if (journey < 0) {
-            bad += 1
-          }
-      })
+  static returnToRoutes() {
+      bottomSwiper.jp_active = false;
+    document.querySelector(
+      ".journey-planner__moreInfoContainer"
+    ).style.display = "none";
+    document.querySelector(".journey-planner__form").style.display = "block";
 
-      if (bad === 0){
-          collectionOfRoutes.push(route)
+    // remove the journeys being shown
+    document.querySelector("#routesHere").style.display = "block";
+    document
+      .querySelector(".journey-planner__form-container")
+      .classList.remove("journeyFocus");
+      if (document.querySelector(".journey-planner__showscreen")){
+        document.querySelector(".journey-planner__showscreen").style.display =
+      "none";
       }
-   
+    
+  }
+
+  static appendToDom(route) {
+ 
+    let bad = 0;
+    route.journeyTime.forEach(journey => {
+      if (journey < 0) {
+        bad += 1;
+      }
+    });
+
+    if (bad === 0) {
+      collectionOfRoutes.push(route);
+    }
   }
 
   static signalAppend() {
@@ -224,8 +245,7 @@ export class Route {
     });
 
     if (collectionOfRoutes.length === 0) {
-        document.querySelector("#routesHere").innerHTML = 
-        `
+      document.querySelector("#routesHere").innerHTML = `
         <div class="error-container">
           
           <div class="error-inner">
@@ -237,7 +257,7 @@ export class Route {
           </div>
 
         
-        `
+        `;
     }
 
     collectionOfRoutes.forEach(route => {
@@ -245,7 +265,6 @@ export class Route {
         Route.jpDisplayCard(route.nodeHTML, route.routeData.id)
       );
 
-    
       route.domNode = document.querySelector(`#route-${route.routeData.id}`);
       Route.addClick(route);
     });
@@ -368,7 +387,9 @@ export class Route {
 
       finString =
         finString +
-        `<div class="journey-planner__card__right__iconContainer ${routeDescription.length > 3 ? "smallened" : ""}">
+        `<div class="journey-planner__card__right__iconContainer ${
+          routeDescription.length > 3 ? "smallened" : ""
+        }">
                           ${icon}
                           <div class="journey-planner__card__numberbox journey-planner__card__numberbox ${
                             walking ? "walking-numberbox" : "bus-numberbox"
@@ -379,7 +400,12 @@ export class Route {
     return finString;
   }
 
-  static moreInfoBuilder(routeDescription, leavingInVal, departureTime, arrivalTime) {
+  static moreInfoBuilder(
+    routeDescription,
+    leavingInVal,
+    departureTime,
+    arrivalTime
+  ) {
     /*
     routeDescription explained:
     0: 'walking' or 'bus' - String
@@ -416,82 +442,69 @@ export class Route {
 
       function provideWalkTime(prevBusJourneyTime, prevBusLeaveTime) {
         let fin;
-      /** this function:
-       * * takes in the departure time of the previous bus.
-       * * We have to add prevBusJourneyTime to prevBusLeave Time
-       *
-       * ? They are both strings on input
-       * *
-       * /
-       */
-      let firstTwo = prevBusLeaveTime.slice(0, 2);
-    
-      let lastTwo = prevBusLeaveTime.slice(-2);
-      
-    
-      let lastTwoAsNum = parseInt(lastTwo);
-      let prevBusJTasNum = parseInt(prevBusJourneyTime);
-    
-    
-      // * have we crossed the hour boundary?
-      if (prevBusJTasNum + lastTwoAsNum >= 60) {
-    let fin;
-        let newTwo;
-        // * have we crossed the day boundary?
-        if (firstTwo === "23") {
-    
-          newTwo = "00";
+        /** this function:
+         * * takes in the departure time of the previous bus.
+         * * We have to add prevBusJourneyTime to prevBusLeave Time
+         *
+         * ? They are both strings on input
+         * *
+         * /
+         */
+        let firstTwo = prevBusLeaveTime.slice(0, 2);
+
+        let lastTwo = prevBusLeaveTime.slice(-2);
+
+        let lastTwoAsNum = parseInt(lastTwo);
+        let prevBusJTasNum = parseInt(prevBusJourneyTime);
+
+        // * have we crossed the hour boundary?
+        if (prevBusJTasNum + lastTwoAsNum >= 60) {
+          let fin;
+          let newTwo;
+          // * have we crossed the day boundary?
+          if (firstTwo === "23") {
+            newTwo = "00";
+          } else {
+            newTwo = (parseInt(firstTwo) + 1).toString();
+          }
+          // * adjust the minutes
+          lastTwo = parseInt(prevBusJTasNum + lastTwoAsNum - 60);
+          if (lastTwo.toString().length < 2) {
+            lastTwo = "0" + lastTwo;
+          }
+
+          fin = newTwo + ":" + lastTwo;
+          lastAddedTime = fin;
+          return fin;
         } else {
-          newTwo = (parseInt(firstTwo) + 1).toString();
-        }
-        // * adjust the minutes
-        lastTwo = parseInt(prevBusJTasNum + lastTwoAsNum - 60);
-        if (lastTwo.toString().length < 2) {
-          lastTwo = "0" + lastTwo;
-        }
-    
-        
-        fin = newTwo + ":" + lastTwo;
-        lastAddedTime = fin;
-        return fin
-      } else {
-        let newMinutes = lastTwoAsNum + prevBusJTasNum;
-        if (newMinutes.toString().length < 2) {
+          let newMinutes = lastTwoAsNum + prevBusJTasNum;
+          if (newMinutes.toString().length < 2) {
             newMinutes = "0" + newMinutes;
           }
-        console.log("newMinutes", newMinutes);
-        fin = firstTwo + ":" + newMinutes;
-        lastAddedTime = fin
-        return fin
+          fin = firstTwo + ":" + newMinutes;
+          lastAddedTime = fin;
+          return fin;
+        }
       }
-    }
-    
 
       function provideTime(currentIndex) {
-          let prev;
+        let prev;
         if (currentIndex === 0) {
-          return departureTime; 
-        } else if (currentIndex === -1){
-            
-            let prev = routeDescription[routeDescription.length - 1]
-            if (prev[0] === 'bus') {
-                return provideWalkTime(prev[7], prev[8]);
-            } else {
-                return provideWalkTime(prev[7], lastAddedTime);
-            }   
-        } 
-        else
-        {
+          return departureTime;
+        } else if (currentIndex === -1) {
+          let prev = routeDescription[routeDescription.length - 1];
+          if (prev[0] === "bus") {
+            return provideWalkTime(prev[7], prev[8]);
+          } else {
+            return provideWalkTime(prev[7], lastAddedTime);
+          }
+        } else {
           prev = routeDescription[currentIndex - 1];
 
           return provideWalkTime(prev[7], prev[8]);
         }
       }
 
-    //   else if (currentIndex === routeDescription.length - 1) {
-    //     // console.log("it's the last one!!")
-    //     // console.log("the one before", routeDescription[currentIndex -1])
-    //     } 
 
       function splitDistanceText(distText) {
         let arr = distText.split(",");
@@ -514,7 +527,6 @@ export class Route {
               routeSection[0] === "bus" ? routeSection[8] : provideTime(index)
             }</h2>`;
 
-            console.log("r1:", routeSection[0], "r8", routeSection[8])
 
       finString += "</div>";
 
@@ -563,7 +575,6 @@ export class Route {
           
           `;
     });
-    console.log("LAST ADDED TIMNE!!!", lastAddedTime)
     return finString;
   }
 
@@ -613,12 +624,4 @@ export const search = {
   searchInput
 };
 
-//   route.showContainer.innerHTML = Route.journeyShowCard(
-//     route.routeData.routeDescription,
-//     route.nodeHTML,
-//     route.routeData.id
-//   );
-//   route.showContainer.style.display = "block";
-//   go to lowered state
-//   bottomSwiper.changeState(bottomSwiper.LOWERED_STATE, null);
 

@@ -1,15 +1,13 @@
-
 .loader__wrapper {
   width: 50%;
   margin: 0 auto;
   padding-top: 20%;
   position: relative;
   text-align: center;
-
 }
 
 .loader-jp {
-    padding-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 .loader__wrapper2 {
@@ -46,10 +44,10 @@
 
 @keyframes bounce {
   0% {
-    transform: translateY(0)
+    transform: translateY(0);
   }
   100% {
-    transform: translateY(-2%)
+    transform: translateY(-2%);
   }
 }
 

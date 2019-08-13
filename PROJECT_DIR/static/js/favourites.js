@@ -14,7 +14,7 @@ import {
     route_save_favourites,
     route_toggle_heart
 } from "./routes";
-import {toInput, fromInput} from "./nodes";
+import {toInput, fromInput, setTimeToNow, fromContainer, toContainer} from "./nodes";
 import {bottomSwiper} from "./touches";
 
 
@@ -186,6 +186,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
 };
 export const create_favourite_route_card = (route_id, tab_name) => {
     set_height();
+    
     get_headsign(route_id).then(direction => {
         let card =
             '<ion-card class="routes__content__card" id="routes__content__card__' +
@@ -341,12 +342,6 @@ async function removeFavourite(id) {
 
 }
 
-// savedJourneysContainer.addEventListener('click', e => {
-//     console.log(e.target.id);
-//     removeFavourite(e.target.id)
-// })
-
-
 const update_journey_list = () => {
     journeyList = JSON.parse(localStorage.getItem("journeys"));
 
@@ -359,9 +354,12 @@ const update_journey_list = () => {
         let addrs = document.querySelectorAll("#journey__content__card__address");
         for (let addr of addrs) {
             addr.addEventListener('click', () => {
+                setTimeToNow();
                 fromInput.value = addr.offsetParent.dataset.from;
                 toInput.value = addr.offsetParent.dataset.to;
                 document.querySelector("ion-tabs").select("journey");
+                fromContainer.classList.add('focussed');
+                toContainer.classList.add('focussed');
                 FindMyRoutes(initialLocation, directionsService);
             })
         }
@@ -510,9 +508,7 @@ export function checkFavouriteJourneys() {
     if (!currentJourneysInStorage) {
         currentJourneysInStorage = {}
     }
-    // first check if there's any saved journeys
-    // console.log("Favourite journeys called")
-    // console.log("current journeys in storage", currentJourneysInStorage)
+
 
 
     let journeyKeys = Object.keys(currentJourneysInStorage)

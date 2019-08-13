@@ -44,6 +44,7 @@
   &__options {
     &__head {
       background-color: $bus_yellow;
+      height: 16rem;
 
     }
 
@@ -52,11 +53,11 @@
       font-size: 3rem;
       font-weight: bold;
       color: $db_blue;
-      font-family: Helvetica;
+  
     }
 
     &__back-btn {
-
+        color: $db_blue;
     }
 
     &__cards {
