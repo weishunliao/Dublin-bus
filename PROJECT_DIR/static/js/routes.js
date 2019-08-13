@@ -1,4 +1,4 @@
-import {markers, map, bus_route_drawer} from "./google_maps";
+import {markers, map, bus_route_drawer, hideMarkers, showMarkers} from "./google_maps";
 import {create_favourite_route_card, empty_msg, update_route_list} from "./favourites";
 import {controller_confirm} from "./stops";
 import {controller} from "./nodes";
@@ -147,6 +147,7 @@ const display_bus_arrival_time = (num) => {
 export const detail2 = () => {
     const container = $("#routes-container");
     if (container.css('margin-left') === '0px') {
+        hideMarkers();
         container.animate({'margin-left': '-100%'}, 200, 'linear');
     } else {
         container.animate({'margin-left': '0'}, 200, 'linear');
