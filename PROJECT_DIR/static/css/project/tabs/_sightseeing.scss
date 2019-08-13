@@ -23,18 +23,18 @@
       }
 
       &__icon {
-        font-size: 7vw;
+        font-size: 3rem;
         color: white;
         background-color: $db_blue;
         border-radius: 50%;
-        padding: 3vh;
+        padding: 1.5rem;
         margin-bottom: 5px;
       }
 
       &__label {
         margin-top: 0;
         color: $db_blue;
-        font-size: 3.5vw;
+        //font-size: 3.5vw;
         font-weight: bold;
       }
     }
@@ -44,7 +44,7 @@
   &__options {
     &__head {
       background-color: $bus_yellow;
-
+      height: 16rem;
     }
 
     &__search__title__label {
@@ -52,11 +52,11 @@
       font-size: 3rem;
       font-weight: bold;
       color: $db_blue;
-      font-family: Helvetica;
+  
     }
 
     &__back-btn {
-
+        color: $db_blue;
     }
 
     &__cards {
@@ -64,7 +64,7 @@
     padding-bottom: 5rem;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
-    height: 30rem;
+   
 
       &__photo {
       }

@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'livereload',
     'webpack_loader',
     'dublin_bus',
+    'django_user_agents',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'livereload.middleware.LiveReloadScript',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'django_project.urls'
@@ -91,9 +91,12 @@ DATABASES = {
 
         # PRODUCTION
         'HOST': 'localhost',
+        # 'HOST': '127.0.0.1'
 
-        # UCD - 137.43.49.50 is for development
+        # DEVELOPMENT - UCD
         # 'HOST': '137.43.49.50'
+        # DEVELOPMENT - HOME
+        # 'HOST': '127.0.0.1'
     }
 
 }

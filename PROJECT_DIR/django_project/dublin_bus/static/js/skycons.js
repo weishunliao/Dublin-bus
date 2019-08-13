@@ -637,13 +637,17 @@ caf = cancelAnimationFrame        ||
 
   
 export default function buildWeather(weather_type){
-    console.log(weather_type)
+
     let obj;
     let color;
 
     switch (weather_type) {
         case "snow":
             obj = Skycons.SNOW
+            color = "white"
+            break;
+        case "rain":
+            obj = Skycons.RAIN
             color = "white"
             break;
         case "partly-cloudy-day":
@@ -655,7 +659,7 @@ export default function buildWeather(weather_type){
             color = "white"
             break;
         default:
-            obj = Skycons.SNOW
+            obj = Skycons.RAIN
             color = "white"
             break;
     }
