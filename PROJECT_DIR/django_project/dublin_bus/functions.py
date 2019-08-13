@@ -364,7 +364,6 @@ def get_trip_info(trip_ids, service_id, direction, route_id):
         return []
     path = os.path.join(BASE_DIR, '../bus_info/routes/route_' + route_id + '.json')
     infos = []
-    print(trip_ids)
     with open(path, 'r') as json_file:
         data = json.load(json_file)[direction][str(service_id)]
         for trip_id in trip_ids:
@@ -378,12 +377,6 @@ def calculate_time_diff(trips, time):
     i = 1
     stops_list = []
     while i <= len(trips[0]):
-        # t = 0
-        # while t < len(trips) and (trips[t][str(i)][2] - time) // 60 < 0:
-        #     t += 1
-        # print(trips[t])
-        # stops_list.append(
-        #     [trips[t][str(i)][0][-4:], trips[t][str(i)][1], (trips[t][str(i)][2] - time) // 60, trips[t][str(i)][3]])
         stops_list.append(
             [trips[0][str(i)][0][-4:], trips[0][str(i)][1], (trips[0][str(i)][2] - time) // 60, trips[0][str(i)][3]])
 

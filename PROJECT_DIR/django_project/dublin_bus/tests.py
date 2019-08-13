@@ -976,7 +976,7 @@ class TestGetBusStopList(TestCase):
                   '38': ['8220DB000354', 'Grand Canal Dock, Barrow Street', 79278,
                          'Greenhills College - Barrow Street']}]
 
-        self.assertEqual((functions.calculate_time_diff(trips, 71820))[0][2], 3)
+        self.assertEqual((functions.calculate_time_diff(trips, 71820))[0][2], -27)
 
 
 class TestGetTripInfo(TestCase):

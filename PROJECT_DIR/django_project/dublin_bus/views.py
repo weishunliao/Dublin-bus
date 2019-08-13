@@ -39,9 +39,6 @@ def test_routing(request):
 @csrf_exempt
 def get_travel_time(request):
     body = json.loads(request.body)
-
-    print("body of the request", body)
-
     route_id = body['route_id']
     start_point = body['start_point']
     num_stops = int(body['num_stops'])
@@ -60,7 +57,7 @@ def get_travel_time(request):
     stop_list = functions.get_stop_list(route_id, headsign, start_point, end_point, num_stops, departure_time)
     # call the machine learning model to get a prediction for journey time
     journey_time = functions.predict_journey_time(stop_list, departure_time_value, rain, temp)
-    print("Journey Time:", journey_time)
+    # print("Journey Time:", journey_time)
     return JsonResponse({"journey_time": journey_time})
 
 
@@ -243,7 +240,6 @@ def real_time_for_route_bk(request):
 
     current = datetime.now()
     current_min = current.hour * 60 + current.minute
-    # print(real_time_info)
     for k in real_time_info.keys():
         temp = []
         for s in real_time_info[k]:
@@ -258,7 +254,6 @@ def real_time_for_route_bk(request):
                         diff = 'Due'
                     temp.append(diff)
         real_time_info[k] = temp
-    print(real_time_info)
     return JsonResponse(real_time_info)
 
 
