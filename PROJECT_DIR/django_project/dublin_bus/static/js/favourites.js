@@ -255,10 +255,10 @@ export const create_favourite_route_card = (route_id, tab_name) => {
                     route_save_favourites(route_id);
                     route_toggle_heart();
                 });
-            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[1].addEventListener('click', ()=>{
+            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[1].addEventListener('click', () => {
                 switch_to_route_tab(route_id);
             });
-            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[0].children[0].addEventListener('click', ()=>{
+            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[0].children[0].addEventListener('click', () => {
                 switch_to_route_tab(route_id);
             })
         }
@@ -356,13 +356,15 @@ const update_journey_list = () => {
         journeys.forEach(journey => {
             savedJourneysContainer.innerHTML += journeyList[journey].nodeHTML;
         });
-        let addrs = document.querySelectorAll("#journey__content__card__address");
-        for (let addr of addrs) {
-            addr.addEventListener('click', () => {
-                fromInput.value = addr.offsetParent.dataset.from;
-                toInput.value = addr.offsetParent.dataset.to;
-                document.querySelector("ion-tabs").select("journey");
-                FindMyRoutes(initialLocation, directionsService);
+        let cards = document.querySelectorAll(".journey__content__card");
+        for (let card of cards) {
+            card.addEventListener('click', (e) => {
+                if (e.target.name !== 'heart') {
+                    fromInput.value = card.dataset.from;
+                    toInput.value = card.dataset.to;
+                    document.querySelector("ion-tabs").select("journey");
+                    FindMyRoutes(initialLocation, directionsService);
+                }
             })
         }
         const heart_icons = document.querySelectorAll('.journey__content__card__icon2');
@@ -556,53 +558,53 @@ export const empty_msg = (tab) => {
 
 
 export const switch_to_route_tab = (route_id) => {
-  document.querySelector("ion-tabs").getSelected().then(function(current_tab) {
-      if (current_tab === "routes") {
-        document
-          .querySelector("ion-tabs")
-          .select("none")
-          .then(() => {
+    document.querySelector("ion-tabs").getSelected().then(function (current_tab) {
+        if (current_tab === "routes") {
+            document
+                .querySelector("ion-tabs")
+                .select("none")
+                .then(() => {
+                    document.querySelector("ion-tabs").select("routes");
+                });
+        } else {
             document.querySelector("ion-tabs").select("routes");
-          });
-      } else {
-        document.querySelector("ion-tabs").select("routes");
-      }
-      const routes_container_position = $("#routes-container").css("margin-left");
-      if (routes_container_position === "0px") {
-        detail2();
-      }
-      get_bus_stop_list(route_id, "in");
-      change_btn2();
+        }
+        const routes_container_position = $("#routes-container").css("margin-left");
+        if (routes_container_position === "0px") {
+            detail2();
+        }
+        get_bus_stop_list(route_id, "in");
+        change_btn2();
     });
 };
 
 
 const change_btn2 = () => {
-  document.getElementById("routes__toolbar__back-btn").innerText = "";
-  document.getElementById("routes__show-on-map-btn__name").style.display =
-    "none";
-  $("#routes__toolbar__back-btn").append(
-    "<ion-icon name='md-close' size='medium'></ion-icon>"
-  );
-  document
-    .getElementById("routes__toolbar__back-btn")
-    .removeEventListener("click", detail2);
-  document
-    .getElementById("routes__toolbar__back-btn")
-    .addEventListener("click", close_btn2);
+    document.getElementById("routes__toolbar__back-btn").innerText = "";
+    document.getElementById("routes__show-on-map-btn__name").style.display =
+        "none";
+    $("#routes__toolbar__back-btn").append(
+        "<ion-icon name='md-close' size='medium'></ion-icon>"
+    );
+    document
+        .getElementById("routes__toolbar__back-btn")
+        .removeEventListener("click", detail2);
+    document
+        .getElementById("routes__toolbar__back-btn")
+        .addEventListener("click", close_btn2);
 };
 
 const close_btn2 = () => {
-  bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
-  document.getElementById("routes__toolbar__back-btn").innerText = "";
-  $("#routes__toolbar__back-btn").append(
-    "<ion-icon name='arrow-back'></ion-icon>Back"
-  );
-  document.getElementById("routes__show-on-map-btn__name").style.display = "";
-  document
-    .getElementById("routes__toolbar__back-btn")
-    .removeEventListener("click", close_btn2);
-  document
-    .getElementById("routes__toolbar__back-btn")
-    .addEventListener("click", detail2);
+    bottomSwiper.changeState(bottomSwiper.IN_STATE, null);
+    document.getElementById("routes__toolbar__back-btn").innerText = "";
+    $("#routes__toolbar__back-btn").append(
+        "<ion-icon name='arrow-back'></ion-icon>Back"
+    );
+    document.getElementById("routes__show-on-map-btn__name").style.display = "";
+    document
+        .getElementById("routes__toolbar__back-btn")
+        .removeEventListener("click", close_btn2);
+    document
+        .getElementById("routes__toolbar__back-btn")
+        .addEventListener("click", detail2);
 };
