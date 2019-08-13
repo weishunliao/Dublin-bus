@@ -516,7 +516,10 @@ ion-datetime {
   & .journey-planner__card__container {
       height: 100%;
       border-radius: 1.5rem;
-     
+  }
+
+  & #sub-button {
+      width: 200%;
   }
 
   & .journey-planner__title {

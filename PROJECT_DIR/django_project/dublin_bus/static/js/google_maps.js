@@ -9,7 +9,8 @@ import {
   sightInput,
   fromContainer,
   submitButton,
-  controller
+  controller,
+  buildDate
 } from "./nodes";
 import { searchToggle } from "./index";
 import MarkerClusterer from "./markerclusterer";
@@ -469,12 +470,13 @@ function change_route(route_index) {
   directionsDisplay.setRouteIndex(route_index);
 }
 
+let allMarkers = [];
 window.initMap = initMap;
+let markerCluster;
 
 // function for adding markers to a map based on input
 function AddMarkers(data, map) {
   // get the latitude, longitude and name of each bus stop
-  let allMarkers = [];
   for (let key in data) {
     let stopID = key;
     let latitude = data[key][0];
@@ -514,10 +516,11 @@ function AddMarkers(data, map) {
   //   ];
 
   let mcOptions = {
-    imagePath: "/static/images/m"
+    imagePath: "/static/images/m",
+    ignoreHidden: true
   };
 
-  let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
+  markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
 
 export const markerListener = stopID => {
@@ -576,6 +579,8 @@ const close_btn = () => {
 
 export function FindMyRoutes(initialLocation, directionsService) {
   submitButton.innerHTML = "Go";
+  hideMarkers();
+
 
   let theight = document
     .querySelector(".tabbar-container")
@@ -862,4 +867,27 @@ export function FindMyRoutes(initialLocation, directionsService) {
       }
     }
   );
+}
+
+
+export const hideMarkers = () => {
+    console.log(allMarkers, "called hide all markers")
+    allMarkers.forEach(marker => {
+        marker.setVisible(false)
+    });
+    markerCluster.repaint()
+}
+
+export const showMarkers = () => {
+    console.log(allMarkers, "called show all markers")
+
+    for (let marker of allMarkers){
+        if (marker.getVisible()){
+            break;
+        } else {
+            marker.setVisible(true)
+        }
+    }
+    
+    markerCluster.repaint()
 }

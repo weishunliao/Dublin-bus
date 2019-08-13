@@ -201,8 +201,10 @@ export default class Swiper {
           break;
         case this.MID_STATE:
           this.startTransform = this.midVal;
+          break;
         case this.LOWERED_STATE:
           this.startTransform = this.loweredVal;
+          break;
       }
 
       this.transformStyle =

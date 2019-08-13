@@ -33,7 +33,11 @@
        
         width: 50%;
         margin: 0 auto;
-
+        text-align: center;
+        
+        & img {
+            max-width: 24rem;
+        }
     }
 
     &__progress-container {

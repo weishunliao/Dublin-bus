@@ -119,6 +119,6 @@ ion-progress-bar {
 
     & #map {
         float: right;
-        width: 70%;
+        width: calc(100% - 420px);
     }
 }

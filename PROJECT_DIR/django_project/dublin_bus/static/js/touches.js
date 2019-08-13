@@ -3,14 +3,20 @@ import {
   dateInput,
   switchUpText,
   showContainer,
-  changeCardShowing
+  Route,
+  changeCardShowing,
+  setTimeToNow
 } from "./nodes";
 
+import { showMarkers } from "./google_maps";
+
+import { set_height } from "./stops";
 
 import { checkFavouriteJourneys } from "./favourites";
 import Swiper from "./Swiper";
-
+export let ourTabsHeight;
 export let bottomSwiper;
+export let swiperHeight;
 
 // Main window load
 
@@ -29,25 +35,8 @@ export let bottomSwiper;
 // })
 
 window.addEventListener("load", function() {
+  
 
-   
-
- 
-
-    
-  //   assigns the height of the drawer depending on how large the screen is.
-
-//   $("head").append(
-//     '<link href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css" rel="stylesheet" />'
-//   );
-//   $("head").append(
-//     '<script type="module" src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js"></script> '
-//   );
-//   $("head").append(
-//     ''
-
-  //   showContainer = document.querySelector("#show-container")
-  //   console.log(showContainer)
   var h = Math.max(
     document.documentElement.clientHeight,
     window.innerHeight || 0
@@ -58,9 +47,17 @@ window.addEventListener("load", function() {
 
   window.onresize = function() {
     main.setAttribute("style", `height:${h}px`);
-    $(".drawer__container").css("height", h * 0.95);
+    if (is_mobile_JS) {
+      $(".drawer__container").css("height", h * 0.95);
+    } else {
+      $(".drawer__container").css("height", h);
+    }
+
     console.log("resized!");
   };
+
+  setTimeToNow();
+  this.document.querySelector('#departing-container').classList.add('focussed');
 
   Swiper.underline = document.querySelector(".jp__header__underline");
 
@@ -82,10 +79,11 @@ window.addEventListener("load", function() {
   }
 
   function tabClick(e) {
-    // alert('called!')
     checkFavouriteJourneys();
     if (
-      e.target.id == "tab-button-journey") {
+      e.target.id == "tab-button-journey" &&
+      bottomSwiper.currentState !== bottomSwiper.OUT_STATE
+    ) {
       switchUpText();
       const dateobj = new Date();
       const dateString = dateobj.toISOString();
@@ -95,6 +93,8 @@ window.addEventListener("load", function() {
 
     if (e.target.id !== "tab-button-journey") {
       changeCardShowing();
+      showMarkers();
+      Route.returnToRoutes();
       bottomSwiper.jp_active = false;
     }
 
@@ -121,14 +121,18 @@ window.addEventListener("load", function() {
       document.documentElement.offsetHeight
     );
 
+    ourTabsHeight = document
+      .querySelector(".tabbar-container")
+      .getBoundingClientRect().height;
+
+    swiperHeight = document.querySelector('.drawer__container').getBoundingClientRect().height;
+      set_height();
     let bdTabs = document
       .querySelector(".tabbar-container")
       .getBoundingClientRect().height;
     bottomDrawer.style.height = bdHeight * 0.95 + "px";
 
     bottomSwiper = new Swiper(bottomDrawer, grabber, is_mobile_JS);
-
-    
 
     tabs.addEventListener("ionTabsWillChange", handleOut);
     $(".load-screen").fadeOut();
@@ -155,9 +159,9 @@ window.addEventListener("load", function() {
   $(".favourite-journeys-container").on("touchmove", function(e) {
     e.stopPropagation();
   });
+  $("#timeline-wrapper__content__box").on("touchmove", function(e) {
+    e.stopPropagation();
+  });
 
   $(".drawer__container").css("display", "block");
-
-
-  
 });

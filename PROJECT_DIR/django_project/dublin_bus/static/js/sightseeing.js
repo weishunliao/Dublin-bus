@@ -1,4 +1,4 @@
-import {fromInput, height, toInput} from './nodes'
+import {fromInput, height, toInput, fromContainer, toContainer} from './nodes'
 import {directionsService, FindMyRoutes, initialLocation} from "./google_maps";
 
 
@@ -73,6 +73,8 @@ const create_card = (point) => {
     document.getElementById(point[0]).addEventListener("click", () => {
         toInput.value = point[0] + " " + point[1];
         document.querySelector("ion-tabs").select("journey");
+        fromContainer.classList.add('focussed')
+        toContainer.classList.add('focussed')
         FindMyRoutes(initialLocation, directionsService);
     });
 };

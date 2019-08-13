@@ -1,16 +1,29 @@
 import {map, markers} from "./google_maps";
 import {create_favourite_stop_card, empty_msg, update_stop_list} from "./favourites";
-import {height} from './nodes'
+import {height } from './nodes'
+
 import {toast_route_add, toast_route_remove} from "./routes";
-import {bottomSwiper} from "./touches";
+import {bottomSwiper, ourTabsHeight, swiperHeight} from "./touches";
 
 
 export const set_height = () => {
-    let ourTabsHeight = document.querySelector('.tabbar-container').getBoundingClientRect().height;
-    document.querySelector("#stops__content__wrapper").style.height = (height - ourTabsHeight - (height * 0.1) - 175) + "px";
-    document.querySelector("#stops__time-table").style.height = (height - ourTabsHeight - (height * 0.03) - 175) + "px";
-    document.querySelector("#routes__content__wrapper").style.height = (height - ourTabsHeight - (height * 0.1) - 175) + "px";
-    document.querySelector("#timeline-wrapper__content__box").style.height = (height - ourTabsHeight - (height * 0.1) - 175) + "px";
+    let h;
+
+    console.log("swiperheight: ", swiperHeight, "main height: ", height)
+
+    if (is_mobile_JS){
+        h = swiperHeight
+    } else {
+        h = height;
+    }
+
+   
+    
+    document.querySelector("#stops__content__wrapper").style.height = (h - ourTabsHeight - (h * 0.1) - 175) + "px";
+    document.querySelector('.journey-planner__routes__scroll-area').style.height = (h - ourTabsHeight - 200) + "px";
+    document.querySelector("#stops__time-table").style.height = (h - ourTabsHeight - 145) + "px";
+    document.querySelector("#routes__content__wrapper").style.height = (h - ourTabsHeight - (h * 0.1) - 175) + "px";
+    document.querySelector("#timeline-wrapper__content__box").style.height = (h - (2 * ourTabsHeight) - 145) + "px";
 };
 
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
