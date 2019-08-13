@@ -143,7 +143,7 @@ export class Route {
             <ion-icon class="button-icon button-icon--left" name="arrow-back"></ion-icon>
             <h3 class="button-text button-text--left">Back to routes</h3>
         </div>
-        <div class="right-button general-button">
+        <div class="right-button general-button ${is_mobile_JS ? "" : "hide-button"}">
         <ion-icon class="button-icon button-icon--right" name="arrow-dropup-circle"></ion-icon>
         <h3 class="button-text button-text--right">More info</h3>
        

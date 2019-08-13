@@ -4,7 +4,7 @@
     height: 16rem;
 
     &__title {
-      font-family: Helvetica;
+
       color: $db_blue;
       font-size: 3rem;
       font-weight: bold;
@@ -40,13 +40,11 @@
   }
 
   &__content {
-
     &__card {
       margin-bottom: 1rem;
     }
   }
 }
-
 
 .journey__content {
   &__card {
@@ -65,8 +63,7 @@
     &__icon1 {
       font-size: 1.5rem;
       text-align: center;
-      color: $bus_blue
-
+      color: $bus_blue;
     }
 
     &__icon2 {
@@ -103,7 +100,6 @@
   }
 }
 
-
 .favourite-journeys-container {
   -webkit-overflow-scrolling: touch;
   overflow: scroll;
@@ -131,24 +127,24 @@
 }
 .empty_favourite_div {
   margin: 0 auto;
-  text-align: center
+  text-align: center;
 }
 
 .empty_favourite_icon {
   font-size: 25px;
-  color:$db_blue;
+  color: $db_blue;
 }
 
 .empty_favourite_title {
   text-align: center;
   font-weight: bold;
   font-size: 2.2rem;
-  color:$db_blue;
+  color: $db_blue;
 }
 
 .empty_favourite_subtitle {
   margin: 0 auto;
   text-align: center;
   font-size: 1.5rem;
-  color:darkslategrey;
+  color: darkslategrey;
 }

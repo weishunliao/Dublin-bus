@@ -9,7 +9,8 @@ import {
   sightInput,
   fromContainer,
   submitButton,
-  controller
+  controller,
+  buildDate
 } from "./nodes";
 import { searchToggle } from "./index";
 import MarkerClusterer from "./markerclusterer";
@@ -88,7 +89,7 @@ export let bus_route_drawer;
 
 // const toInputContainer = document.querySelector('#to-input')
 
-// styling for the map
+// styling for the map - based on https://snazzymaps.com/style/60/blue-gray
 let blueGray = [
   {
     featureType: "water",
@@ -393,9 +394,7 @@ export default function initMap() {
               icon: "./static/images/location32.png"
             });
 
-            // if (toInput.value === "") {
-            // }
-
+            
             locationMarkers.push(marker);
             marker.setAnimation(google.maps.Animation.DROP);
 
@@ -408,10 +407,10 @@ export default function initMap() {
                   fromInput.value = "Current location";
                   fromContainer.classList.add("focussed");
                 } else {
-                  console.log("No results found");
+                  alert("Unable to find user location")
                 }
               } else {
-                console.log("The whole thing failed");
+                
               }
             });
           },
@@ -469,12 +468,13 @@ function change_route(route_index) {
   directionsDisplay.setRouteIndex(route_index);
 }
 
+let allMarkers = [];
 window.initMap = initMap;
+let markerCluster;
 
 // function for adding markers to a map based on input
 function AddMarkers(data, map) {
   // get the latitude, longitude and name of each bus stop
-  let allMarkers = [];
   for (let key in data) {
     let stopID = key;
     let latitude = data[key][0];
@@ -514,10 +514,11 @@ function AddMarkers(data, map) {
   //   ];
 
   let mcOptions = {
-    imagePath: "/static/images/m"
+    imagePath: "/static/images/m",
+    ignoreHidden: true
   };
 
-  let markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
+  markerCluster = new MarkerClusterer(map, allMarkers, mcOptions);
 }
 
 export const markerListener = stopID => {
@@ -576,6 +577,8 @@ const close_btn = () => {
 
 export function FindMyRoutes(initialLocation, directionsService) {
   submitButton.innerHTML = "Go";
+  hideMarkers();
+
 
   let theight = document
     .querySelector(".tabbar-container")
@@ -630,9 +633,8 @@ export function FindMyRoutes(initialLocation, directionsService) {
     async function(response, status) {
       try {
         resp = response;
-        console.log(response);
         if (status === "OK") {
-          console.log("RESPONSE IS ", response);
+         
           for (let i = 0; i < response.routes.length; i++) {
             let directions = new google.maps.DirectionsRenderer({
               preserveViewport: true,
@@ -822,14 +824,14 @@ export function FindMyRoutes(initialLocation, directionsService) {
                 formattedDate,
                 journeyTimeReturnedFromModel
               });
-              //   console.log(newRoute)
+            
               Route.appendToDom(newRoute);
             }
           }
           document.querySelector("#routesHere").innerHTML = "";
           Route.signalAppend();
         } else {
-          console.log("ERROR ");
+       
           document.querySelector("#routesHere").innerHTML = "";
           errorText = `
           <div class="error-container">
@@ -858,8 +860,29 @@ export function FindMyRoutes(initialLocation, directionsService) {
           </div>
           `;
         document.querySelector("#routesHere").innerHTML = errorText;
-        console.log(err);
+       
       }
     }
   );
+}
+
+
+export const hideMarkers = () => {
+    allMarkers.forEach(marker => {
+        marker.setVisible(false)
+    });
+    markerCluster.repaint()
+}
+
+export const showMarkers = () => {
+
+    for (let marker of allMarkers){
+        if (marker.getVisible()){
+            break;
+        } else {
+            marker.setVisible(true)
+        }
+    }
+    
+    markerCluster.repaint()
 }

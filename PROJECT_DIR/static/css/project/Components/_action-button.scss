@@ -1,146 +1,125 @@
 .action_button {
+  &__container {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1;
+    width: calc(100% - 4rem);
+  }
 
+  &__rel-container {
+    @include relative;
+  }
+
+  &__rel-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__button {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+    position: absolute;
+    right: 0;
+    background: white;
+
+    &--search {
+      z-index: 3;
+      box-shadow: none;
+    }
+
+    &--weather {
+      top: 6rem;
+    }
+
+    &--location {
+      top: 12rem;
+    }
+  }
+
+  &__temperature {
+    @include absolute(50%, 50%, translate(-50%, -50%));
+    font-size: 2rem;
+    color: $db_blue;
+    opacity: 1;
+    font-family: sans-serif !important;
+  }
+
+  &__weather-container {
+    @include absolute(50%, 52%, translate(-50%, -50%));
+
+    & canvas {
+      opacity: 1;
+    }
+  }
+
+  &__location-container {
+    @include absolute(50%, 52%, translate(-50%, -50%));
+
+    & ion-icon {
+      height: 3.5rem;
+      width: 3.5rem;
+      color: $db_blue;
+    }
+  }
+
+  &__icon {
+    height: 3rem;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 3rem;
+    top: 50%;
+    left: 50%;
+
+    color: $db_blue;
+  }
+
+  &__search {
     &__container {
-
-        position: fixed;
-        top: 2rem;
-        right: 2rem;
-        z-index: 1;
-        width: calc(100% - 4rem);
-       
+      position: absolute;
+      width: 5rem;
+      height: 5rem;
+      right: 0;
+      box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+      top: 0;
+      background: white;
+      border-radius: 5rem;
+      opacity: 1;
+      transition: all 0.2s ease-out;
+      z-index: 2;
     }
 
-    &__rel-container {
-        @include relative;
-    }
+    &__input-container {
+      @include absolute(2rem, 50%, translateY(-50%));
+      width: calc(100% - 9rem);
 
-    &__rel-container {
-        position: relative;
-        height: 100%;
+      & input {
         width: 100%;
+        border: none;
+        font-size: 1.6rem;
+        transform: translateY(2px);
+      }
     }
-    
-    &__button {
-        height: 5rem;
-        width: 5rem;
-        border-radius: 50%;
-        box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-        margin-bottom: 1rem;
-        position: absolute;
-        right: 0;
-        background: white;
-
-        &--search {
-            z-index: 3;
-            box-shadow: none;
-            
-        }
-
-        &--weather {
-           
-            top: 6rem;
-        }
-
-        &--location {
-           
-            top: 12rem;
-        }
-
-    }
-
-    &__temperature {
-        @include absolute(50%, 50%, translate(-50%, -50%));
-        font-size: 2rem;
-        color: $db_blue;
-        opacity: 1;
-        font-family: sans-serif !important;
-    }
-
-    &__weather-container {
-        @include absolute(50%, 52%, translate(-50%, -50%));
-
-        & canvas {
-        
-        
-            opacity: 1;
-        }
-    }
-
-    &__location-container {
-        @include absolute(50%, 52%, translate(-50%, -50%));
-        
-        & ion-icon {
-            height: 3.5rem;
-            width: 3.5rem;
-            color: $db_blue;
-        }
-    }
-
-    &__icon {
-        height: 3rem;
-        position: absolute;
-        transform: translate(-50%, -50%);
-        width: 3rem;
-        top:50%;
-        left: 50%;
-
-
-         color: $db_blue;
-        
-    }
-
-    &__search {
-
-        &__container {
-            position: absolute;
-            width: 5rem;
-            height: 5rem;
-            right: 0;
-            box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-            top: 0;
-            background: white;
-            border-radius: 5rem;
-            opacity: 1;
-            transition: all .2s ease-out;
-            z-index: 2;
-        }
-
-      
-
-        &__input-container {
-            @include absolute(2rem, 50%, translateY(-50%));
-            width: calc(100% - 9rem);
-            
-            & input {
-
-                width: 100%;
-                border: none;
-                font-size: 1.6rem;
-                transform: translateY(2px);
-            }
-        }
-
-
-    }
-    
-    
- 
+  }
 }
 
 .search-out {
-    width: 100%;
-    opacity: 1;
+  width: 100%;
+  opacity: 1;
 
-    &-button {
-        & ion-icon {
-            color: $db_blue;
-        }
+  &-button {
+    & ion-icon {
+      color: $db_blue;
     }
+  }
 }
 
-
 .desktop {
-    & .search-out {
-        width: 68% !important;
-    }
+  & .search-out {
+    width: 68% !important;
+  }
 }
