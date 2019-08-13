@@ -226,7 +226,7 @@ export class Route {
   }
 
   static appendToDom(route) {
-    console.log(route);
+ 
     let bad = 0;
     route.journeyTime.forEach(journey => {
       if (journey < 0) {
@@ -481,7 +481,6 @@ export class Route {
           if (newMinutes.toString().length < 2) {
             newMinutes = "0" + newMinutes;
           }
-          console.log("newMinutes", newMinutes);
           fin = firstTwo + ":" + newMinutes;
           lastAddedTime = fin;
           return fin;
@@ -506,10 +505,6 @@ export class Route {
         }
       }
 
-      //   else if (currentIndex === routeDescription.length - 1) {
-      //     // console.log("it's the last one!!")
-      //     // console.log("the one before", routeDescription[currentIndex -1])
-      //     }
 
       function splitDistanceText(distText) {
         let arr = distText.split(",");
@@ -532,7 +527,6 @@ export class Route {
               routeSection[0] === "bus" ? routeSection[8] : provideTime(index)
             }</h2>`;
 
-      console.log("r1:", routeSection[0], "r8", routeSection[8]);
 
       finString += "</div>";
 
@@ -581,7 +575,6 @@ export class Route {
           
           `;
     });
-    console.log("LAST ADDED TIMNE!!!", lastAddedTime);
     return finString;
   }
 
@@ -631,11 +624,4 @@ export const search = {
   searchInput
 };
 
-//   route.showContainer.innerHTML = Route.journeyShowCard(
-//     route.routeData.routeDescription,
-//     route.nodeHTML,
-//     route.routeData.id
-//   );
-//   route.showContainer.style.display = "block";
-//   go to lowered state
-//   bottomSwiper.changeState(bottomSwiper.LOWERED_STATE, null);
+

@@ -53,7 +53,6 @@ window.addEventListener("load", function() {
       $(".drawer__container").css("height", h);
     }
 
-    console.log("resized!");
   };
 
   setTimeToNow();
@@ -87,7 +86,7 @@ window.addEventListener("load", function() {
       switchUpText();
       const dateobj = new Date();
       const dateString = dateobj.toISOString();
-      console.log(dateInput.value);
+      
       dateInput.value = dateString;
     }
 

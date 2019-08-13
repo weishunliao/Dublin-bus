@@ -342,12 +342,6 @@ async function removeFavourite(id) {
 
 }
 
-// savedJourneysContainer.addEventListener('click', e => {
-//     console.log(e.target.id);
-//     removeFavourite(e.target.id)
-// })
-
-
 const update_journey_list = () => {
     journeyList = JSON.parse(localStorage.getItem("journeys"));
 
@@ -514,9 +508,7 @@ export function checkFavouriteJourneys() {
     if (!currentJourneysInStorage) {
         currentJourneysInStorage = {}
     }
-    // first check if there's any saved journeys
-    // console.log("Favourite journeys called")
-    // console.log("current journeys in storage", currentJourneysInStorage)
+
 
 
     let journeyKeys = Object.keys(currentJourneysInStorage)

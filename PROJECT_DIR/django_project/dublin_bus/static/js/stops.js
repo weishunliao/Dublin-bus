@@ -9,15 +9,12 @@ import {bottomSwiper, ourTabsHeight, swiperHeight} from "./touches";
 export const set_height = () => {
     let h;
 
-    console.log("swiperheight: ", swiperHeight, "main height: ", height)
-
     if (is_mobile_JS){
         h = swiperHeight
     } else {
         h = height;
     }
 
-   
     
     document.querySelector("#stops__content__wrapper").style.height = (h - ourTabsHeight - (h * 0.1) - 175) + "px";
     document.querySelector('.journey-planner__routes__scroll-area').style.height = (h - ourTabsHeight - 200) + "px";
@@ -27,8 +24,6 @@ export const set_height = () => {
 };
 
 $('#typeahead_stop').bind('typeahead:select', function (ev, suggestion) {
-    // let type = document.getElementById("suggestion_" + suggestion).dataset.type;
-    // console.log(type, suggestion);
 
     document.getElementById('typeahead_stop').blur();
     get_bus_real_time_info(suggestion);

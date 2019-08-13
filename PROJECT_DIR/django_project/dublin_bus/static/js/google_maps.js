@@ -394,9 +394,7 @@ export default function initMap() {
               icon: "./static/images/location32.png"
             });
 
-            // if (toInput.value === "") {
-            // }
-
+            
             locationMarkers.push(marker);
             marker.setAnimation(google.maps.Animation.DROP);
 
@@ -409,10 +407,10 @@ export default function initMap() {
                   fromInput.value = "Current location";
                   fromContainer.classList.add("focussed");
                 } else {
-                  console.log("No results found");
+                  alert("Unable to find user location")
                 }
               } else {
-                console.log("The whole thing failed");
+                
               }
             });
           },
@@ -635,9 +633,8 @@ export function FindMyRoutes(initialLocation, directionsService) {
     async function(response, status) {
       try {
         resp = response;
-        console.log(response);
         if (status === "OK") {
-          console.log("RESPONSE IS ", response);
+         
           for (let i = 0; i < response.routes.length; i++) {
             let directions = new google.maps.DirectionsRenderer({
               preserveViewport: true,
@@ -827,14 +824,14 @@ export function FindMyRoutes(initialLocation, directionsService) {
                 formattedDate,
                 journeyTimeReturnedFromModel
               });
-              //   console.log(newRoute)
+            
               Route.appendToDom(newRoute);
             }
           }
           document.querySelector("#routesHere").innerHTML = "";
           Route.signalAppend();
         } else {
-          console.log("ERROR ");
+       
           document.querySelector("#routesHere").innerHTML = "";
           errorText = `
           <div class="error-container">
@@ -863,7 +860,7 @@ export function FindMyRoutes(initialLocation, directionsService) {
           </div>
           `;
         document.querySelector("#routesHere").innerHTML = errorText;
-        console.log(err);
+       
       }
     }
   );
@@ -871,7 +868,6 @@ export function FindMyRoutes(initialLocation, directionsService) {
 
 
 export const hideMarkers = () => {
-    console.log(allMarkers, "called hide all markers")
     allMarkers.forEach(marker => {
         marker.setVisible(false)
     });
@@ -879,7 +875,6 @@ export const hideMarkers = () => {
 }
 
 export const showMarkers = () => {
-    console.log(allMarkers, "called show all markers")
 
     for (let marker of allMarkers){
         if (marker.getVisible()){

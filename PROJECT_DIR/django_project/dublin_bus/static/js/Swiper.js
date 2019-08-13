@@ -180,11 +180,7 @@ export default class Swiper {
       switch (newState) {
         case this.IN_STATE:
           this.startTransform = this.inTransformVal;
-          if (!document.body.classList.contains('desktop')){
-              console.log('its not on desktop')
-          } else {
-              console.log('it is on desktop!')
-          }
+          
 
           
           if (!cardShowing && !document.body.classList.contains('desktop')) {
