@@ -1,6 +1,6 @@
 import {map, markers} from "./google_maps";
 import {create_favourite_stop_card, empty_msg, update_stop_list} from "./favourites";
-import {height } from './nodes'
+import {height} from './nodes'
 
 import {toast_route_add, toast_route_remove} from "./routes";
 import {bottomSwiper, ourTabsHeight, swiperHeight} from "./touches";
@@ -9,13 +9,13 @@ import {bottomSwiper, ourTabsHeight, swiperHeight} from "./touches";
 export const set_height = () => {
     let h;
 
-    if (is_mobile_JS){
+    if (is_mobile_JS) {
         h = swiperHeight
     } else {
         h = height;
     }
 
-    
+
     document.querySelector("#stops__content__wrapper").style.height = (h - ourTabsHeight - (h * 0.1) - 175) + "px";
     document.querySelector('.journey-planner__routes__scroll-area').style.height = (h - ourTabsHeight - 200) + "px";
     document.querySelector("#stops__time-table").style.height = (h - ourTabsHeight - 145) + "px";
@@ -182,6 +182,7 @@ const stops_show_on_map = () => {
         $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
         document.getElementById("stops__toolbar__back-btn").style.display = '';
         document.getElementById("routes__toolbar__back-btn").style.display = '';
+        map.setZoom(15);
     } else {
         bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
         let stop_position = stop_marker.getPosition();
@@ -192,6 +193,9 @@ const stops_show_on_map = () => {
             document.getElementById("stops__show-on-map-btn__name").innerText = "";
             document.getElementById("stops__toolbar__back-btn").style.display = 'none';
             $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
+        } else {
+            document.getElementById("stops__show-on-map-btn__name").innerText = "";
+            $("#stops__show-on-map-btn__name").append("<ion-icon name='md-close' size=\"medium\"></ion-icon> Clear");
         }
     }
 };
