@@ -218,6 +218,7 @@ const draw_bus_markers_on_route = () => {
 
 
 const route_show_on_map = () => {
+    hideMarkers();
     if (bottomSwiper.currentState === 4 || bus_route_drawer.getMap() !== null) {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         bus_route_drawer.setMap(null);
@@ -237,7 +238,9 @@ const route_show_on_map = () => {
             document.getElementById("routes__show-on-map-btn__name").innerText = "";
             document.getElementById("routes__toolbar__back-btn").style.display = 'none';
             $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
-
+        } else {
+            document.getElementById("routes__show-on-map-btn__name").innerText = "";
+            $("#routes__show-on-map-btn__name").append("<ion-icon name='md-close' size='medium'></ion-icon> Clear");
         }
     }
 };

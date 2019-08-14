@@ -125,6 +125,7 @@
 .empty_favourite_wrapper {
   margin-top: 2rem;
 }
+
 .empty_favourite_div {
   margin: 0 auto;
   text-align: center;
@@ -147,4 +148,8 @@
   text-align: center;
   font-size: 1.5rem;
   color: darkslategrey;
+}
+
+.card_pointer {
+  cursor: pointer;
 }
