@@ -99,7 +99,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
     get_stop_name(stop_id).then(stop_name => {
         get_serve_route(stop_id).then(serve_route => {
             let card =
-                '<ion-card class="stops__content__card" id="stops__content__card__' +
+                '<ion-card class="stops__content__card card_pointer" id="stops__content__card__' +
                 stop_id +
                 '" data-item=' +
                 stop_id +
@@ -176,9 +176,11 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
                     });
                 const elem = document.getElementById(
                     "card_bottom_" + tab_name + "_" + stop_id
-                );
-                elem.addEventListener("click", () => {
-                    markerListener(stop_id);
+                ).parentElement.parentElement;
+                elem.addEventListener("click", (e) => {
+                    if (e.target.name !== 'heart') {
+                        markerListener(stop_id);
+                    }
                 });
             }
         });
@@ -189,7 +191,7 @@ export const create_favourite_route_card = (route_id, tab_name) => {
 
     get_headsign(route_id).then(direction => {
         let card =
-            '<ion-card class="routes__content__card" id="routes__content__card__' +
+            '<ion-card class="routes__content__card card_pointer" id="routes__content__card__' +
             route_id + "_in_" + tab_name +
             '" data-direction="in"\n' +
             '                                      data-id="' +
@@ -256,12 +258,11 @@ export const create_favourite_route_card = (route_id, tab_name) => {
                     route_save_favourites(route_id);
                     route_toggle_heart();
                 });
-            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[1].addEventListener('click', () => {
-                switch_to_route_tab(route_id);
+            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).addEventListener('click', (e) => {
+                if (e.target.name !== 'heart') {
+                    switch_to_route_tab(route_id);
+                }
             });
-            document.querySelector("#routes__content__card__" + route_id + "_in_" + tab_name).children[0].children[0].children[0].addEventListener('click', () => {
-                switch_to_route_tab(route_id);
-            })
         }
     });
 };
@@ -413,7 +414,7 @@ class SavedJourney {
     constructor(from, to) {
         this.from = from;
         this.to = to;
-        this.nodeHTML = `<ion-card class="journey__content__card" data-from = "${from}" data-to="${to}">
+        this.nodeHTML = `<ion-card class="journey__content__card card_pointer" data-from = "${from}" data-to="${to}">
         <ion-grid no-padding>
             <ion-row class="journey__content__card__row">
                 <ion-col size="2" class="journey__content__card__icon1" align-self-center>

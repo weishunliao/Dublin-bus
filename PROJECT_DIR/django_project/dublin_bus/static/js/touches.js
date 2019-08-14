@@ -113,7 +113,7 @@ window.addEventListener("load", function() {
   setTimeout(() => {
     //   SWIPER IS DEFINED
     let bdHeight = Math.max(
-      document.body.scrollHeight,
+      // document.body.scrollHeight,
       document.body.offsetHeight,
       document.documentElement.clientHeight,
       document.documentElement.scrollHeight,

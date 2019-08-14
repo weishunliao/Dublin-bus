@@ -54,7 +54,7 @@ export default class Swiper {
     this.is_mobile = is_mobile;
 
     this.documentHeight = Math.max(
-      document.body.scrollHeight,
+      // document.body.scrollHeight,
       document.body.offsetHeight,
       document.documentElement.clientHeight,
       document.documentElement.scrollHeight,
