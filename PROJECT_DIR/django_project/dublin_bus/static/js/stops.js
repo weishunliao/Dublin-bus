@@ -193,9 +193,6 @@ const stops_show_on_map = () => {
             document.getElementById("stops__show-on-map-btn__name").innerText = "";
             document.getElementById("stops__toolbar__back-btn").style.display = 'none';
             $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
-        } else {
-            document.getElementById("stops__show-on-map-btn__name").innerText = "";
-            $("#stops__show-on-map-btn__name").append("<ion-icon name='md-close' size=\"medium\"></ion-icon> Clear");
         }
     }
 };
