@@ -40,9 +40,9 @@ def test_routing(request):
 def get_travel_time(request):
     body = json.loads(request.body)
     route_id = body['route_id']
-    start_point = body['start_point']
+    start_point = body['start_point'].split(",")[0]
     num_stops = int(body['num_stops'])
-    end_point = body['end_point']
+    end_point = body['end_point'].split(",")[0]
     departure_time_value = body['departure_time_value']
     route_id = body['route_id']
     headsign = body['head_sign']
@@ -150,17 +150,17 @@ def get_sights_info(request):
     offset = int(request.GET['offset'])
     url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + MAP_KEY + "&query="
     if category == "Sightseeing":
-        url += "Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z/data=!3m1!4b1"
+        url += "Tourist%2Battraction%2BDublin/@53.3498881,-6.2619041,14z"
     elif category == "Restaurant":
         url += "restaurant+Dublin"
     elif category == "Nightlife":
-        url += "bar%2BDublin/@53.3211591,-6.3004305,12z/data=!3m1!4b1"
+        url += "bar%2BDublin/@53.3211591,-6.3004305,12z"
     elif category == "Coffee":
-        url += "/coffee+dublin/@53.3454515,-6.2690574,16z/data=!3m1!4b1"
+        url += "/coffee+dublin/@53.3454515,-6.2690574,16z"
     elif category == "Hotel":
-        url += "hotel+dublin/@53.3454768,-6.2690574,16z/data=!3m1!4b1"
+        url += "hotel+dublin/@53.3454768,-6.2690574,16z"
     elif category == "Shopping":
-        url += "shopping+dublin/@53.3455021,-6.2690574,16z/data=!3m1!4b1"
+        url += "shopping+dublin/@53.3455021,-6.2690574,16z"
     infos = requests.get(url=url).json()['results']
     points = []
 

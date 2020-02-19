@@ -79,11 +79,11 @@ const display_stops = (route_id, info) => {
             let arrive_next = next_id === "N/A" || info[next_id].length === 0 ? 'N/A' : info[next_id][0];
             if (arrive === 'Due' && arrive_prev !== 'Due') {
                 realtime_bus_marker.push(id);
-                h3.innerHTML = "<h6 class='stop_id'>" + id + "<ion-icon class=\"bus-icon\" name=\"md-bus\" size=\"large\"></ion-icon></h6>" + stops[i][1];
+                h3.innerHTML = "<h6 class='stop_id'>" + id + "<ion-icon class=\"bus-icon\" name=\"bus\" size=\"large\"></ion-icon></h6>" + stops[i][1];
                 li.className = "timeline-wrapper__content__event__fill";
             } else if (arrive !== 'N/A' && arrive_prev !== 'N/A' && parseInt(arrive) < parseInt(arrive_prev) && parseInt(arrive) <= parseInt(arrive_next)) {
                 realtime_bus_marker.push(id);
-                h3.innerHTML = "<h6 class='stop_id'>" + id + "<ion-icon class=\"bus-icon\" name=\"md-bus\" size=\"large\"></ion-icon></h6>" + stops[i][1];
+                h3.innerHTML = "<h6 class='stop_id'>" + id + "<ion-icon class=\"bus-icon\" name=\"bus\" size=\"large\"></ion-icon></h6>" + stops[i][1];
                 li.className = "timeline-wrapper__content__event__fill";
             } else {
                 h3.innerHTML = "<h6 class='stop_id'>" + id + "<span class='stop_id__span'>" + arrive + " min</span></h6>" + stops[i][1];
@@ -232,7 +232,7 @@ const route_show_on_map = () => {
         bus_route_drawer.setMap(null);
         clear_bus_marker_on_map();
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
-        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='map'></ion-icon>Show on map");
         document.getElementById("routes__toolbar__back-btn").style.display = '';
     } else {
         bottomSwiper.changeState(bottomSwiper.LOWERED_STATE);
@@ -245,10 +245,10 @@ const route_show_on_map = () => {
         if (is_mobile) {
             document.getElementById("routes__show-on-map-btn__name").innerText = "";
             document.getElementById("routes__toolbar__back-btn").style.display = 'none';
-            $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-dropup-circle' size='medium'></ion-icon> More result");
+            $("#routes__show-on-map-btn__name").append("<ion-icon name='arrow-down-circle' size='medium'></ion-icon> More result");
         } else {
             document.getElementById("routes__show-on-map-btn__name").innerText = "";
-            $("#routes__show-on-map-btn__name").append("<ion-icon name='md-close' size='medium'></ion-icon> Clear");
+            $("#routes__show-on-map-btn__name").append("<ion-icon name='close' size='medium'></ion-icon> Clear");
         }
     }
 };
@@ -276,7 +276,7 @@ route_heart_solid.addEventListener('click', () => {
 });
 
 route_heart_empty.addEventListener('click', () => {
-    toast_route_add();
+    // toast_route_add();
     let route_id = document.getElementById("routes__content__card__route-id").innerText;
     route_save_favourites(route_id);
     route_toggle_heart();

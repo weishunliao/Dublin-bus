@@ -4264,7 +4264,7 @@ $('#search-container-stops .typeahead').typeahead({
                 ],
             suggestion:
                 function (data) {
-                    return '<h6 class="suggestion" data-type="stop" id="suggestion_' + data + '"><ion-icon name="md-pin"></ion-icon>' + data + '</h6>';
+                    return '<h6 class="suggestion" data-type="stop" id="suggestion_' + data + '"><ion-icon name="pin"></ion-icon>' + data + '</h6>';
                 }
         }
     },
@@ -4296,7 +4296,7 @@ $('#search-container-routes .typeahead').typeahead({
                 '<div class="empty-message">No matching route id found!</div>'
             ],
             suggestion: function (data) {
-                return '<h6 class="suggestion" data-type="route" id="suggestion_' + data + '"><ion-icon name="md-bus"></ion-icon>' + data + '</h6>';
+                return '<h6 class="suggestion" data-type="route" id="suggestion_' + data + '"><ion-icon name="bus"></ion-icon>' + data + '</h6>';
             }
         }
     },

@@ -594,7 +594,7 @@ export class Route {
     <div class="showCard__toggleButtonsContainer">
                     <div class="showCard__backToRoutesContainer" id="backToRoutes">
                       <ion-icon
-                        name="md-arrow-back"
+                        name="arrow-back"
                         class="showCard__backArrow"
                       ></ion-icon>
                       <h2 class="showCard__routeText showText">Choose another route</h2>

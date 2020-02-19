@@ -66,7 +66,7 @@ const create_card = (point) => {
         'style="width: ' + rating + '"> \n' +
         ' <span>★★★★★</span></div><div class="sightseeing__options__cards__info__ratting__bottom"><span>★★★★★</span>' +
         '</div></div></ion-col></ion-row><ion-row><ion-col size="12" class="sightseeing__options__cards__info__opening-hour">' +
-        '<ion-icon name="md-time" size="medium"></ion-icon><span id="sightseeing__options__cards__info__opening-hour">' + point[4] + '</span></ion-col></ion-row></ion-col></ion-row>' +
+        '<ion-icon name="time" size="medium"></ion-icon><span id="sightseeing__options__cards__info__opening-hour">' + point[4] + '</span></ion-col></ion-row></ion-col></ion-row>' +
         '</ion-grid></ion-card>';
 
     $('#sightseeing__options__cards').append(card);

@@ -84,13 +84,13 @@ DATABASES = {
     'default': {
 
         'NAME': 'db_route_info',  # database name
-        'USER': 'team8',
+        'USER': 'root',
         'ENGINE': 'django.db.backends.mysql',
         'PASSWORD': config('DATABASE_PASSWORD'),
         'PORT': '3306',
 
         # PRODUCTION
-        'HOST': 'localhost',
+        'HOST': 'database-1.cwkrfnle04ii.eu-west-1.rds.amazonaws.com',
         # 'HOST': '127.0.0.1'
 
         # DEVELOPMENT - UCD

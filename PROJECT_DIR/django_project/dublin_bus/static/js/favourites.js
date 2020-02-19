@@ -120,7 +120,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
                 "_" +
                 stop_id +
                 '" style=""></ion-icon>\n' +
-                '                                    <ion-icon name="heart-empty" id="card__heart-empty__in__' +
+                '                                    <ion-icon name="heart-outline" id="card__heart-empty__in__' +
                 tab_name +
                 "_" +
                 stop_id +
@@ -142,7 +142,7 @@ export const create_favourite_stop_card = (stop_id, tab_name) => {
                 "                            </ion-col>\n" +
                 '                            <ion-col size="8">\n' +
                 '                                <ion-item lines="none">\n' +
-                '                                    <ion-icon name="md-bus"\n' +
+                '                                    <ion-icon name="bus"\n' +
                 '                                              class="stops__content__card__service-bus"></ion-icon>\n' +
                 '                                    <span class="stops__content__card__service-bus-id">' +
                 serve_route +
@@ -213,7 +213,7 @@ export const create_favourite_route_card = (route_id, tab_name) => {
             "_" +
             route_id +
             '" style=""></ion-icon>\n' +
-            '                                                <ion-icon name="heart-empty" id="route__card__heart-empty__in__' +
+            '                                                <ion-icon name="heart-outline" id="route__card__heart-empty__in__' +
             tab_name +
             "_" +
             route_id +
@@ -466,16 +466,16 @@ saveJourneyButton.addEventListener("click", () => {
 
     if (checkForKey in currentJourneysInStorage) {
         delete currentJourneysInStorage[checkForKey]
-        saveJourneyButton.children[0].setAttribute("name", "heart-empty");
+        saveJourneyButton.children[0].setAttribute("name", "heart-outline");
         localStorage.setItem("journeys", JSON.stringify(currentJourneysInStorage));
-        presentToast('remove');
+        // presentToast('remove');
     } else {
         let currentJourney = new SavedJourney(fromInput.value, toInput.value);
         let journeyKey = fromInput.value + toInput.value;
         currentJourneysInStorage[journeyKey] = currentJourney;
         saveJourneyButton.children[0].setAttribute("name", "heart");
         localStorage.setItem("journeys", JSON.stringify(currentJourneysInStorage));
-        presentToast('add');
+        // presentToast('add');
     }
 
 
@@ -515,7 +515,7 @@ export function checkFavouriteJourneys() {
     let journeyKeys = Object.keys(currentJourneysInStorage)
 
     if (journeyKeys.length == 0) {
-        saveJourneyButton.children[0].setAttribute("name", "heart-empty");
+        saveJourneyButton.children[0].setAttribute("name", "heart-outline");
     }
 
     for (let key of journeyKeys) {
@@ -525,7 +525,7 @@ export function checkFavouriteJourneys() {
             return;
         } else {
 
-            saveJourneyButton.children[0].setAttribute("name", "heart-empty");
+            saveJourneyButton.children[0].setAttribute("name", "heart-outline");
         }
     }
 
@@ -536,7 +536,7 @@ export const empty_msg = (tab) => {
     return '<ion-grid class="empty_favourite_wrapper">\n' +
         '                    <ion-row>\n' +
         '                    <ion-col size="5" class="empty_favourite_div">\n' +
-        '                    <ion-icon name="heart-empty" class="empty_favourite_icon"></ion-icon>\n' +
+        '                    <ion-icon name="heart-outline" class="empty_favourite_icon"></ion-icon>\n' +
         '                    </ion-col>    \n' +
         '                    </ion-row>\n' +
         '                    <ion-row><ion-col size="12" class="empty_favourite_title">\n' +
@@ -579,7 +579,7 @@ const change_btn2 = () => {
     document.getElementById("routes__show-on-map-btn__name").style.display =
         "none";
     $("#routes__toolbar__back-btn").append(
-        "<ion-icon name='md-close' size='medium'></ion-icon>"
+        "<ion-icon name='close' size='medium'></ion-icon>"
     );
     document
         .getElementById("routes__toolbar__back-btn")
