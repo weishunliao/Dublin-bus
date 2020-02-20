@@ -429,7 +429,7 @@ class SavedJourney {
             </ion-row>
             <ion-row>
                 <ion-col size="2" class="ion-no-padding" id="journey__content__card__address">
-                    <div class="journey__content__card__to">.<br>.<br>.<br>.<br>.<br>.<br>.<br>
+                    <div class="journey__content__card__to">.<br>.<br>.<br>.<br>.<br>.<br>.<br>.<br>.<br>
                     </div>
                 </ion-col>
             </ion-row>
