@@ -241,28 +241,27 @@ heart_empty.addEventListener('click', () => {
 export const controller_confirm = document.querySelector('ion-alert-controller');
 
 export function confirm_box(stop_id) {
-    controller_confirm.create({
-        header: 'DELETE STOP?',
-        message: 'Do you want to <strong>remove</strong> this stop from your favourite?',
-        buttons: [
-            {
-                text: 'Cancel',
-                role: 'cancel',
-                cssClass: 'secondary',
-            }, {
-                text: 'Okay',
-                handler: () => {
-                    remove_favourites(stop_id);
-                    toggle_heart();
-                    // hide_card(stop_id);
-                    toast_route_remove();
-                    update_stop_list();
-                }
+    const alert = document.createElement('ion-alert');
+    alert.header = 'DELETE STOP?';
+    alert.message = 'Do you want to <strong>remove</strong> this stop from your favourite?';
+    alert.buttons = [
+        {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+        }, {
+            text: 'Okay',
+            handler: () => {
+                remove_favourites(stop_id);
+                toggle_heart();
+                // hide_card(stop_id);
+                // toast_route_remove();
+                update_stop_list();
             }
-        ]
-    }).then(alert => {
-        alert.present();
-    });
+        }
+    ];
+    document.body.appendChild(alert);
+    return alert.present();
 }
 
 

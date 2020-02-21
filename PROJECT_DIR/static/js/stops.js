@@ -116,7 +116,7 @@ const create_chip = (data) => {
         routes.add(elem[0]);
     }
     for (let route of routes) {
-        let chip = '<ion-chip color="primary"><ion-icon name="md-swap"></ion-icon><ion-label>' + route + '</ion-label></ion-chip>';
+        let chip = '<ion-chip color="primary"><ion-icon name="swap"></ion-icon><ion-label>' + route + '</ion-label></ion-chip>';
         $('#stops_chips_row').append(chip);
     }
 };
@@ -178,8 +178,8 @@ const stops_show_on_map = () => {
         bottomSwiper.changeState(bottomSwiper.OUT_STATE);
         document.getElementById("stops__show-on-map-btn__name").innerText = "";
         document.getElementById("routes__show-on-map-btn__name").innerText = "";
-        $("#stops__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
-        $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+        $("#stops__show-on-map-btn__name").append("<ion-icon name='map'></ion-icon>Show on map");
+        $("#routes__show-on-map-btn__name").append("<ion-icon name='map'></ion-icon>Show on map");
         document.getElementById("stops__toolbar__back-btn").style.display = '';
         document.getElementById("routes__toolbar__back-btn").style.display = '';
         map.setZoom(15);
@@ -192,7 +192,7 @@ const stops_show_on_map = () => {
         if (is_mobile) {
             document.getElementById("stops__show-on-map-btn__name").innerText = "";
             document.getElementById("stops__toolbar__back-btn").style.display = 'none';
-            $("#stops__show-on-map-btn__name").append("<ion-icon name='md-arrow-dropup' size=\"medium\"></ion-icon> More result");
+            $("#stops__show-on-map-btn__name").append("<ion-icon name='arrow-down' size=\"medium\"></ion-icon> More result");
         }
     }
 };
@@ -200,8 +200,8 @@ const stops_show_on_map = () => {
 export const drawer_default_height = () => {
     document.getElementById("stops__show-on-map-btn__name").innerText = "";
     document.getElementById("routes__show-on-map-btn__name").innerText = "";
-    $("#stops__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
-    $("#routes__show-on-map-btn__name").append("<ion-icon name='md-map'></ion-icon>Show on map");
+    $("#stops__show-on-map-btn__name").append("<ion-icon name='map'></ion-icon>Show on map");
+    $("#routes__show-on-map-btn__name").append("<ion-icon name='map'></ion-icon>Show on map");
     document.getElementById("stops__toolbar__back-btn").style.display = '';
     document.getElementById("routes__toolbar__back-btn").style.display = '';
     $('.drawer__container').animate({'height': window.innerHeight * 0.95}, 200, 'linear');
@@ -231,7 +231,7 @@ heart_solid.addEventListener('click', () => {
 });
 
 heart_empty.addEventListener('click', () => {
-    toast_route_add();
+    // toast_route_add();
     let stop_id = document.getElementById("stops__content__card__stop-id").innerText;
     save_favourites(stop_id);
     toggle_heart();

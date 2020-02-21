@@ -550,7 +550,7 @@ const change_btn = () => {
   document.getElementById("stops__show-on-map-btn__name").style.display =
     "none";
   $("#stops__toolbar__back-btn").append(
-    "<ion-icon name='md-close' size='medium'></ion-icon>"
+    "<ion-icon name='close' size='medium'></ion-icon>"
   );
   document
     .getElementById("stops__toolbar__back-btn")

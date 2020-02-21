@@ -1,6 +1,6 @@
 import {markers, map, bus_route_drawer, hideMarkers, showMarkers} from "./google_maps";
-import {create_favourite_route_card, empty_msg, update_route_list} from "./favourites";
-import {controller_confirm} from "./stops";
+import {create_favourite_route_card, empty_msg, update_route_list, update_stop_list} from "./favourites";
+import {controller_confirm, remove_favourites, toggle_heart} from "./stops";
 import {controller} from "./nodes";
 import {bottomSwiper} from "./touches";
 
@@ -284,28 +284,27 @@ route_heart_empty.addEventListener('click', () => {
 
 
 export function route_confirm_box(route_id) {
-    controller_confirm.create({
-        header: 'DELETE ROUTE?',
-        message: 'Do you want to <strong>remove</strong> this route from your favourites?',
-        buttons: [
-            {
-                text: 'Cancel',
-                role: 'cancel',
-                cssClass: 'secondary',
-            }, {
-                text: 'Okay',
-                handler: () => {
-                    route_remove_favourites(route_id);
-                    route_toggle_heart();
-                    // update_hide_card(route_id);
-                    toast_route_remove();
-                    update_route_list();
-                }
+    const alert = document.createElement('ion-alert');
+    alert.header = 'DELETE ROUTE?';
+    alert.message = 'Do you want to <strong>remove</strong> this route from your favourites?';
+    alert.buttons = [
+        {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+        }, {
+            text: 'Okay',
+            handler: () => {
+                route_remove_favourites(route_id);
+                route_toggle_heart();
+                // update_hide_card(route_id);
+                // toast_route_remove();
+                update_route_list();
             }
-        ]
-    }).then(alert => {
-        alert.present();
-    });
+        }
+    ];
+    document.body.appendChild(alert);
+    return alert.present();
 }
 
 
