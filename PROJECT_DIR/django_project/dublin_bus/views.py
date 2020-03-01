@@ -156,7 +156,7 @@ def get_sights_info(request):
     elif category == "Nightlife":
         url += "bar%2BDublin/@53.3211591,-6.3004305,12z"
     elif category == "Coffee":
-        url += "/coffee+dublin/@53.3454515,-6.2690574,16z"
+        url += "coffee+shop+Dublin&location=53.3211591,-6.3004305&radius=10000"
     elif category == "Hotel":
         url += "hotel+dublin/@53.3454768,-6.2690574,16z"
     elif category == "Shopping":
