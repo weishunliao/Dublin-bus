@@ -642,23 +642,6 @@ export function FindMyRoutes(initialLocation, directionsService) {
               routeIndex: i
             });
             let length = response.routes[i].legs[0].steps.length;
-            let error_count = 0; // used to track if any steps in the route are not run by Dublin Bus
-            for (let j = 0; j < length; j++) {
-              if (
-                response.routes[i].legs[0].steps[j].travel_mode == "TRANSIT"
-              ) {
-                let agent =
-                  response.routes[i].legs[0].steps[j].transit.line.agencies[0][
-                    "name"
-                  ];
-                if (agent !== "Dublin Bus") {
-                  error_count++;
-                }
-              }
-            }
-            if (error_count > 0) {
-              continue;
-            }
             let full_travel_time = 0;
             let button =
               '<button type="button" class="btn btn-secondary" onclick="change_route(' +
@@ -759,40 +742,20 @@ export function FindMyRoutes(initialLocation, directionsService) {
                 departure_time =
                   response.routes[i].legs[0].steps[step].transit.departure_time
                     .text;
-
-                await fetch("get_travel_time", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json"
-                  },
-                  body: JSON.stringify({
-                    route_id: route_id,
-                    start_point: departure_stop,
-                    end_point: arrival_stop,
-                    num_stops: num_stops,
-                    departure_time_value: departure_time_value,
-                    head_sign: head_sign
-                  })
-                })
-                  .then(response => {
-                    return response.json();
-                  })
-                  .then(data => {
-                    journeyTimeReturnedFromModel.push(data.journey_time);
-                    full_travel_time += data.journey_time;
-                    routeDescription.push([
-                      "bus",
-                      route_id,
-                      distance,
-                      departureStop,
-                      arrivalStop,
-                      start,
-                      end,
-                      Math.round(data.journey_time / 60) + " mins",
-                      leavingInValue
-                    ]);
-                  });
+                let journey_time = response.routes[i].legs[0].steps[step].duration.value;
+                journeyTimeReturnedFromModel.push(journey_time);
+                full_travel_time += journey_time;
+                routeDescription.push([
+                  "bus",
+                  route_id,
+                  distance,
+                  departureStop,
+                  arrivalStop,
+                  start,
+                  end,
+                  Math.round(journey_time / 60) + " mins",
+                  leavingInValue
+                ]);
               }
               step++;
             }

@@ -325,7 +325,7 @@ export class Route {
                   <h1 class="journey-planner__card__timeTitle  ${
                     future ? "futureTimeTitle" : ""
                   }">
-                  ${leavingInString}<span class="journey-planner__card__timeTitle__mins">${mins}</span>
+                  ${Math.round(full_travel_time / 60)}<span class="journey-planner__card__timeTitle__mins">${mins}</span>
                   </h1>
                 ${
                   future
